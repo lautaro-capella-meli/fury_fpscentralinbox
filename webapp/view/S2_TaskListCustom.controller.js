@@ -219,6 +219,20 @@ sap.ui.define([
 			this._oDataModel.read("/TaskCollection", oRequestConfiguration);
 		},
 
+		_dataMassage: function (aTasks) {
+			return aTasks.map(oTask => {
+				const oCustomAttrData = oTask.CustomAttributeData;
+				const aCustomAttrs = oCustomAttrData?.results;
+
+				if (aCustomAttrs && aCustomAttrs.length)
+					aCustomAttrs.forEach(oCustomAttr => {
+						oTask[encodeURIComponent(oCustomAttr.Name)] = oCustomAttr.Value;
+					});
+
+				return oTask;
+			});
+		},
+
 		onTaskSelected: function (oEvent) {
 			var oNav = {
 				SAP__Origin: oEvent.getSource().getBindingContext("taskList").getProperty("SAP__Origin"),

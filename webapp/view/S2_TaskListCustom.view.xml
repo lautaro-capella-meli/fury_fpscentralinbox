@@ -48,21 +48,21 @@
 									key="SAP__Origin>>LOCAL_TGW"
 									text="S/4"
 									icon="sap-icon://radar-chart"
-									iconColor="{= ${taskListView>/LOCAL_TGWCount} == 0 ? 'Default' : 'Critical' }"
+									iconColor="{taskListView>/LOCAL_TGWCountColor}"
 									count="{taskListView>/LOCAL_TGWCount}" />
 								<IconTabFilter
 									id="tabFilterARIBA_TGWId"
 									key="SAP__Origin>>ARIBA_TGW"
 									text="Ariba"
 									icon="sap-icon://radar-chart"
-									iconColor="{= ${taskListView>/ARIBA_TGWCount} == 0 ? 'Default' : 'Critical' }"
+									iconColor="{taskListView>/ARIBA_TGWCountColor}"
 									count="{taskListView>/ARIBA_TGWCount}" />
 								<IconTabFilter
 									id="tabFilterCONCUR_TGWId"
 									key="SAP__Origin>>CONCUR_TGW"
 									text="Concur"
 									icon="sap-icon://radar-chart"
-									iconColor="{= ${taskListView>/CONCUR_TGWCount} == 0 ? 'Default' : 'Critical' }"
+									iconColor="{taskListView>/CONCUR_TGWCountColor}"
 									count="{taskListView>/CONCUR_TGWCount}" />
 								<IconTabSeparator />
 								<IconTabFilter

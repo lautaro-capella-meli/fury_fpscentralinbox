@@ -225,7 +225,27 @@ sap.ui.define([
 		                //############ Custom Gabriel Inicio #######
 		                //Custom Gabriel
 		        		const tasks = H;
-		        		let total=0, due=0, status={}, priorities={}, sources={"LOCAL_TGW":{count:0, tasks:{}}, "ARIBA_TGW":{count:0, tasks:{}}, "CONCUR_TGW":{count:0, tasks:{}}};
+		        		let total=0;
+		        		let due=0;
+		        		let status={};
+		        		let priorities={};
+		        		let sources={
+		        			"LOCAL_TGW": {
+		        				count:0,
+		        				get countColor() { return this.count == 0 ? "Standard" : 'Critical' },
+		        				tasks:{}
+		        			}, 
+		        			"ARIBA_TGW":{
+		        				count:7, 
+		        				get countColor() { return this.count == 0 ? "Standard" : 'Critical' },
+		        				tasks:{}
+		        			},
+		        			"CONCUR_TGW":{
+		        				count:2,
+		        				get countColor() { return this.count == 0 ? "Standard" : 'Critical' },
+		        				tasks:{}
+		        			}
+		        		};
 		        
 		        		tasks.forEach(c => {
 			        		const src = c.SAP__Origin, stt = c.Status, prt = c.Priority;

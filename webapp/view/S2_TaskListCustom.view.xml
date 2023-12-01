@@ -33,7 +33,9 @@
 						<IconTabBar
 							id="idIconTabBar"
 							headerMode="Standard"
+							expandable="false"
 							class="sapUiNoContentPadding">
+							<!--headerMode="Inline"-->
 							<items>
 								<IconTabFilter
 									showAll="true"
@@ -43,38 +45,42 @@
 								<IconTabSeparator />
 								<IconTabFilter
 									id="tabFilterLOCAL_TGWId"
-									text="SAP S/4 Tasks"
-									count="{taskListView>/LOCAL_TGWCount}"
-									key="SAP__Origin>>LOCAL_TGW">
-								</IconTabFilter>
+									key="SAP__Origin>>LOCAL_TGW"
+									text="S/4"
+									icon="sap-icon://radar-chart"
+									iconColor="{= ${taskListView>/LOCAL_TGWCount} == 0 ? 'Default' : 'Critical' }"
+									count="{taskListView>/LOCAL_TGWCount}" />
 								<IconTabFilter
 									id="tabFilterARIBA_TGWId"
-									count="{taskListView>/ARIBA_TGWCount}"
-									text="SAP Ariba Tasks"
-									key="SAP__Origin>>ARIBA_TGW" />
+									key="SAP__Origin>>ARIBA_TGW"
+									text="Ariba"
+									icon="sap-icon://radar-chart"
+									iconColor="{= ${taskListView>/ARIBA_TGWCount} == 0 ? 'Default' : 'Critical' }"
+									count="{taskListView>/ARIBA_TGWCount}" />
 								<IconTabFilter
 									id="tabFilterCONCUR_TGWId"
-									count="{taskListView>/CONCUR_TGWCount}"
-									text="SAP Concur Tasks"
-									key="SAP__Origin>>CONCUR_TGW" />
-								<IconTabSeparator icon="sap-icon://vertical-grip"/>
+									key="SAP__Origin>>CONCUR_TGW"
+									text="Concur"
+									icon="sap-icon://radar-chart"
+									iconColor="{= ${taskListView>/CONCUR_TGWCount} == 0 ? 'Default' : 'Critical' }"
+									count="{taskListView>/CONCUR_TGWCount}" />
+								<IconTabSeparator />
 								<IconTabFilter
 									id="tabFilterStatusId"
+									key="STATUS"
 									text="Status"
-									key="STATUS">
-								</IconTabFilter>
+									icon="sap-icon://order-status" />
 								<IconTabFilter
 									id="tabFilterPriorityId"
 									text="Priority"
-									key="PRIORITY">
-								</IconTabFilter>
+									key="PRIORITY"
+									icon="sap-icon://sales-quote" />
 								<IconTabFilter
 									id="tabFilteDueyId"
 									count="{taskListView>/DueCount}"
 									text="Task Due"
-									key="DUE">
-								</IconTabFilter>
-								
+									key="DUE"
+									icon="sap-icon://timesheet" />
 							</items>
 							<content class="sapUiNoContentPadding">
 								<Table class="" id="taskListTable" growing="true"

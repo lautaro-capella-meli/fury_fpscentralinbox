@@ -1,0 +1,154 @@
+{
+  "projectType": [
+    "com.watt.commonbuilder.sapui5clientbuild",
+    "sap.watt.uitools.ide.fiori"
+  ],
+  "generation": [
+    {
+      "templateId": "fioriexttemplate.extensionProject",
+      "templateVersion": "1.4.0",
+      "dateTimeStamp": "Thu, 19 Oct 2023 14:23:03 GMT"
+    },
+    {
+      "templateId": "fioriexttemplate.extendcontrollercomponent",
+      "templateVersion": "1.4.0",
+      "dateTimeStamp": "Mon, 23 Oct 2023 12:24:26 GMT"
+    },
+    {
+      "templateId": "fioriexttemplate.replaceviewcomponent",
+      "templateVersion": "1.4.0",
+      "dateTimeStamp": "Fri, 20 Oct 2023 18:43:37 GMT"
+    }
+  ],
+  "extensibility": {
+    "controllers": {
+      "Main": "CA_FIORI_INBOX%2fMain.controller.js",
+      "AdditionalTaskDetails": "CA_FIORI_INBOX%2fcontroller%2fAdditionalTaskDetails.controller.js",
+      "App": "CA_FIORI_INBOX%2fcontroller%2fApp.controller.js",
+      "Detail": "CA_FIORI_INBOX%2fcontroller%2fDetail.controller.js",
+      "DetailDetail": "CA_FIORI_INBOX%2fcontroller%2fDetailDetail.controller.js",
+      "DetailEmpty": "CA_FIORI_INBOX%2fcontroller%2fDetailEmpty.controller.js",
+      "MultiSelectMessageDialog": "CA_FIORI_INBOX%2fcontroller%2fMultiSelectMessageDialog.controller.js",
+      "SplitContainer": "CA_FIORI_INBOX%2fcontroller%2fSplitContainer.controller.js",
+      "Worklist": "CA_FIORI_INBOX%2fcontroller%2fWorklist.controller.js",
+      "AddInbox": "CA_FIORI_INBOX%2fview%2fAddInbox.controller.js",
+      "DetailDeepEmpty": "CA_FIORI_INBOX%2fview%2fDetailDeepEmpty.controller.js",
+      "Empty": "CA_FIORI_INBOX%2fview%2fEmpty.controller.js",
+      "Forward": "CA_FIORI_INBOX%2fview%2fForward.controller.js",
+      "ForwardSimple": "CA_FIORI_INBOX%2fview%2fForwardSimple.controller.js",
+      "MultiSelectDetail": "CA_FIORI_INBOX%2fview%2fMultiSelectDetail.controller.js",
+      "MultiSelectFilter": "CA_FIORI_INBOX%2fview%2fMultiSelectFilter.controller.js",
+      "MultiSelectMessage": "CA_FIORI_INBOX%2fview%2fMultiSelectMessage.controller.js",
+      "MultiSelectSummary": "CA_FIORI_INBOX%2fview%2fMultiSelectSummary.controller.js",
+      "ReplaceDetail": "CA_FIORI_INBOX%2fview%2fReplaceDetail.controller.js",
+      "S2": "CA_FIORI_INBOX%2fview%2fS2.controller.js",
+      "S2_FilterBar": "CA_FIORI_INBOX%2fview%2fS2_FilterBar.controller.js",
+      "S2_TaskList": "CA_FIORI_INBOX%2fview%2fS2_TaskList.controller.js",
+      "S3": "CA_FIORI_INBOX%2fview%2fS3.controller.js",
+      "ViewSubstitution": "CA_FIORI_INBOX%2fview%2fViewSubstitution.controller.js"
+    },
+    "views": {
+      "Main": "CA_FIORI_INBOX%2fApp.view.xml",
+      "AddInbox": "CA_FIORI_INBOX%2fview%2fAddInbox.view.xml",
+      "AdditionalTaskDetails": "CA_FIORI_INBOX%2fview%2fAdditionalTaskDetails.view.xml",
+      "App": "CA_FIORI_INBOX%2fview%2fApp.view.xml",
+      "Detail": "CA_FIORI_INBOX%2fview%2fDetail.view.xml",
+      "DetailDeepEmpty": "CA_FIORI_INBOX%2fview%2fDetailDeepEmpty.view.xml",
+      "DetailDetail": "CA_FIORI_INBOX%2fview%2fDetailDetail.view.xml",
+      "DetailEmpty": "CA_FIORI_INBOX%2fview%2fDetailEmpty.view.xml",
+      "Empty": "CA_FIORI_INBOX%2fview%2fEmpty.view.xml",
+      "Forward": "CA_FIORI_INBOX%2fview%2fForward.view.xml",
+      "ForwardSimple": "CA_FIORI_INBOX%2fview%2fForwardSimple.view.xml",
+      "MultiSelectDetail": "CA_FIORI_INBOX%2fview%2fMultiSelectDetail.view.xml",
+      "MultiSelectFilter": "CA_FIORI_INBOX%2fview%2fMultiSelectFilter.view.xml",
+      "MultiSelectMessage": "CA_FIORI_INBOX%2fview%2fMultiSelectMessage.view.xml",
+      "MultiSelectMessageDialog": "CA_FIORI_INBOX%2fview%2fMultiSelectMessageDialog.view.xml",
+      "MultiSelectSummary": "CA_FIORI_INBOX%2fview%2fMultiSelectSummary.view.xml",
+      "ReplaceDetail": "CA_FIORI_INBOX%2fview%2fReplaceDetail.view.xml",
+      "S2": "CA_FIORI_INBOX%2fview%2fS2.view.xml",
+      "S2_FilterBar": "CA_FIORI_INBOX%2fview%2fS2_FilterBar.view.xml",
+      "S2_TaskList": "CA_FIORI_INBOX%2fview%2fS2_TaskList.view.xml",
+      "S3": "CA_FIORI_INBOX%2fview%2fS3.view.xml",
+      "SplitContainer": "CA_FIORI_INBOX%2fview%2fSplitContainer.view.xml",
+      "ViewSubstitution": "CA_FIORI_INBOX%2fview%2fViewSubstitution.view.xml",
+      "Worklist": "CA_FIORI_INBOX%2fview%2fWorklist.view.xml"
+    },
+    "fragments": {
+      "AddSubstitute": "CA_FIORI_INBOX%2ffrag%2fAddSubstitute.fragment.xml",
+      "AddSubstituteUserID": "CA_FIORI_INBOX%2ffrag%2fAddSubstituteUserID.fragment.xml",
+      "ConfirmationDialog": "CA_FIORI_INBOX%2ffrag%2fConfirmationDialog.fragment.xml",
+      "JamShareItemDisplay": "CA_FIORI_INBOX%2ffrag%2fJamShareItemDisplay.fragment.xml",
+      "MultiSelectSortingDialog": "CA_FIORI_INBOX%2ffrag%2fMultiSelectSortingDialog.fragment.xml",
+      "ObjectLinks": "CA_FIORI_INBOX%2ffrag%2fObjectLinks.fragment.xml",
+      "Resubmit": "CA_FIORI_INBOX%2ffrag%2fResubmit.fragment.xml",
+      "SubstituteProfile": "CA_FIORI_INBOX%2ffrag%2fSubstituteProfile.fragment.xml",
+      "SupportInfo": "CA_FIORI_INBOX%2ffrag%2fSupportInfo.fragment.xml",
+      "TaskGroupingDialog": "CA_FIORI_INBOX%2ffrag%2fTaskGroupingDialog.fragment.xml",
+      "TaskSortingDialog": "CA_FIORI_INBOX%2ffrag%2fTaskSortingDialog.fragment.xml",
+      "UserPicker": "CA_FIORI_INBOX%2ffrag%2fUserPicker.fragment.xml",
+      "UserPickerDialog": "CA_FIORI_INBOX%2ffrag%2fUserPickerDialog.fragment.xml",
+      "TableOperationsDialog": "CA_FIORI_INBOX%2ffragments%2fTableOperationsDialog.fragment.xml"
+    },
+    "type": "abaprep",
+    "shouldLinkComponentToManifest": true,
+    "component": "CA_FIORI_INBOX%2fComponent.js",
+    "manifest": "CA_FIORI_INBOX%2fmanifest.json",
+    "versionJsonPath": "CA_FIORI_INBOX%2fversion.json",
+    "minUI5Version": "1.90.7",
+    "system": {
+      "name": "S4H",
+      "description": "FIORI - Globant 2021",
+      "proxyUrlPrefix": "/webidedispatcher/destinations/S4H",
+      "path": "/sap/bc/adt",
+      "url": "/webidedispatcher/destinations/S4H/sap/bc/adt",
+      "wattUsage": "dev_abap",
+      "systemId": "S4H",
+      "entryPath": "/sap/bc/adt",
+      "sapClient": "100",
+      "additionalData": []
+    },
+    "discoveryStatus": {
+      "csrfToken": "-qbpWfjMgsysxnydzydmDg==",
+      "transports": "/webidedispatcher/destinations/S4H/sap/bc/adt/cts/transports",
+      "transportchecks": "/webidedispatcher/destinations/S4H/sap/bc/adt/cts/transportchecks",
+      "filestore_ui5_bsp": "/webidedispatcher/destinations/S4H/sap/bc/adt/filestore/ui5-bsp/objects",
+      "search": "/webidedispatcher/destinations/S4H/sap/bc/adt/repository/informationsystem/search",
+      "ato_settings": "/webidedispatcher/destinations/S4H/sap/bc/adt/ato/settings",
+      "ui5_rt_version": "/webidedispatcher/destinations/S4H/sap/bc/adt/filestore/ui5-bsp/ui5-rt-version",
+      "description": "FIORI - Globant 2021",
+      "proxyUrlPrefix": "/webidedispatcher/destinations/S4H"
+    },
+    "BSPName": "CA_FIORI_INBOX",
+    "namespace": "cross.fnd.fiori.inbox",
+    "resourceBundle": "i18n/i18n.properties",
+    "parentResourceRootUrl": "/destinations/S4H/sap/bc/ui5_ui5/sap/CA_FIORI_INBOX"
+  },
+  "codeCheckingTriggers": {
+    "notifyBeforePush": true,
+    "notifyBeforePushLevel": "Error",
+    "blockPush": false,
+    "blockPushLevel": "Error"
+  },
+  "translation": {
+    "translationDomain": "",
+    "supportedLanguages": "en,fr,de",
+    "defaultLanguage": "en",
+    "defaultI18NPropertyFile": "i18n.properties",
+    "resourceModelName": "i18n"
+  },
+  "basevalidator": {
+    "services": {
+      "xml": "fioriXmlAnalysis",
+      "js": "fioriJsValidator"
+    }
+  },
+  "build": {
+    "targetFolder": "dist",
+    "sourceFolder": "webapp",
+    "buildRequired": true
+  },
+  "deploy": {
+    "destination": "DS4",
+    "name": "Z_CENTRAL_INBOX"
+  }
+}

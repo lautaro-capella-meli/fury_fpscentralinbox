@@ -31,56 +31,16 @@
 								press="onPersonalizationPressed" text="{i18n>xbut.personalization}" tooltip="{i18n>xbut.personalization}"/>
 						</OverflowToolbar>
 						<IconTabBar
-							id="idIconTabBar"
+							id="idMainIconTabBar"
 							headerMode="Standard"
 							expandable="false"
 							class="sapUiNoContentPadding">
-							<!--headerMode="Inline"-->
 							<items>
 								<IconTabFilter
-									showAll="true"
-									count="{taskListView>/allTaskCount}"
-									text="All Tasks"
-									key="ALL" />
-								<IconTabSeparator />
-								<IconTabFilter
-									id="tabFilterLOCAL_TGWId"
-									key="SAP__Origin>>LOCAL_TGW"
-									text="S/4"
-									icon="sap-icon://radar-chart"
-									iconColor="{taskListView>/LOCAL_TGWCountColor}"
-									count="{taskListView>/LOCAL_TGWCount}" />
-								<IconTabFilter
-									id="tabFilterARIBA_TGWId"
-									key="SAP__Origin>>ARIBA_TGW"
-									text="Ariba"
-									icon="sap-icon://radar-chart"
-									iconColor="{taskListView>/ARIBA_TGWCountColor}"
-									count="{taskListView>/ARIBA_TGWCount}" />
-								<IconTabFilter
-									id="tabFilterCONCUR_TGWId"
-									key="SAP__Origin>>CONCUR_TGW"
-									text="Concur"
-									icon="sap-icon://radar-chart"
-									iconColor="{taskListView>/CONCUR_TGWCountColor}"
-									count="{taskListView>/CONCUR_TGWCount}" />
-								<IconTabSeparator />
-								<IconTabFilter
-									id="tabFilterStatusId"
-									key="STATUS"
-									text="Status"
-									icon="sap-icon://order-status" />
-								<IconTabFilter
-									id="tabFilterPriorityId"
-									text="Priority"
-									key="PRIORITY"
-									icon="sap-icon://sales-quote" />
-								<IconTabFilter
-									id="tabFilteDueyId"
-									count="{taskListView>/DueCount}"
-									text="Task Due"
-									key="DUE"
-									icon="sap-icon://timesheet" />
+									id="dummyTabFilter"
+									key="dummy"
+									text="dummy"
+									visible="false" />
 							</items>
 							<content class="sapUiNoContentPadding">
 								<Table class="" id="taskListTable" growing="true"

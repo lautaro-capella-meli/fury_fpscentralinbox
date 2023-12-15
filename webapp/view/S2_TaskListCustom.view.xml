@@ -37,12 +37,27 @@
 							class="sapUiNoContentPadding">
 							<items>
 								<IconTabFilter
-									id="dummyTabFilter"
+									id="dummyTabFilter1"
 									key="dummy"
 									text="dummy"
 									visible="false" />
 							</items>
 							<content class="sapUiNoContentPadding">
+								<IconTabBar 
+									id="idSubIconTabBar" 
+									headerMode="Inline" 
+									expandable="false"
+									visible="false"
+									class="sapUiNoContentPadding">
+									<items>
+										<IconTabFilter
+											id="dummyTabFilter2"
+											key="dummy"
+											text="dummy"
+											visible="false" />
+									</items>
+									<content />
+								</IconTabBar>
 								<Table class="" id="taskListTable" growing="true"
 									items="{path:'taskList>/TaskCollection', sorter:[{path: 'TaskTitle', descending: false}], groupHeaderFactory:'.createGroupHeader'}"
 									noDataText="{taskListView>/noDataText}" updateFinished="onUpdateFinished" width="auto" mode="MultiSelect"

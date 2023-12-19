@@ -7,7 +7,8 @@
 		"applicationVersion": {
 			"version": "1.0"
 		},
-		"title": "{{SHELL_TITLE}}"
+		"title": "{{SHELL_TITLE}}",
+		"i18n": "i18n/i18n.properties"
 	},
 	"sap.ui": {
 		"_version": "1.1.0",
@@ -63,6 +64,14 @@
 					"uri": "css/custom.css"
 				}
 			]
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.i18n.i18n"
+				}
+			}
 		}
 	},
 	"sap.platform.abap": {

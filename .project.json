@@ -96,32 +96,32 @@
     "versionJsonPath": "CA_FIORI_INBOX%2fversion.json",
     "minUI5Version": "1.90.7",
     "system": {
-      "name": "S4H",
+      "name": "DS4",
       "description": "FIORI - Globant 2021",
-      "proxyUrlPrefix": "/webidedispatcher/destinations/S4H",
+      "proxyUrlPrefix": "/webidedispatcher/destinations/DS4",
       "path": "/sap/bc/adt",
-      "url": "/webidedispatcher/destinations/S4H/sap/bc/adt",
+      "url": "/webidedispatcher/destinations/DS4/sap/bc/adt",
       "wattUsage": "dev_abap",
-      "systemId": "S4H",
+      "systemId": "DS4",
       "entryPath": "/sap/bc/adt",
       "sapClient": "100",
       "additionalData": []
     },
     "discoveryStatus": {
       "csrfToken": "-qbpWfjMgsysxnydzydmDg==",
-      "transports": "/webidedispatcher/destinations/S4H/sap/bc/adt/cts/transports",
-      "transportchecks": "/webidedispatcher/destinations/S4H/sap/bc/adt/cts/transportchecks",
-      "filestore_ui5_bsp": "/webidedispatcher/destinations/S4H/sap/bc/adt/filestore/ui5-bsp/objects",
-      "search": "/webidedispatcher/destinations/S4H/sap/bc/adt/repository/informationsystem/search",
-      "ato_settings": "/webidedispatcher/destinations/S4H/sap/bc/adt/ato/settings",
-      "ui5_rt_version": "/webidedispatcher/destinations/S4H/sap/bc/adt/filestore/ui5-bsp/ui5-rt-version",
+      "transports": "/webidedispatcher/destinations/DS4/sap/bc/adt/cts/transports",
+      "transportchecks": "/webidedispatcher/destinations/DS4/sap/bc/adt/cts/transportchecks",
+      "filestore_ui5_bsp": "/webidedispatcher/destinations/DS4/sap/bc/adt/filestore/ui5-bsp/objects",
+      "search": "/webidedispatcher/destinations/DS4/sap/bc/adt/repository/informationsystem/search",
+      "ato_settings": "/webidedispatcher/destinations/DS4/sap/bc/adt/ato/settings",
+      "ui5_rt_version": "/webidedispatcher/destinations/DS4/sap/bc/adt/filestore/ui5-bsp/ui5-rt-version",
       "description": "FIORI - Globant 2021",
-      "proxyUrlPrefix": "/webidedispatcher/destinations/S4H"
+      "proxyUrlPrefix": "/webidedispatcher/destinations/DS4"
     },
     "BSPName": "CA_FIORI_INBOX",
     "namespace": "cross.fnd.fiori.inbox",
     "resourceBundle": "i18n/i18n.properties",
-    "parentResourceRootUrl": "/destinations/S4H/sap/bc/ui5_ui5/sap/CA_FIORI_INBOX"
+    "parentResourceRootUrl": "/destinations/DS4/sap/bc/ui5_ui5/sap/CA_FIORI_INBOX"
   },
   "codeCheckingTriggers": {
     "notifyBeforePush": true,

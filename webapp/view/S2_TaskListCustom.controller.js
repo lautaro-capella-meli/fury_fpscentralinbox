@@ -45,6 +45,7 @@ sap.ui.define([
 	MessagePopover, Fragment, DateFormat, jquery, CustomFormatters) {
 	"use strict";
 	var ButtonType = library.ButtonType;
+	const I18N_CUSTOM_PREFIX = "custom.meli."
 
 	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
@@ -63,6 +64,10 @@ sap.ui.define([
 			};
 			this._oDataModel.read("/TaskDefinitionCollection", params);
 		},
+
+		_getI18nCustomText(sText, ...args) {
+			return this._oResourceBundle.getText(I18N_CUSTOM_PREFIX + sText, ...args);
+		}
 
 		onSuccessTaskDefintionRequest: function (oData, response) {
 			if (response.statusCode === "200") {
@@ -249,10 +254,14 @@ sap.ui.define([
 			/*******************************************************/
 			/*******************************************************/
 
+			this._oMainIconTabBar.destroyItems();
+			this._oSubIconTabBar.destroyItems();
+			this._oGroupsMap.clear();
+
 			/// MAIN > ALL TASKS ///
 			const oAllTasksIconTabFilter = new sap.m.IconTabFilter({
 				key: "ALL",
-				text: "All",
+				text: this._getI18nCustomText("All"),
 				showAll: true,
 				count: oTaskListData.allTasks.count
 			});
@@ -262,7 +271,7 @@ sap.ui.define([
 			/// SUB > ALL TASKS ///
 			const oAllSubIconTabFilter = new sap.m.IconTabFilter({
 				key: "ALL",
-				text: "All",
+				text: this._getI18nCustomText("All"),
 				count: oTaskListData.allTasks.count
 			});
 			this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
@@ -277,8 +286,8 @@ sap.ui.define([
 					/// MAIN > (EACH) SOURCE ///
 					const oBySourceIconTabFilter = new sap.m.IconTabFilter({
 						key: "bySource__" + sSource,
-						icon: "sap-icon://radar-chart",
-						text: sSource,
+						text: this._getI18nCustomText(`Source.${sSource}`), 
+						icon: this._getI18nCustomText(`Source.${sSource}.Icon`), 
 						count: oTaskGroupBySource.count
 					});
 					this._oMainIconTabBar.addItem(oBySourceIconTabFilter);
@@ -306,8 +315,8 @@ sap.ui.define([
 			/// MAIN > BY STATUS ///
 			const oByStatusIconTabFilter = new sap.m.IconTabFilter({
 				key: "byStatus",
-				icon: "sap-icon://order-status",
-				text: "Status"
+				text: this._getI18nCustomText("ByStatus"),
+				icon: this._getI18nCustomText("ByStatus.Icon"),
 			});
 			this._oMainIconTabBar.addItem(oByStatusIconTabFilter);
 			this._oGroupsMap.set(oByStatusIconTabFilter, oTaskListData.allTasks);
@@ -318,7 +327,7 @@ sap.ui.define([
 				/// SUB > BY STATUS ///
 				const oByStatusSubIconTabFilter = new sap.m.IconTabFilter({
 					key: "byStatus__" + sStatus,
-					text: sStatus,
+						text: this._getI18nCustomText(`Status.${sStatus}`), 
 					count: oTaskGroupByStatus.count
 				});
 				if (this._bUseSubIconTabBar)
@@ -332,8 +341,8 @@ sap.ui.define([
 			/// MAIN > BY PRIORITY ///
 			const oByPriorityIconTabFilter = new sap.m.IconTabFilter({
 				key: "byPriority",
-				icon: "sap-icon://sales-quote",
-				text: "Priority"
+				text: this._getI18nCustomText("ByPriority"),
+				icon: this._getI18nCustomText("ByPriority.Icon"),
 			});
 			this._oMainIconTabBar.addItem(oByPriorityIconTabFilter);
 			this._oGroupsMap.set(oByPriorityIconTabFilter, oTaskListData.allTasks);
@@ -343,7 +352,7 @@ sap.ui.define([
 				/// SUB > BY PRIORITY ///
 				const oByPrioritySubIconTabFilter = new sap.m.IconTabFilter({
 					key: "byPriority__" + sPriority,
-					text: sPriority,
+					text: this._getI18nCustomText(`Priority.${sPriority}`), 
 					count: oTaskGroupByPriority.count
 				});
 				if (this._bUseSubIconTabBar)
@@ -356,8 +365,8 @@ sap.ui.define([
 			/// MAIN > DUE ///
 			const oNewMainIconTabFilter = new sap.m.IconTabFilter({
 				key: "withCompletionDeadLine",
-				text: "Task Due",
-				icon: "sap-icon://timesheet",
+				text: this._getI18nCustomText("TaskDue"),
+				icon: this._getI18nCustomText("TaskDue.Icon"),
 				count: oTaskListData.withCompletionDeadLine.count
 			});
 			this._oMainIconTabBar.addItem(oNewMainIconTabFilter);
@@ -452,6 +461,7 @@ sap.ui.define([
 					(oItem.getKey() !== "ALL") && oItem.getVisible()
 				);
 				this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
+				this._oSubIconTabBar.setKey("ALL");
 			}
 			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
 

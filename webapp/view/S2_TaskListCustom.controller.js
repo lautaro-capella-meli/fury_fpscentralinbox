@@ -259,8 +259,10 @@ sap.ui.define([
 			/*******************************************************/
 			/*******************************************************/
 
+			// Init Tab Bars
 			this._oMainIconTabBar.destroyItems();
 			this._oSubIconTabBar.destroyItems();
+			this._oSubIconTabBar.setVisible(false);
 			this._oGroupsMap.clear();
 
 			/// MAIN > ALL TASKS ///

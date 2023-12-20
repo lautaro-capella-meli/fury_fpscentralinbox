@@ -461,7 +461,7 @@ sap.ui.define([
 					(oItem.getKey() !== "ALL") && oItem.getVisible()
 				);
 				this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
-				this._oSubIconTabBar.setKey("ALL");
+				this._oSubIconTabBar.setSelectedKey("ALL");
 			}
 			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
 

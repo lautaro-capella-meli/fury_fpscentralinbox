@@ -431,6 +431,8 @@ sap.ui.define([
 				const oByStatusSubIconTabFilter = new sap.m.IconTabFilter({
 					key: "byStatus__" + sStatus,
 					text: this._getI18nCustomText(`Status.${sStatus}`),
+					icon: this._getI18nCustomText(`Status.${sStatus}.Icon`) || undefined,
+					iconColor: this._getI18nCustomText(`Status.${sStatus}.IconColor`) || undefined,
 					count: oTaskGroupByStatus.count
 				});
 				if (this._bUseSubIconTabBar)
@@ -456,6 +458,8 @@ sap.ui.define([
 				const oByPrioritySubIconTabFilter = new sap.m.IconTabFilter({
 					key: "byPriority__" + sPriority,
 					text: this._getI18nCustomText(`Priority.${sPriority}`),
+					icon: this._getI18nCustomText(`Priority.${sPriority}.Icon`) || undefined,
+					iconColor: this._getI18nCustomText(`Priority.${sPriority}.IconColor`) || undefined,
 					count: oTaskGroupByPriority.count
 				});
 				if (this._bUseSubIconTabBar)

@@ -67,7 +67,7 @@ sap.ui.define([
 
 		_getI18nCustomText(sText, ...args) {
 			return this._oResourceBundle.getText(I18N_CUSTOM_PREFIX + sText, ...args);
-		}
+		},
 
 		onSuccessTaskDefintionRequest: function (oData, response) {
 			if (response.statusCode === "200") {

@@ -201,7 +201,7 @@ sap.ui.define([
 			return oTaskListData;
 		},
 
-		_createTabFilters: function () {
+		_createTabFilters: function (oTaskListData) {
 
 			/// MAIN > ALL TASKS ///
 			const oAllTasksIconTabFilter = new sap.m.IconTabFilter({

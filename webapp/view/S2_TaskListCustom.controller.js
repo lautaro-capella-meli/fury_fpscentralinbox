@@ -102,6 +102,19 @@ sap.ui.define([
 
 		_initTaskModel: function () {
 
+			this._bUseSubIconTabBar ??= true;
+			this._oGroupsMap ??= new Map();
+
+			if (!this._oMainIconTabBar) {
+				this._oMainIconTabBar = this.byId("idMainIconTabBar");
+				this._oMainIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
+			}
+
+			if (!this._oSubIconTabBar) {
+				this._oSubIconTabBar = this.byId("idSubIconTabBar");
+				this._oSubIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
+			}
+
 			const aFilters = [this._getinitialStatusFilters()];
 			const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
 

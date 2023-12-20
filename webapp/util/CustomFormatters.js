@@ -7,10 +7,7 @@ sap.ui.define([
 
 	cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.CustomFormatters = {
 		formatterCustomAttributeValue: function (sAttributeName, oCustomAttributeData) {
-			return oCustomAttributeData
-				?.results
-				?.find(oCustomAttribute => oCustomAttribute.Name.toLowerCase() === sAttributeName.toLowerCase())
-				?.Value;
+			return oCustomAttributeData?.results?.find(oCustomAttribute => oCustomAttribute.Name.toLowerCase() === sAttributeName.toLowerCase())?.Value;
 		}
 	};
 

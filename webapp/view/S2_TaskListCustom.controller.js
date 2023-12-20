@@ -198,14 +198,6 @@ sap.ui.define([
 
 		_initTaskModel: function () {
 
-			this._bUseSubIconTabBar = true;
-			this._oGroupsMap = new Map();
-			this._oTaskListTable = this.byId("taskListTable");
-			this._oMainIconTabBar = this.byId("idMainIconTabBar");
-			this._oMainIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
-			this._oSubIconTabBar = this.byId("idSubIconTabBar");
-			this._oSubIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
-
 			const aFilters = [this._getinitialStatusFilters()];
 			const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
 
@@ -244,87 +236,42 @@ sap.ui.define([
 
 			var aTasks = oData.results;
 
-			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
+			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 				aTasks = this._dataMassage(oData.results);
-			}
 
-			// console.log("S2_TaskListCustom _initTaskModel H", aTasks);
 			const oTaskListModel = new JSONModel({ TaskCollection: aTasks });
 			this.getView().setModel(oTaskListModel, "taskList");
-			this._loadCustomAttributesDeferredForTasks.resolve();
-			if (this._filterDeferred) {
-				this._filterDeferred.resolve();
-			}
-			// //############ Custom Gabriel Inicio #######
-			// //Custom Gabriel
-			// let iTotal = 0;
-			// let iDue = 0;
-			// let oStatus = {};
-			// let oPriorities = {};
-			// let oSources = {
-			// 	"LOCAL_TGW": {
-			// 		count: 0,
-			// 		get countColor() { return this.count == 0 ? "Standard" : 'Critical' },
-			// 		tasks: {}
-			// 	},
-			// 	"ARIBA_TGW": {
-			// 		count: 7,
-			// 		get countColor() { return this.count == 0 ? "Standard" : 'Critical' },
-			// 		tasks: {}
-			// 	},
-			// 	"CONCUR_TGW": {
-			// 		count: 2,
-			// 		get countColor() { return this.count == 0 ? "Standard" : 'Critical' },
-			// 		tasks: {}
-			// 	}
-			// };
 
-			// aTasks.forEach(oTask => {
-			// 	const sTaskSource = oTask.SAP__Origin;
-			// 	const sTaskStatus = oTask.Status;
-			// 	const sTaskPriority = oTask.Priority;
-			// 	const oSource = oSources[sTaskSource];
+			this._loadCustomAttributesDeferredForTasks?.resolve();
+			this._filterDeferred?.resolve();
 
-			// 	oSource.count++;
-			// 	oSource.tasks[oTask.TaskDefinitionName] ||= 0;
-			// 	oSource.tasks[oTask.TaskDefinitionName]++;
+			const oTaskListData = this._processTaskListData(aTasks);
+			this._initTabBars();
+			this._createTabFilters(oTaskListData);
+		},
 
+		_processTaskListData: function (aTasks) {
 
-			// 	oStatus[sTaskStatus] ||= 0;
-			// 	oStatus[sTaskStatus]++;
-
-
-			// 	oPriorities[sTaskPriority] ||= 0;
-			// 	oPriorities[sTaskPriority]++;
-
-			// 	oTask.CompletionDeadLine && iDue++;
-			// 	iTotal++;
-			// });
-
-			/*******************************************************/
-			/*******************************************************/
-			/*******************************************************/
-
-			const newTaskGroup = () => ({ count: 0, tasks: [] });
+			const newTaskGroup = () => ({ count: 0, tasks: [] }); //Helper fn
 
 			const oTaskListData = aTasks.reduce((oTaskListData, oTask) => {
-				// By source
+				// Build  By source group
 				oTaskListData.bySource[oTask.SAP__Origin] ||= newTaskGroup();
 				oTaskListData.bySource[oTask.SAP__Origin].count++;
 				oTaskListData.bySource[oTask.SAP__Origin].tasks.push(oTask);
 
-				// By source | TaskDefinitionName
+				// Build  By source | TaskDefinitionName group
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName ||= {};
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName] ||= newTaskGroup();
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].count++;
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].tasks.push(oTask);
 
-				// By status
+				// Build  By status group
 				oTaskListData.byStatus[oTask.Status] ||= newTaskGroup();
 				oTaskListData.byStatus[oTask.Status].count++;
 				oTaskListData.byStatus[oTask.Status].tasks.push(oTask);
 
-				// By Priority
+				// Build  By Priority group
 				oTaskListData.byPriority[oTask.Priority] ||= newTaskGroup();
 				oTaskListData.byPriority[oTask.Priority].count++;
 				oTaskListData.byPriority[oTask.Priority].tasks.push(oTask);
@@ -343,23 +290,14 @@ sap.ui.define([
 				withCompletionDeadLine: newTaskGroup()
 			});
 
+			// Fill All Tasks group
 			oTaskListData.allTasks.count = aTasks.length;
 			oTaskListData.allTasks.tasks = [...aTasks];
 
-			this._oTaskListModel = new JSONModel(oTaskListData);
-			this.getView().setModel(oTaskListModel, "taskListStats");
+			return oTaskListData;
+		},
 
-
-
-			/*******************************************************/
-			/*******************************************************/
-			/*******************************************************/
-
-			// Init Tab Bars
-			this._oMainIconTabBar.destroyItems();
-			this._oSubIconTabBar.destroyItems();
-			this._oSubIconTabBar.setVisible(false);
-			this._oGroupsMap.clear();
+		_createTabFilters: function () {
 
 			/// MAIN > ALL TASKS ///
 			const oAllTasksIconTabFilter = new sap.m.IconTabFilter({
@@ -552,6 +490,14 @@ sap.ui.define([
 
 		},
 
+		_initTabBars: function () {
+			// Init Tab Bars
+			this._oMainIconTabBar.destroyItems();
+			this._oSubIconTabBar.destroyItems();
+			this._oSubIconTabBar.setVisible(false);
+			this._oGroupsMap.clear();
+		},
+
 		onSelectMainIconTabBar: function (oEvent) {
 			const oSelectedItem = oEvent.getParameter("selectedItem");
 			const oTaskGroup = oSelectedItem && this._oGroupsMap.get(oSelectedItem);
@@ -572,8 +518,8 @@ sap.ui.define([
 			}
 			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
 
-			// this._oTaskListTable.getColumns()[8].setVisible(true);
-			// this._oTaskListTable.getColumns()[9].setVisible(true);
+			// this._oTable.getColumns()[8].setVisible(true);
+			// this._oTable.getColumns()[9].setVisible(true);
 		},
 
 		onTaskSelected: function (oEvent) {

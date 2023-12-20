@@ -49,100 +49,8 @@ sap.ui.define([
 
 	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
-		onInit: function() {
-			this.mainViewModel = new JSONModel({
-				busy: true,
-				delay: 0
-			});
-			this.getView().setModel(this.mainViewModel, "mainView");
-			var oComponent = cross.fnd.fiori.inbox.util.tools.Application.getImpl().getComponent();
-			this.oDataManager = oComponent.getDataManager();
-			this.oDataManager.setModel(oComponent.getModel());
-			oComponent.getEventBus().subscribe("cross.fnd.fiori.inbox", "refreshTask", this._refreshTask.bind(this));
-			oComponent.getEventBus().subscribe("cross.fnd.fiori.inbox", "refreshListInternal", this.onRefreshPressed.bind(this));
-			this.oRouter = this.getOwnerComponent().getRouter();
-
-			this._oResourceBundle = this.getResourceBundle();
-			var oViewModel = new JSONModel({
-				personalizationActive:false,
-				taskListTitle: this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME"),
-				noDataText:this._oResourceBundle.getText("XMSG_LOADING")
-			});
-			this.getView().setModel(oViewModel, "taskListView");
-
-			this._bUseSubIconTabBar = true;
-			this._oGroupsMap = new Map();
-			this._oMainIconTabBar = this.byId("idMainIconTabBar");
-			this._oMainIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
-			this._oSubIconTabBar = this.byId("idSubIconTabBar");
-			this._oSubIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
-
-			this._oTable = this.byId("taskListTable");
-			this._oTable.setBusyIndicatorDelay(0);
-			
-			this._oFullScreenPage = this.getView().byId("taskListPage");
-			this._oFullScreenPage.setShowFooter(false);
-			this.getView().setModel(oComponent.getModel());
-			this._oDataModel = this.getView().getModel();
-			this._initPersonalization();
-			this._aTaskPropertiesForSelect = ["SAP__Origin","InstanceID","TaskDefinitionID","TaskDefinitionName","TaskTitle","Priority","PriorityNumber","Status","StatusText",
-												"CreatedBy","CreatedByName","CreatedOn","CompletionDeadLine","HasAttachments","TaskSupports","SupportsComments","SupportsAttachments","CustomAttributeData",
-													"SupportsClaim", "SupportsRelease", "SupportsForward"];
-													
-			this.fnAddAditionalSelectPropertiesAndInitBinding();
-
-			this._oTableOperations = new TableOperations(this._oTable,this.getView(), ["TaskTitle", "Priority", "Status","CreatedByName","CompletionDeadLine","CreatedOn"]);
-
-			this._oGrouping = new TaskListGroupingHelper(this._oTableOperations, this.getView());
-			this._oSorting =  new TaskListSortingHelper(this._oTableOperations, this.getView());
-			this._tableHelper = new TaskListCustomAttributeHelper(this, this.getView(), this._oTable,this._oGrouping,this._oSorting,this._oTableOperations);
-			this._actionHelper = new ActionHelper(this, this.getView());
-
-			this._oConfirmationDialogManager = ConfirmationDialogManager;
-
-			// create unique ID for resubmit pop up
-			this.sResubmitUniqueId = this.createId() + "DLG_RESUBMIT";
-
-			//Handling busy indicator while querying tasks.
-			this._oDataModel.attachRequestSent(function() {
-				this._oTable.setShowNoData(false);
-				this._oTable.setBusy(true);
-			}.bind(this));
-
-			this._oDataModel.attachRequestCompleted(function() {
-				this._oTable.setBusy(false);
-				this._oTable.setShowNoData(true);
-			}.bind(this));
-
-			this._oDataModel.attachRequestFailed(function() {
-				//To hide busy initial load busy indicator
-				this.mainViewModel.setProperty("/busy", false);
-				this._oTable.setShowNoData(true);
-			}.bind(this));
-
-			// load initial app data once the metadata is loaded
-			if (!this.oDataManager.oModel.getServiceMetadata()) {
-				//Execution can only continue - e.g.: metadata fetch success
-				this.oDataManager.oModel.attachMetadataLoaded(function() {
-					this._loadInitialAppData();
-				}.bind(this));
-			}
-			else {
-				this._loadInitialAppData();
-			}
-
-			//Use jQuery deferred object to delay the filterbar search event.
-			this._loadCustomAttributesDeferredForTasks = jQuery.Deferred();
-			this._loadCustomAttributesDeferredForTaskDefs = jQuery.Deferred();
-
-			this._initFBSubView().then(function(fbSubView) {
-				this.byId("taskListPage").insertContent(fbSubView, 0);
-			}.bind(this));
-
-			//Check if mass selection is disabled
-			if (this.oDataManager.bIsMassActionEnabled === false) {
-				this._oTable.setMode("SingleSelectLeft");
-			}
+		_getI18nCustomText(sText, ...args) {
+			return this._oResourceBundle.getText(I18N_CUSTOM_PREFIX + sText, ...args);
 		},
 
 		_initTaskDefintionModel: function () {
@@ -159,10 +67,6 @@ sap.ui.define([
 				}
 			};
 			this._oDataModel.read("/TaskDefinitionCollection", params);
-		},
-
-		_getI18nCustomText(sText, ...args) {
-			return this._oResourceBundle.getText(I18N_CUSTOM_PREFIX + sText, ...args);
 		},
 
 		onSuccessTaskDefintionRequest: function (oData, oResponse) {

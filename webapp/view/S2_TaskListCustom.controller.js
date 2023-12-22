@@ -50,7 +50,9 @@ sap.ui.define([
 	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
 		_getI18nCustomText(sText, ...args) {
-			return this._oResourceBundle.getText(I18N_CUSTOM_PREFIX + sText, ...args);
+			return this._oResourceBundle.hasText(I18N_CUSTOM_PREFIX + sText, ...args) ?
+				this._oResourceBundle.getText(I18N_CUSTOM_PREFIX + sText, ...args)
+				: "";
 		},
 
 		_initTaskDefintionModel: function () {

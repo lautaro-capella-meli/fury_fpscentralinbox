@@ -44,11 +44,18 @@
 					},
 					"cross.fnd.fiori.inbox.view.S2_TaskList": {
 						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom"
+					},
+					"cross.fnd.fiori.inbox.view.S3": {
+						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom"
 					}
 				},
 				"sap.ui.viewReplacements": {
 					"cross.fnd.fiori.inbox.view.S2_TaskList": {
 						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom",
+						"type": "XML"
+					},
+					"cross.fnd.fiori.inbox.view.S3": {
+						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom",
 						"type": "XML"
 					}
 				}

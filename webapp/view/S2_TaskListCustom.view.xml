@@ -103,13 +103,13 @@
 											</header>
 										</Column>
 										<!-- On Behalf Of -->
-										<Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline">
+										<Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="onBehalfOfLbl" text="{i18n>view.Workflow.onBehalfOf}"/>
 											</header>
 										</Column>
 										<!-- Confidence Level -->
-										<Column demandPopin="true" hAlign="Right" id="confidenceLevelColumn" minScreenWidth="Tablet" popinDisplay="Inline">
+										<Column demandPopin="true" hAlign="Right" id="confidenceLevelColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="confidenceLevelLbl" text="{i18n>ConfidenceLevelColumnTitle}"/>
 											</header>

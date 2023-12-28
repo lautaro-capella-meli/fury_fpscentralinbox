@@ -8,7 +8,18 @@
 			"version": "1.0"
 		},
 		"title": "{{SHELL_TITLE}}",
-		"i18n": "i18n/i18n.properties"
+		"i18n": "i18n/i18n.properties",
+		"dataSources": {
+			"kpiService": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_CUSTOM_KPI_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
+			}
+		}
 	},
 	"sap.ui": {
 		"_version": "1.1.0",
@@ -78,6 +89,11 @@
 				"settings": {
 					"bundleName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.i18n.i18n"
 				}
+			},
+			"kpiModel": {
+				"dataSource": "kpiService",
+				"preload": true,
+				"settings": {}
 			}
 		}
 	},

@@ -49,7 +49,9 @@ sap.ui.define([
 ) {
 	"use strict";
 
+	// return sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom1", {
 	return BaseController.extend("cross.fnd.fiori.inbox.view.S3", {
+
 		// 	//	Controller Hook method definitions
 		// 	//	This hook method can be used to perform additional requests for example
 		// 	//	It is called in the success callback of the detail data fetch

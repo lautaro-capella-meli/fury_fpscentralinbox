@@ -141,9 +141,6 @@ sap.ui.define([
 			if (oResponse.statusCode != 200)
 				return MessageToast.show(oResponse.statusText + ":" + oResponse.body);
 
-				oData.results.forEach(oEntry => oEntry.CreatedOn = new Date(oEntry.CreatedOn));
-			}
-
 			var aTasks = oData.results;
 
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))

@@ -58,7 +58,7 @@
 									</items>
 									<content />
 								</IconTabBar>
-								<Table class="" id="taskListTable" growing="true"
+								<Table class="" id="taskListTable" growing="true" autoPopinMode="true" popinLayout="GridLarge"
 									items="{path:'taskList>/TaskCollection', sorter:[{path: 'TaskTitle', descending: false}], groupHeaderFactory:'.createGroupHeader'}"
 									noDataText="{taskListView>/noDataText}" updateFinished="onUpdateFinished" width="auto" mode="MultiSelect"
 									selectionChange="handleSelectionChange">

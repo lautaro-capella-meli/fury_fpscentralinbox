@@ -1602,6 +1602,20 @@ sap.ui.define([
 			}
 
 			var oItemData = that.oModel2.getData();
+
+			if (!this.getOwnerComponent().getModel("kpiDataModel"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "kpiDataModel");
+
+			if (this.oKPIManager.shouldTaskShowKPIsTab(oItemData)) {
+				this.oKPIManager.getItemKpis(oItemData).then((oData) => {
+					const oKpiData = this.oKPIManager.processItemsKpis(oData, null);
+					this.getOwnerComponent().getModel("kpiDataModel").setData(oKpiData);
+				}).catch((oErr) => {
+					const oKpiData = this.oKPIManager.processItemsKpis(null, oErr);
+					this.getOwnerComponent().getModel("kpiDataModel").setData(oKpiData);
+				});
+			}
+
 			if (!that.isGenericComponentRendered) {
 				var aTabCounts = [];
 				if (this.fnFormatterSupportsProperty(oItemData.TaskSupports.Comments, oItemData.SupportsComments)) {

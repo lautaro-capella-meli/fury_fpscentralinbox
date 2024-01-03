@@ -547,16 +547,12 @@ sap.ui.define([
 			if (!oIconTabBar)
 				return false;
 			
-			const oIconTabFilter = new sap.m.IconTabFilter("iconKPI" + new Date().getTime(), {
-				icon: "sap-icon://bubble-chart",
-				content: new sap.m.Label({ text: "Test KPI" })
-			});
+			const oIconTabFilter = new sap.m.IconTabFilter({ icon: "sap-icon://bubble-chart" });
 			oIconTabBar.addItem(oIconTabFilter);
 			
 			this.loadFragment({
 				name: "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3_KpiCustom"
-			}).then(function(oFragmentContent) {
-				oIconTabFilter.destroyContent();
+			}).then(function (oFragmentContent) {
 				oIconTabFilter.addContent(oFragmentContent);
 			}.bind(this));
 			return true;

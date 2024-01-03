@@ -38,6 +38,7 @@ sap.ui.define([
 	"cross/fnd/fiori/inbox/util/ComponentCache",
 	"cross/fnd/fiori/inbox/util/CommonFunctions",
 	"cross/fnd/fiori/inbox/util/Utils",
+	"cross/fnd/fiori/inbox/CA_FIORI_INBOXExtension2/util/KPI",
 	"sap/ui/core/format/DateFormat",
 	"sap/ui/core/Component",
 	"sap/ui/core/routing/History"
@@ -45,7 +46,7 @@ sap.ui.define([
 	Log, encodeURL, TimelineItem, jQuery, Device, Fragment, XMLView, FormElement, ResponsiveFlowLayoutData, Context, JSONModel,
 	AttachmentFormatters, BaseController, Application, CommonHeaderFooterHelper, ActionHelper, Forward,
 	ForwardSimple, SupportInfo, Conversions, DataManager, Resubmit, Parser, ConfirmationDialogManager,
-	EmployeeCard, ComponentCache, CommonFunctions, Utils, DateFormat, Component, RoutingHistory
+	EmployeeCard, ComponentCache, CommonFunctions, Utils, KPI, DateFormat, Component, RoutingHistory
 ) {
 	"use strict";
 
@@ -150,6 +151,8 @@ sap.ui.define([
 			else {
 				this.oComponentCache = new ComponentCache();
 			}
+
+			this.oKPIManager = new KPI(this.getOwnerComponent().getModel("kpiModel"));
 
 			this._setExtensionState(false);
 
@@ -516,7 +519,7 @@ sap.ui.define([
 
 			this.__mComponentRenderWatchers ??= new Map();
 			if (!this.__mComponentRenderWatchers.has(oComponent)) {
-				const fnComponentRenderWatcher = this.__newComponentRenderWatcher(oComponent);
+				const fnComponentRenderWatcher = this.__newComponentRenderWatcher(oComponent, oDetailData);
 				const iComponentRenderWatcherInterval = setInterval(fnComponentRenderWatcher.bind(this), 100);
 				this.__mComponentRenderWatchers.set(oComponent, {
 					fnComponentRenderWatcher,
@@ -527,17 +530,21 @@ sap.ui.define([
 			return true;
 		},
 
-		__newComponentRenderWatcher: function (oComponent) {
-			return function() {
-				if(this.__componentRenderWatcherRunning) 
+		__newComponentRenderWatcher: function (oComponent, oDetailData) {
+			return function (oComponent, oDetailData) {
+				if (this.__componentRenderWatcherRunning)
 					return;
 				this.__componentRenderWatcherRunning = true;
-				const bWatcherRunOK = this.__addKPIIconTab();
+				var bWatcherRunOK = true;
 
-				if(bWatcherRunOK)
+				if (this.oKPIManager.shouldTaskShowKPIsTab(oDetailData)) {
+					bWatcherRunOK = this.__addKPIIconTab();
+				}
+
+				if (bWatcherRunOK)
 					clearInterval(this.__mComponentRenderWatchers.get(oComponent).iComponentRenderWatcherInterval);
 				this.__componentRenderWatcherRunning = false;
-			}.bind(this);
+			}.bind(this, oComponent, oDetailData);
 		},
 
 		__addKPIIconTab: function () {
@@ -546,10 +553,10 @@ sap.ui.define([
 			const oIconTabBar = oComponent.byId(sIconTabFilterId);
 			if (!oIconTabBar)
 				return false;
-			
+
 			const oIconTabFilter = new sap.m.IconTabFilter({ icon: "sap-icon://bubble-chart" });
 			oIconTabBar.addItem(oIconTabFilter);
-			
+
 			this.loadFragment({
 				name: "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3_KpiCustom"
 			}).then(function (oFragmentContent) {

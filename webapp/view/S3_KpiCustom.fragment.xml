@@ -1,6 +1,142 @@
 <core:FragmentDefinition
+    xmlns:f="sap.ui.layout.form"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
 >
-    <Text text="Test" />
+    <VBox>
+        <MessageStrip
+            text="{i18n>custom.meli.KPI.FetchError}"
+            type="Warning"
+            showIcon="true"
+            showCloseButton="false"
+            class="sapUiSmallMarginTopBottom"
+            visible="{kpiDataModel>/error}"
+        />
+        <f:Form>
+            <f:title>
+                <core:Title text="{i18n>custom.meli.KPI.Title}" />
+            </f:title>
+            <f:layout>
+                <f:ResponsiveGridLayout
+                    labelSpanXL="3"
+                    labelSpanL="4"
+                    labelSpanM="6"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="0"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    emptySpanS="0"
+                    columnsXL="1"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false"
+                />
+            </f:layout>
+            <f:formContainers>
+                <f:FormContainer>
+                    <f:formElements>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.PO_VARIANCE_PER}"
+                        >
+                            <f:fields>
+                                <ObjectStatus
+                                    text="{kpiDataModel>/PO_VARIANCE_PER/text}"
+                                    icon="{kpiDataModel>/PO_VARIANCE_PER/icon}"
+                                    state="{kpiDataModel>/PO_VARIANCE_PER/state}"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.DEVIATION_AMOUNT_SUP}"
+                        >
+                            <f:fields>
+                                <ObjectStatus
+                                    text="{kpiDataModel>/DEVIATION_AMOUNT_SUP/text}"
+                                    icon="{kpiDataModel>/DEVIATION_AMOUNT_SUP/icon}"
+                                    state="{kpiDataModel>/DEVIATION_AMOUNT_SUP/state}"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.DEVIATION_MEAN_SUP}"
+                        >
+                            <f:fields>
+                                <ObjectStatus
+                                    text="{kpiDataModel>/DEVIATION_MEAN_SUP/text}"
+                                    icon="{kpiDataModel>/DEVIATION_MEAN_SUP/icon}"
+                                    state="{kpiDataModel>/DEVIATION_MEAN_SUP/state}"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.PO_VARIANCE_OLD}"
+                        >
+                            <f:fields>
+                                <ObjectNumber
+                                    number="{
+                                        parts:[{path:'kpiDataModel>/PO_VARIANCE_OLD/text'},{value:'USD'}],
+                                        type: 'sap.ui.model.type.Currency',
+                                        formatOptions: {showMeasure: false}
+                                    }"
+                                    unit="USD"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.PO_VARIANCE_NEW}"
+                        >
+                            <f:fields>
+                                <ObjectNumber
+                                    number="{
+                                        parts:[{path:'kpiDataModel>/PO_VARIANCE_NEW/text'},{value:'USD'}],
+                                        type: 'sap.ui.model.type.Currency',
+                                        formatOptions: {showMeasure: false}
+                                    }"
+                                    unit="USD"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.PO_VARIANCE_COUNT}"
+                        >
+                            <f:fields>
+                                <ObjectStatus
+                                    text="{kpiDataModel>/PO_VARIANCE_COUNT/text}"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.PO_TOTAL_USD}"
+                        >
+                            <f:fields>
+                                <ObjectNumber
+                                    number="{
+                                        parts:[{path:'kpiDataModel>/PO_TOTAL_USD/text'},{value:'USD'}],
+                                        type: 'sap.ui.model.type.Currency',
+                                        formatOptions: {showMeasure: false}
+                                    }"
+                                    unit="USD"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                        <f:FormElement
+                            label="{i18n>custom.meli.KPI.SUP_EFF_PURCHASING}"
+                        >
+                            <f:fields>
+                                <ObjectNumber
+                                    number="{
+                                        parts:[{path:'kpiDataModel>/SUP_EFF_PURCHASING/text'},{value:'USD'}],
+                                        type: 'sap.ui.model.type.Currency',
+                                        formatOptions: {showMeasure: false}
+                                    }"
+                                    unit="USD"
+                                />
+                            </f:fields>
+                        </f:FormElement>
+                    </f:formElements>
+                </f:FormContainer>
+            </f:formContainers>
+        </f:Form>
+    </VBox>
 </core:FragmentDefinition>

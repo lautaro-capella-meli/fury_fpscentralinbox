@@ -76,7 +76,7 @@
 						</IconTabFilter>
 						<IconTabFilter id="MIBKPIIconTabFilter" icon="sap-icon://bubble-chart" tooltip="{i18n>notes.tooltip}" count="{detail>/CommentsCount}"
 							key="KPIS">
-								<core:Fragment fragmentName="cross.fnd.fiori.inbox.frag.CustomFragment" type="XML"/>
+								<core:Fragment fragmentName="cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3_KpiCustom" type="XML"/>
 						</IconTabFilter>
 						<IconTabFilter id="MIBAttachmentIconTabFilter" icon="sap-icon://attachment" tooltip="{i18n>attachments.tooltip}"
 							count="{detail>/AttachmentsCount}"

@@ -85,19 +85,19 @@
 											</header>
 										</Column>
 										<!-- Status -->
-										<Column demandPopin="true" hAlign="Center" id="statusColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader">
+										<Column demandPopin="true" hAlign="Center" id="statusColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
 											<header>
 												<Label id="statusLbl" text="{i18n>group.status}"/>
 											</header>
 										</Column>
 										<!-- Priority -->
-										<Column demandPopin="true" hAlign="Begin" id="priorityColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader">
+										<Column demandPopin="true" hAlign="Begin" id="priorityColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
 											<header>
 												<Label id="priorityLbl" text="{i18n>group.priority}"/>
 											</header>
 										</Column>
 										<!-- Created By -->
-										<Column demandPopin="true" hAlign="Begin" id="createdByColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader">
+										<Column demandPopin="true" hAlign="Begin" id="createdByColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
 											<header>
 												<Label id="createdByLbl" text="{i18n>multi.summary.createdBy}"/>
 											</header>
@@ -121,7 +121,7 @@
 											</header>
 										</Column>
 										<!-- Completion Deadline -->
-										<Column demandPopin="true" hAlign="Right" id="dueDateColumn" minScreenWidth="Tablet" popinDisplay="Inline">
+										<Column demandPopin="true" hAlign="Right" id="dueDateColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="dueDateLbl" text="{i18n>multi.summary.dueDate}"/>
 											</header>
@@ -133,16 +133,6 @@
 											</header>
 										</Column>
 										-->
-										<Column demandPopin="false" hAlign="End" id="quantityColumn" visible="false">
-											<header>
-												<Label id="quantityrLbl" text="Custom Quantity"/>
-											</header>
-										</Column>
-										<Column demandPopin="true" hAlign="End" id="itemValueColumn" visible="false" >
-											<header>
-												<Label id="itemValueLbl" text="Custom Price"/>
-											</header>
-										</Column>
 										<!--<Column demandPopin="true" hAlign="Right" id="purchOrgColumn" visible="false" minScreenWidth="Tablet" popinDisplay="Inline">-->
 										<!--	<header>-->
 										<!--		<Label id="purchOrgLbl" text="PURCH_ORG"/>-->
@@ -157,11 +147,30 @@
 									<items>
 										<ColumnListItem id="columnListItem" press="onTaskSelected" type="Navigation" vAlign="Middle">
 											<cells>
+												<VBox class="sapMTableContentMargin" >
+													<ObjectIdentifier id="taskTitleTxt" 
+														title="{parts: [{path: 'taskList>TaskTitle'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterTaskTitleTaskList'}" />
+													<!-- <ObjectIdentifier id="taskTitleTxt" 
+														title="{parts: [{path: 'taskList>TaskTitle'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterTaskTitleTaskList'}"
+														titleActive="{parts: [{path: 'taskList>GUI_Link'}, {path: 'taskList>TaskSupports/UIExecutionLink'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterTaskTitleLink'}" 
+														titlePress="onTaskTitlePressed"/> -->
+													<!-- Priority -->
+													<HBox class="sapUiTinyMarginTop">
+														<ObjectStatus id="statusTxtInline" class="sapUiTinyMarginEnd"
+															text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"
+															state="Information"
+															inverted="true"/>
+														<ObjectStatus id="PriorityTxtInline" class="sapUiTinyMarginEnd"
+															text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Priority'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriority'}"
+															state="{path: 'taskList>Priority', formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriorityState'}"
+															inverted="true"/>
+													</HBox>
+												</VBox>
 												<!-- Task Title and Has Attachments indication -->
-												<ObjectIdentifier class="sapMTableContentMargin" id="taskTitleTxt"
+												<!-- <ObjectIdentifier class="sapMTableContentMargin" id="taskTitleTxt"
 													title="{parts: [{path: 'taskList>TaskTitle'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterTaskTitleTaskList'}"
 													titleActive="{parts: [{path: 'taskList>GUI_Link'}, {path: 'taskList>TaskSupports/UIExecutionLink'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterTaskTitleLink'}"
-													titlePress="onTaskTitlePressed"/>
+													titlePress="onTaskTitlePressed"/> -->
 												<!-- Status -->
 												<Text class="sapMTableContentMargin" id="statusTxt" maxLines="2" textAlign="Center"
 													text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"/>
@@ -187,12 +196,6 @@
 												<!-- Add Button 
 												<Button class="sapMTableContentMargin" id="btnAddToCart" press="onAddToCartPressed" text="Approve" type="Accept"/>
 												-->
-												<ObjectNumber id="TS20000166_QUANTITY" 
-													number="{parts: [{value: 'QUANTITY'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.CustomFormatters.formatterCustomAttributeValue'}"
-													unit="{parts: [{value: 'UNIT'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.CustomFormatters.formatterCustomAttributeValue'}" />
-												<ObjectNumber id="TS20000166_ITEM_VALUE" 
-													number="{parts: [{value: 'ITEM_VALUE'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.CustomFormatters.formatterCustomAttributeValue'}"
-													unit="{parts: [{value: 'CURRENCY'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.CustomFormatters.formatterCustomAttributeValue'}" />
 												<!--<Text class="sapMTableContentMargin" id="TS20000166_PURCH_ORG" maxLines="2" textAlign="Right"-->
 												<!--	text="{parts: [{value: 'PURCH_ORG'}, {path: 'taskList>CustomAttributeData'}], formatter:'cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.CustomFormatters.formatterCustomAttributeValue'}"/>-->
 												<!--	<Text class="sapMTableContentMargin" id="TS20000166_PLANTR" maxLines="2" textAlign="Right"-->

@@ -74,10 +74,6 @@
 								<core:ComponentContainer id="commentsContainer" propagateModel="true"/>
 							</core:ExtensionPoint>
 						</IconTabFilter>
-						<IconTabFilter id="MIBKPIIconTabFilter" icon="sap-icon://bubble-chart" tooltip="{i18n>notes.tooltip}" count="{detail>/CommentsCount}"
-							key="KPIS">
-								<core:Fragment fragmentName="cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3_KpiCustom" type="XML"/>
-						</IconTabFilter>
 						<IconTabFilter id="MIBAttachmentIconTabFilter" icon="sap-icon://attachment" tooltip="{i18n>attachments.tooltip}"
 							count="{detail>/AttachmentsCount}"
 							visible="{parts: [{path: 'detail>/TaskSupports/Attachments'}, {path: 'detail>/SupportsAttachments'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterSupportsProperty'}"
@@ -95,6 +91,10 @@
 								<core:Fragment fragmentName="cross.fnd.fiori.inbox.frag.ObjectLinks" type="XML"/>
 							</core:ExtensionPoint>
 						</IconTabFilter>
+						<!-- <IconTabFilter id="MIBKPIIconTabFilter" icon="sap-icon://bubble-chart" tooltip="{i18n>notes.tooltip}" count="{detail>/CommentsCount}"
+							key="KPIS">
+								<core:Fragment fragmentName="cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3_KpiCustom" type="XML"/>
+						</IconTabFilter> -->
 						<!-- Extends the tab bar with additional tabs -->
 						<core:ExtensionPoint name="CustomerExtensionForAdditionalTabs"/>
 					</items>

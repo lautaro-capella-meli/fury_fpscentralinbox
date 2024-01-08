@@ -58,6 +58,9 @@
 					},
 					"cross.fnd.fiori.inbox.view.S3": {
 						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom"
+					},
+					"cross.fnd.fiori.inbox.view.S2_FilterBar": {
+						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom"
 					}
 				},
 				"sap.ui.viewReplacements": {

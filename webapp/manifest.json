@@ -68,6 +68,10 @@
 						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom",
 						"type": "XML"
 					},
+					"cross.fnd.fiori.inbox.view.S2_FilterBar": {
+						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom",
+						"type": "XML"
+					},
 					"cross.fnd.fiori.inbox.view.S3": {
 						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom",
 						"type": "XML"

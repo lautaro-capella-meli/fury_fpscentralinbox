@@ -90,10 +90,10 @@ sap.ui.define([
 		},
 
 		_identifyColumnsTobeAdded: function (aTaskDefinitions) {
-			return aTaskDefinitions.reduce((oCcolumns, oTaskDefinition) => {
+			return aTaskDefinitions.reduce((oColumns, oTaskDefinition) => {
 				oTaskDefinition.TaskDefinitionID = oTaskDefinition.TaskDefinitionID?.toUpperCase();
-				oCcolumns[oTaskDefinition.TaskDefinitionID] = oTaskDefinition.CustomAttributeDefinitionData?.results;
-				return oCcolumns;
+				oColumns[oTaskDefinition.TaskDefinitionID] = oTaskDefinition.CustomAttributeDefinitionData?.results;
+				return oColumns;
 			}, {});
 		},
 

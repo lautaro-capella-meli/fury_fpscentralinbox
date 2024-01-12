@@ -58,14 +58,14 @@
 				</fb:control>				
 			</fb:FilterItem>
 
-			<fb:FilterItem id="onBehalfOfFI" name="onBehalfOf" label="{i18n>view.Workflow.onBehalfOf}">
+			<fb:FilterItem id="onBehalfOfFI" name="onBehalfOf" visibleInFilterBar="false" visible="false" label="{i18n>view.Workflow.onBehalfOf}">
 				<fb:control>
 					<MultiComboBox id="onBehalfOfFilter" items="{path: 'filter>/SubstitutedUserNameCollection', templateShareable: 'true'}" selectionFinish="onChange">
 						<core:Item key="{filter>UniqueName}" text="{filter>DisplayName}" />
 					</MultiComboBox>
 				</fb:control>
 			</fb:FilterItem>
-			<fb:FilterItem id="confidenceLevelFI" name="confidenceLevel" visibleInFilterBar="true"  label="{i18n>ConfidenceLevelColumnTitle}">
+			<fb:FilterItem id="confidenceLevelFI" name="confidenceLevel" visibleInFilterBar="false" visible="false"  label="{i18n>ConfidenceLevelColumnTitle}">
 				<fb:control>
 					<MultiInput id="confidenceLevelFilter" type="Number" valueHelpRequest="onValueHelpConfidenceLevel" name="confidenceLevel" tokenChange="onChange" change="onChange">
 					</MultiInput>				

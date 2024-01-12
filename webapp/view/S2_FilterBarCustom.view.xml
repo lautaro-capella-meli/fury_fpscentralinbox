@@ -57,7 +57,6 @@
 					</MultiInput>				
 				</fb:control>				
 			</fb:FilterItem>
-
 			<fb:FilterItem id="onBehalfOfFI" name="onBehalfOf" visible="false" label="{i18n>view.Workflow.onBehalfOf}">
 				<fb:control>
 					<MultiComboBox id="onBehalfOfFilter" items="{path: 'filter>/SubstitutedUserNameCollection', templateShareable: 'true'}" selectionFinish="onChange">

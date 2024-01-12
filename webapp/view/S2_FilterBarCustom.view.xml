@@ -70,7 +70,6 @@
 					</MultiInput>				
 				</fb:control>				
 			</fb:FilterItem>				
-		
 		</mfb:filterItems>
 	</mfb:MyFilterBar>
 </mvc:View>

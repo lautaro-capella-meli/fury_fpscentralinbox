@@ -101,6 +101,7 @@ sap.ui.define([
 
 			this._bUseSubIconTabBar ??= true;
 			this._oGroupsMap ??= new Map();
+			this._oDataModelReadPromises = [];
 
 			if (!this._oMainIconTabBar) {
 				this._oMainIconTabBar = this.byId("idMainIconTabBar");
@@ -118,6 +119,7 @@ sap.ui.define([
 			if (oTaskDefinitionFilter)
 				aFilters.push(oTaskDefinitionFilter);
 
+			const iListSize = this.oDataManager.getListSize();
 			const oRequestConfiguration = {
 				filters: [new Filter({
 					filters: aFilters,
@@ -126,7 +128,7 @@ sap.ui.define([
 				sorters: [this._getCurrentSorter()],
 				success: this.onSuccessTaskCollectionRequest.bind(this),
 				urlParameters: {
-					$top: this.oDataManager.getListSize(),
+					$top: iListSize,
 					$select: this._getTaskPropertiesToFetch().join(",")
 				}
 			};
@@ -134,24 +136,78 @@ sap.ui.define([
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 				oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
 
-			this._oDataModel.read("/TaskCollection", oRequestConfiguration);
+			// Init taskList model
+			const aTaskListModel = new JSONModel({ TaskCollection: [] });
+			this.getView().setModel(aTaskListModel, "taskList");
+
+			// Get Task count
+			this._oDataModel.setUseBatch(false);
+			this._oDataModel.read("/TaskCollection/$count", {
+				filters: [new Filter({
+					filters: aFilters,
+					and: true
+				})],
+				async: false,
+				success: function (iTaskCount) {
+					var iSkip = 0;
+					this._iTaskCount = iTaskCount;
+					console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
+					do {
+						iTaskCount -= iListSize;
+						const pDataModelRead = new Promise(function (resolve, reject) {
+							this._oDataModel.read("/TaskCollection", {
+								...oRequestConfiguration,
+								success: function (oData, oResponse) { return resolve([oData, oResponse]) },
+								error: function (oError) { return reject(oError) },
+								groupId: Date.now().toString(),
+								urlParameters: {
+									...oRequestConfiguration.urlParameters,
+									$top: iListSize,
+									$skip: iSkip
+								}
+							});
+						}.bind(this));
+
+						// call partial OData read handler
+						pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this));
+						// collect Promises
+						this._oDataModelReadPromises.push(pDataModelRead);
+
+						iSkip += iListSize;
+					} while (iTaskCount > 0);
+
+					// set final OData read handler
+					Promise.all(this._oDataModelReadPromises)
+						.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
+				}.bind(this)
+			});
 		},
 
-		onSuccessTaskCollectionRequest: function (oData, oResponse) {
+		onSuccessTaskCollectionRequest: function ([oData, oResponse]) {
 			if (oResponse.statusCode != 200)
 				return MessageToast.show(oResponse.statusText + ":" + oResponse.body);
 
+			console.log(`>>> GOT ${oData.results.length} TASKS. <<<`);
 			var aTasks = oData.results;
 
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 				aTasks = this._dataMassage(oData.results);
 
-			const oTaskListModel = new JSONModel({ TaskCollection: aTasks });
-			this.getView().setModel(oTaskListModel, "taskList");
+			// Add tasks to taskList model
+			var aTaskListModel = this.getView().getModel("taskList");
+			aTaskListModel.setProperty("/TaskCollection", [
+				...aTaskListModel.getProperty("/TaskCollection"),
+				...aTasks
+			]);
+		},
 
+		onSuccessTaskCollectionRequestComplete: function (oData, oResponse) {
+			console.log(`>>> ALL TASKS RETRIEVED. <<<`);
+			this._oDataModel.setUseBatch(true);
 			this._loadCustomAttributesDeferredForTasks?.resolve();
 			this._filterDeferred?.resolve();
 
+			const aTasks = this.getView().getModel("taskList").getProperty("/TaskCollection");
 			const oTaskListData = this._processTaskListData(aTasks);
 			this._initTabBars();
 			this._createTabFilters(oTaskListData);

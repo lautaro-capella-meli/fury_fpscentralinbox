@@ -103,17 +103,17 @@
 											</header>
 										</Column>
 										<!-- On Behalf Of -->
-										<Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
+										<!-- <Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="onBehalfOfLbl" text="{i18n>view.Workflow.onBehalfOf}"/>
 											</header>
-										</Column>
+										</Column> -->
 										<!-- Confidence Level -->
-										<Column demandPopin="true" hAlign="Right" id="confidenceLevelColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
+<!-- 										<Column demandPopin="true" hAlign="Right" id="confidenceLevelColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="confidenceLevelLbl" text="{i18n>ConfidenceLevelColumnTitle}"/>
 											</header>
-										</Column>
+										</Column> -->
 										<!-- Created On -->
 										<Column hAlign="Right" id="createdOnColumn" minScreenWidth="Tablet" popinDisplay="Inline">
 											<header>
@@ -182,10 +182,10 @@
 												<Text class="sapMTableContentMargin" id="CreatedByTxt" maxLines="2"
 													text="{parts: [{path: 'taskList>CreatedByName'}, {path: 'taskList>CustomAttributeData'}], formatter: 'cross.fnd.fiori.inbox.Conversions.formatterCreatedByTaskList'}"/>
 												<!-- On Behalf Of -->
-												<Text class="sapMTableContentMargin" id="onBehalfOfTxt" maxLines="2" text="{path: 'taskList>SubstitutedUserName'}"></Text>
+												<!-- <Text class="sapMTableContentMargin" id="onBehalfOfTxt" maxLines="2" text="{path: 'taskList>SubstitutedUserName'}"></Text> -->
 												<!-- Confidence Level -->
-												<Text class="sapMTableContentMargin" id="confidenceLevelTxt" maxLines="2" textAlign="Right"
-													text="{parts: [{path: 'taskList>ConfidenceLevel'},{value: 'percentFormat'}], formatter:'cross.fnd.fiori.inbox.Conversions.confidenceLevelFormatter'}"/>
+												<!-- <Text class="sapMTableContentMargin" id="confidenceLevelTxt" maxLines="2" textAlign="Right"
+													text="{parts: [{path: 'taskList>ConfidenceLevel'},{value: 'percentFormat'}], formatter:'cross.fnd.fiori.inbox.Conversions.confidenceLevelFormatter'}"/> -->
 												<!-- Created On -->
 												<Text class="sapMTableContentMargin" id="CreatedOnTxt" maxLines="2" textAlign="Right"
 													text="{path: 'taskList>CreatedOn', formatter:'cross.fnd.fiori.inbox.Conversions.formatterDate'}"/>

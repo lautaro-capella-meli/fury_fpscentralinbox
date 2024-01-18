@@ -149,7 +149,7 @@ sap.ui.define([
 		},
 
 		_manageOnBehalfOfFilterItem: function() {
-			if (this.oDataManager.areSubstitutionsAvailable()) {
+			if (this.oDataManager.areSubstitutionsAvailable?.()) {
 				this.oDataManager.readSubstitutedUserList(function (oData) {
 					var aSubstitutedUserNameCollection = oData.results.map(function (oTask) {
 						return { DisplayName: oTask.DisplayName, UniqueName: oTask.UniqueName };
@@ -182,7 +182,7 @@ sap.ui.define([
 		},
 
 		_manageConfidenceLevelFilterItem: function() {
-			if (!this.oDataManager.isConfidenceLevelAvailable()) {
+			if (!this.oDataManager.isConfidenceLevelAvailable?.()) {
 				var confidenceLevelFilterItem = this._oFilterBar.removeFilterItem(this.byId("confidenceLevelFI"));
 
 				if (confidenceLevelFilterItem) {

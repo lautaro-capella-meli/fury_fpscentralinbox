@@ -1,3 +1,8 @@
 .sapMObjStatus.sapMObjStatusInformation.sapMObjStatusInverted span {
     color: #e8f3ff;
 }
+.sapMPI, .sapMPI * {
+    min-height: 0;
+    border: none;
+    border-radius: 0 !important;
+}

@@ -43,6 +43,11 @@
 									visible="false" />
 							</items>
 							<content class="sapUiNoContentPadding">
+								<ProgressIndicator
+									id="idLoadingProgressIndicator"
+									visible="false"
+									state="Information"
+									displayOnly="true"/>
 								<IconTabBar 
 									id="idSubIconTabBar" 
 									headerMode="Inline" 

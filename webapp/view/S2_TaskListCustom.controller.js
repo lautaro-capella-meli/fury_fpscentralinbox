@@ -99,36 +99,40 @@ sap.ui.define([
 
 		_initTaskModel: function () {
 
+			// Get Task count
+			this._oTable.setBusy(true);
+			this._disableTableSetBusy();
+
 			this._bUseSubIconTabBar ??= true;
 			this._oGroupsMap ??= new Map();
-			this._oDataModelReadPromises = [];
+			this._aODataModelReadPromises = [];
 
-			if (!this._oMainIconTabBar) {
-				this._oMainIconTabBar = this.byId("idMainIconTabBar");
-				this._oMainIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
-			}
+			this._oProgressIndicator ??= this.byId("idLoadingProgressIndicator");
+			this._oMainIconTabBar ??= this.byId("idMainIconTabBar")
+				.attachSelect(this.onSelectMainIconTabBar.bind(this));
+			this._oSubIconTabBar ??= this.byId("idSubIconTabBar")
+				.attachSelect(this.onSelectMainIconTabBar.bind(this));
 
-			if (!this._oSubIconTabBar) {
-				this._oSubIconTabBar = this.byId("idSubIconTabBar");
-				this._oSubIconTabBar.attachSelect(this.onSelectMainIconTabBar.bind(this));
-			}
+			// Init taskList model
+			const aTaskListModel = new JSONModel({ TaskCollection: [] });
+			this.getView().setModel(aTaskListModel, "taskList");
 
+			// set up Request configuration
 			const aFilters = [this._getinitialStatusFilters()];
 			const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
 
 			if (oTaskDefinitionFilter)
 				aFilters.push(oTaskDefinitionFilter);
 
-			const iListSize = this.oDataManager.getListSize();
+			const oFilter = new Filter({
+				filters: aFilters,
+				and: true
+			});
 			const oRequestConfiguration = {
-				filters: [new Filter({
-					filters: aFilters,
-					and: true
-				})],
+				filters: [oFilter],
 				sorters: [this._getCurrentSorter()],
 				success: this.onSuccessTaskCollectionRequest.bind(this),
 				urlParameters: {
-					$top: iListSize,
 					$select: this._getTaskPropertiesToFetch().join(",")
 				}
 			};
@@ -136,51 +140,56 @@ sap.ui.define([
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 				oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
 
-			// Init taskList model
-			const aTaskListModel = new JSONModel({ TaskCollection: [] });
-			this.getView().setModel(aTaskListModel, "taskList");
-
-			// Get Task count
-			this._oDataModel.setUseBatch(false);
 			this._oDataModel.read("/TaskCollection/$count", {
-				filters: [new Filter({
-					filters: aFilters,
-					and: true
-				})],
-				async: false,
-				success: function (iTaskCount) {
-					var iSkip = 0;
-					this._iTaskCount = iTaskCount;
-					console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
-					do {
-						iTaskCount -= iListSize;
-						const pDataModelRead = new Promise(function (resolve, reject) {
-							this._oDataModel.read("/TaskCollection", {
-								...oRequestConfiguration,
-								success: function (oData, oResponse) { return resolve([oData, oResponse]) },
-								error: function (oError) { return reject(oError) },
-								groupId: Date.now().toString(),
-								urlParameters: {
-									...oRequestConfiguration.urlParameters,
-									$top: iListSize,
-									$skip: iSkip
-								}
-							});
-						}.bind(this));
-
-						// call partial OData read handler
-						pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this));
-						// collect Promises
-						this._oDataModelReadPromises.push(pDataModelRead);
-
-						iSkip += iListSize;
-					} while (iTaskCount > 0);
-
-					// set final OData read handler
-					Promise.all(this._oDataModelReadPromises)
-						.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
-				}.bind(this)
+				filters: [oFilter],
+				success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration)
 			});
+		},
+
+		_retrieveTasksByChunks: function (oRequestConfiguration, iTaskCount) {
+
+			console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
+			this._iTaskCount = iTaskCount;
+
+			var iSkip = 0;
+			const iTargetChunkSize = Math.min(200, this.oDataManager.getListSize());
+			const iChunkSize = Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
+
+			// show progress bar if taskCount exceeds request pagination
+			this._oProgressIndicator.setVisible(iTaskCount > iChunkSize);
+
+			// fire chunks reads
+			do {
+				iTaskCount -= iChunkSize;
+				const pDataModelRead = new Promise(function (resolve, reject) {
+					const sGroupId = Math.random().toString(36).slice(2, 8); // e.g.: 's5gzlj'
+					this._oDataModel.read("/TaskCollection", {
+						...oRequestConfiguration,
+						success: function (oData, oResponse) { return resolve([oData, oResponse]) },
+						error: function (oError) { return reject(oError) },
+						groupId: sGroupId,
+						urlParameters: {
+							...oRequestConfiguration.urlParameters,
+							$top: iChunkSize,
+							$skip: iSkip
+						}
+					});
+					this._oDataModel.submitChanges({
+						groupId: sGroupId
+					});
+				}.bind(this));
+
+				// call partial OData read handler
+				pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this));
+				// collect Promises
+				this._aODataModelReadPromises.push(pDataModelRead);
+
+				iSkip += iChunkSize;
+			} while (iTaskCount > 0);
+
+			// set final OData read handler
+			Promise.all(this._aODataModelReadPromises)
+				.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
 		},
 
 		onSuccessTaskCollectionRequest: function ([oData, oResponse]) {
@@ -199,11 +208,17 @@ sap.ui.define([
 				...aTaskListModel.getProperty("/TaskCollection"),
 				...aTasks
 			]);
+
+			aTasks = aTaskListModel.getProperty("/TaskCollection");
+			setTimeout(function () {
+				const nLoadingProgress = (aTasks.length / this._iTaskCount) * 100;
+				this._oProgressIndicator.setDisplayValue(`${aTasks.length}/${this._iTaskCount}`);
+				this._oProgressIndicator.setPercentValue(nLoadingProgress);
+			}.bind(this), 0);
 		},
 
 		onSuccessTaskCollectionRequestComplete: function (oData, oResponse) {
 			console.log(`>>> ALL TASKS RETRIEVED. <<<`);
-			this._oDataModel.setUseBatch(true);
 			this._loadCustomAttributesDeferredForTasks?.resolve();
 			this._filterDeferred?.resolve();
 
@@ -211,6 +226,12 @@ sap.ui.define([
 			const oTaskListData = this._processTaskListData(aTasks);
 			this._initTabBars();
 			this._createTabFilters(oTaskListData);
+
+			this._enableTableSetBusy();
+			this._oTable.setBusy(false);
+			setTimeout(function () {
+				this._oProgressIndicator.setVisible(false);
+			}.bind(this), 500);
 		},
 
 		_processTaskListData: function (aTasks) {
@@ -379,78 +400,6 @@ sap.ui.define([
 			});
 			this._oMainIconTabBar.addItem(oNewMainIconTabFilter);
 			this._oGroupsMap.set(oNewMainIconTabFilter, oTaskListData.withCompletionDeadLine);
-
-
-			// /*******************************************************/
-			// /*******************************************************/
-			// /*******************************************************/
-			// this.getView().getModel("taskListView").setProperty("/allTaskCount", iTotal);
-			// this.getView().getModel("taskListView").setProperty("/DueCount", iDue);
-
-			// for (var key in oSources) {
-			// 	console.log("minhas tasks", key, oSources[key])
-			// 	var propTab = "/" + key + "Count"
-			// 	this.getView().getModel("taskListView").setProperty(propTab, oSources[key].count);
-
-			// 	if (oSources[key].tasks) {
-			// 		var tabFilterSource = this.byId("tabFilter" + key + "Id");
-			// 		tabFilterSource.removeAllItems();
-			// 		for (var key2 in oSources[key].tasks) {
-			// 			tabFilterSource.addItem(new sap.m.IconTabFilter({
-			// 				key: "TaskDefinitionName>>" + key2,
-			// 				text: key2,
-			// 				count: oSources[key].tasks[key2]
-			// 			}));
-			// 		};
-			// 	}
-			// };
-
-			// var tabFilterStatus = this.byId("tabFilterStatusId");
-			// tabFilterStatus.removeAllItems();
-			// for (var key in oStatus) {
-			// 	tabFilterStatus.addItem(new sap.m.IconTabFilter({
-			// 		key: "Status>>" + key,
-			// 		text: key,
-			// 		count: oStatus[key]
-			// 	}));
-			// };
-
-			// var tabFilterPriority = this.byId("tabFilterPriorityId");
-			// tabFilterPriority.removeAllItems();
-			// for (var key in oPriorities) {
-			// 	tabFilterPriority.addItem(new sap.m.IconTabFilter({
-			// 		key: "Priority>>" + key,
-			// 		text: key,
-			// 		count: oPriorities[key]
-			// 	}));
-			// };
-
-			// var iconTabBar = this.byId("idMainIconTabBar");
-			// var that = this;
-			// iconTabBar.attachSelect(function (oEvent) {
-			// 	var oBinding = that.byId("taskListTable").getBinding("items");
-			// 	console.log()
-			// 	var aFilters = [];
-			// 	var sKey = oEvent.getParameter("key");
-			// 	console.log("onFilterSelect", sKey);
-
-			// 	if (sKey === "DUE") {
-			// 		aFilters.push(
-			// 			new sap.ui.model.Filter("CompletionDeadLine", "NE", undefined)
-			// 		);
-			// 	} else if (sKey !== "ALL" && sKey !== "STATUS" && sKey !== "PRIORITY") {
-			// 		const filter = sKey.split(">>", 2);
-			// 		console.log("onFilterSelect split", filter[0], filter[1]);
-			// 		aFilters.push(
-			// 			new sap.ui.model.Filter(filter[0], "EQ", filter[1])
-			// 		);
-			// 	}
-			// 	oBinding.filter(aFilters);
-			// 	that.byId("taskListTable").getColumns()[8].setVisible(true);
-			// 	that.byId("taskListTable").getColumns()[9].setVisible(true);
-			// });
-			// //############ Custom Gabriel Fim ##########
-
 		},
 
 		_initTabBars: function () {
@@ -459,6 +408,15 @@ sap.ui.define([
 			this._oSubIconTabBar.destroyItems();
 			this._oSubIconTabBar.setVisible(false);
 			this._oGroupsMap.clear();
+		},
+
+		_disableTableSetBusy: function () {
+			this._oTableSetBusy = this._oTable.setBusy;
+			this._oTable.setBusy = () => { };
+		},
+
+		_enableTableSetBusy: function () {
+			this._oTable.setBusy = this._oTableSetBusy.bind(this._oTable);
 		},
 
 		onSelectMainIconTabBar: function (oEvent) {

@@ -47,9 +47,6 @@
 			"component": "cross.fnd.fiori.inbox",
 			"extensions": {
 				"sap.ui.controllerExtensions": {
-					"cross.fnd.fiori.inbox.Main": {
-						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.MainCustom"
-					},
 					"cross.fnd.fiori.inbox.controller.App": {
 						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.controller.AppCustom"
 					},

@@ -27,6 +27,8 @@ sap.ui.define([
 		_oDialogPromise: null,
 
 		onInit: function() {
+			jQuery.sap.require("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.util.TaskListCustomAttributeHelper");
+
 			this.oDataManager = cross.fnd.fiori.inbox.util.tools.Application.getImpl().getComponent().getDataManager();
 			this.getView().setModel(cross.fnd.fiori.inbox.util.tools.Application.getImpl().AppI18nModel, "i18n");
 			this._oTaskListController = this.getView().getViewData().parentController;
@@ -94,6 +96,116 @@ sap.ui.define([
 				this._applyData.call(this._oFilterBar, {filter:[{name:"taskdefinition",selectedKeys: this._oTaskListController._getTaskDefinitionsForFilterBar()}]});
 				this._oFilterBar.fireSearch();
 			}, this));
+		},
+
+		__reformatCustomAttributeColumns: function (aTaskDefinitions) {
+			const aCustomAttributes = this._tableHelper._getCustomAttributes(aTaskDefinitions);
+			// // aCustomAttributes = [
+			// // 	{
+			// // 		SAP__Origin: 'LOCAL_TGW',
+			// // 		TaskDefinitionID: 'TS99800017',
+			// // 		Name: 'FISCAL_YEAR',
+			// // 		Type: 'Custom type string',
+			// // 		Label: "Document Number"
+			// // 	},
+			// //  ...
+			// // ];
+
+			const oCustomAttributesConfig = {
+				DOC_NUMBER: {},
+				FISCAL_YEAR: {},
+				COMPANY_CODE: { remove: true },
+				COMPANY_NAME: {
+					replace: true,
+					fnColumnFactory: (sId) => new sap.m.Column(sId + "Column", {
+						header: new sap.m.Label(sId + "Lbl", {
+							text: aCustomAttributes.find(oAttr => oAttr.Name === "SUPPLIER_NAME")?.Label
+						}),
+						popinDisplay: sap.m.PopinDisplay.Inline,
+						minScreenWidth: "Tablet",
+						demandPopin: true
+					}),
+					fnCellFactory: (sId) => new sap.m.Text(sId + "Txt", {
+						text: "{taskList>COMPANY_NAME} ({taskList>COMPANY_CODE})"
+					})
+				},
+				SUPPLIER_ID: { remove: true },
+				SUPPLIER_NAME: {
+					replace: true,
+					fnColumnFactory: (sId) => new sap.m.Column(sId + "Column", {
+						header: new sap.m.Label(sId + "Lbl", {
+							text: aCustomAttributes.find(oAttr => oAttr.Name === "SUPPLIER_NAME")?.Label
+						}),
+						popinDisplay: sap.m.PopinDisplay.Inline,
+						minScreenWidth: "Tablet",
+						demandPopin: true
+					}),
+					fnCellFactory: (sId) => new sap.m.Text(sId + "Txt", {
+						text: "{taskList>SUPPLIER_NAME} ({taskList>SUPPLIER_ID})"
+					})
+				},
+				REFERENCE: {},
+				CREATE_BY: {},
+				PRICE: {},
+				CURRENCY: {},
+				DOC_TYPE: { remove: true },
+				DOC_TYPE_DESC: {
+					replace: true,
+					fnColumnFactory: (sId) => new sap.m.Column(sId + "Column", {
+						header: new sap.m.Label(sId + "Lbl", {
+							text: aCustomAttributes.find(oAttr => oAttr.Name === "SUPPLIER_NAME")?.Label
+						}),
+						popinDisplay: sap.m.PopinDisplay.Inline,
+						minScreenWidth: "Tablet",
+						demandPopin: true
+					}),
+					fnCellFactory: (sId) => new sap.m.Text(sId + "Txt", {
+						text: "{taskList>DOC_TYPE_DESC} ({taskList>DOC_TYPE})"
+					})
+				},
+				DOC_DATE: {},
+			};
+			const oTable = this._tableHelper._oTable;
+			const oColumnListItem = oTable.getBindingInfo("items").template;
+			// const aCells = oColumnListItem.getCells();
+			this._tableHelper._visibleCustomColumns.forEach(oCol => {
+				// oCol = {
+				// 	name: "FISCAL_YEAR",
+				// 	columnObj: {
+				// 		cell: {}, 
+				//		column: {}
+				// 	}
+				// };
+				const { column: oColumn, cell: oCell } = oCol.columnObj;
+				const oLabel = oColumn.getHeader();
+
+				const sColumnId = oColumn.getId();
+				const iColumnIdx = oTable.indexOfColumn(oColumn);
+				const sCellId = oCell.getId();
+				const iCellIdx = oColumnListItem.indexOfCell(oCell);
+				const sId = sColumnId.substring(0, sColumnId.indexOf("Column"));
+
+				const oAttrConfig = oCustomAttributesConfig[oCol.name];
+
+				if (oAttrConfig?.remove || oAttrConfig?.replace) {
+					delete this._tableHelper._customColumns[oCol.name];
+					oTable.removeColumn(sColumnId);
+					oColumnListItem.removeCell(sCellId);
+					oLabel.destroy();
+					oColumn.destroy();
+					oCell.destroy();
+				}
+				
+				if (oAttrConfig?.replace) {
+					oTable.insertColumn(oAttrConfig.fnColumnFactory(sId), iColumnIdx);
+					oColumnListItem.insertCell(oAttrConfig.fnCellFactory(sId), iCellIdx);
+				}
+			});
+
+			// delete remove(d) columns from _visibleCustomColumns array 
+			this._tableHelper._visibleCustomColumns = this._tableHelper._visibleCustomColumns.filter(oCol =>
+				oCustomAttributesConfig[oCol.name] ? !oCustomAttributesConfig[oCol.name].remove : true
+			);
 		},
 
 		_taskDefinitionListFactory : function(sId,oContext) {
@@ -211,12 +323,13 @@ sap.ui.define([
 			}
 		},
 
-		_onChangeInternal:function(oEvent) {
+		_onChangeInternal: function (oEvent) {
 			var filterName = oEvent.getSource().getName();
 			if (filterName === "taskdefinition") {
 				this._tableHelper.hideCustomAttributeColumns(false);
 				var oControl = this._oFilterBar.determineControlByName(filterName);
 				this._tableHelper.showCustomAttributeColumns(oControl.getSelectedKeys());
+				this.__reformatCustomAttributeColumns(oControl.getSelectedKeys());
 			}
 			this._oFilterBar.fireFilterChange(oEvent);
 		},

@@ -102,17 +102,17 @@
 											</header>
 										</Column>
 										<!-- Created By -->
-										<Column demandPopin="true" hAlign="Begin" id="createdByColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
+										<Column demandPopin="true" hAlign="Begin" id="createdByColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="true">
 											<header>
 												<Label id="createdByLbl" text="{i18n>multi.summary.createdBy}"/>
 											</header>
 										</Column>
 										<!-- On Behalf Of -->
-										<!-- <Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
+										<Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="true">
 											<header>
-												<Label id="onBehalfOfLbl" text="{i18n>view.Workflow.onBehalfOf}"/>
+												<Label id="onBehalfOfLbl" text="{i18n>view.Workflow.Substituted}"/>
 											</header>
-										</Column> -->
+										</Column>
 										<!-- Confidence Level -->
 <!-- 										<Column demandPopin="true" hAlign="Right" id="confidenceLevelColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
 											<header>
@@ -187,7 +187,7 @@
 												<Text class="sapMTableContentMargin" id="CreatedByTxt" maxLines="2"
 													text="{parts: [{path: 'taskList>CreatedByName'}, {path: 'taskList>CustomAttributeData'}], formatter: 'cross.fnd.fiori.inbox.Conversions.formatterCreatedByTaskList'}"/>
 												<!-- On Behalf Of -->
-												<!-- <Text class="sapMTableContentMargin" id="onBehalfOfTxt" maxLines="2" text="{path: 'taskList>SubstitutedUserName'}"></Text> -->
+												<Text class="sapMTableContentMargin" id="onBehalfOfTxt" maxLines="2" text="{path: 'taskList>SubstitutedUserName'}"></Text>
 												<!-- Confidence Level -->
 												<!-- <Text class="sapMTableContentMargin" id="confidenceLevelTxt" maxLines="2" textAlign="Right"
 													text="{parts: [{path: 'taskList>ConfidenceLevel'},{value: 'percentFormat'}], formatter:'cross.fnd.fiori.inbox.Conversions.confidenceLevelFormatter'}"/> -->

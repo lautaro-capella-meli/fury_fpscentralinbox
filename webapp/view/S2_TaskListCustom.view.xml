@@ -187,7 +187,8 @@
 												<Text class="sapMTableContentMargin" id="CreatedByTxt" maxLines="2"
 													text="{parts: [{path: 'taskList>CreatedByName'}, {path: 'taskList>CustomAttributeData'}], formatter: 'cross.fnd.fiori.inbox.Conversions.formatterCreatedByTaskList'}"/>
 												<!-- On Behalf Of -->
-												<Text class="sapMTableContentMargin" id="onBehalfOfTxt" maxLines="2" text="{path: 'taskList>SubstitutedUserName'}"></Text>
+												<!-- <Text class="sapMTableContentMargin" id="onBehalfOfTxt" maxLines="2" text="{path: 'taskList>SubstitutedUserName'}"></Text> -->
+												<Text class="sapMTableContentMargin" id="onBehalfOfTxt" maxLines="2" text="{path: 'taskList>ProcessorName'}"></Text>
 												<!-- Confidence Level -->
 												<!-- <Text class="sapMTableContentMargin" id="confidenceLevelTxt" maxLines="2" textAlign="Right"
 													text="{parts: [{path: 'taskList>ConfidenceLevel'},{value: 'percentFormat'}], formatter:'cross.fnd.fiori.inbox.Conversions.confidenceLevelFormatter'}"/> -->

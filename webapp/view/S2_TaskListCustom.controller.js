@@ -97,6 +97,34 @@ sap.ui.define([
 			}, {});
 		},
 
+		/**
+		 * Used to add those select properties in TaskCollection call that need to be checked in metadata first (i.e. "SubstitutedUser", "SubstitutedUserName")
+		 */
+		fnAddAditionalSelectPropertiesAndInitBinding: function () {
+			var oDataManager = this.oDataManager;
+
+			return oDataManager.oModel.getMetaModel().loaded().then(function () {
+				oDataManager.oServiceMetaModel = oDataManager.oModel.getMetaModel();
+
+				if (oDataManager.checkPropertyExistsInMetadata("SubstitutedUser"))
+					this._aTaskPropertiesForSelect.push("SubstitutedUser");
+				if (oDataManager.checkPropertyExistsInMetadata("SubstitutedUserName"))
+					this._aTaskPropertiesForSelect.push("SubstitutedUserName");
+				if (oDataManager.checkPropertyExistsInMetadata("ConfidenceLevel", "Task"))
+					this._aTaskPropertiesForSelect.push("ConfidenceLevel");
+
+				// Processor, ProcessorName, SubstitutedUser, SubstitutedUserName, ForwardedUser+
+				if (oDataManager.checkPropertyExistsInMetadata("Processor"))
+					this._aTaskPropertiesForSelect.push("Processor");
+				if (oDataManager.checkPropertyExistsInMetadata("ProcessorName"))
+					this._aTaskPropertiesForSelect.push("ProcessorName");
+				if (oDataManager.checkPropertyExistsInMetadata("ForwardedUser"))
+					this._aTaskPropertiesForSelect.push("ForwardedUser");
+			}.bind(this));
+		},
+
+
+
 		_initTaskModel: function () {
 
 			// Get Task count
@@ -118,32 +146,35 @@ sap.ui.define([
 			this.getView().setModel(aTaskListModel, "taskList");
 
 			// set up Request configuration
-			const aFilters = [this._getinitialStatusFilters()];
-			const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
+			this.fnAddAditionalSelectPropertiesAndInitBinding()
+				.then(function () {
+					const aFilters = [this._getinitialStatusFilters()];
+					const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
 
-			if (oTaskDefinitionFilter)
-				aFilters.push(oTaskDefinitionFilter);
+					if (oTaskDefinitionFilter)
+						aFilters.push(oTaskDefinitionFilter);
 
-			const oFilter = new Filter({
-				filters: aFilters,
-				and: true
-			});
-			const oRequestConfiguration = {
-				filters: [oFilter],
-				sorters: [this._getCurrentSorter()],
-				success: this.onSuccessTaskCollectionRequest.bind(this),
-				urlParameters: {
-					$select: this._getTaskPropertiesToFetch().join(",")
-				}
-			};
+					const oFilter = new Filter({
+						filters: aFilters,
+						and: true
+					});
+					const oRequestConfiguration = {
+						filters: [oFilter],
+						sorters: [this._getCurrentSorter()],
+						success: this.onSuccessTaskCollectionRequest.bind(this),
+						urlParameters: {
+							$select: this._getTaskPropertiesToFetch().join(",")
+						}
+					};
 
-			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
-				oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
+					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
+						oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
 
-			this._oDataModel.read("/TaskCollection/$count", {
-				filters: [oFilter],
-				success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration)
-			});
+					this._oDataModel.read("/TaskCollection/$count", {
+						filters: [oFilter],
+						success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration)
+					});
+				}.bind(this));
 		},
 
 		_retrieveTasksByChunks: function (oRequestConfiguration, iTaskCount) {

@@ -110,7 +110,7 @@
 										<!-- On Behalf Of -->
 										<Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="true">
 											<header>
-												<Label id="onBehalfOfLbl" text="{i18n>view.Workflow.Substituted}"/>
+												<Label id="onBehalfOfLbl" text="{i18n>custom.meli.Labels.OnBehalfOf}"/>
 											</header>
 										</Column>
 										<!-- Confidence Level -->

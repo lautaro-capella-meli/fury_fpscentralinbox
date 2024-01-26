@@ -280,6 +280,7 @@ sap.ui.define([
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName] ||= newTaskGroup();
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].count++;
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].tasks.push(oTask);
+				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].TaskDefinitionID ||= oTask.TaskDefinitionID;
 
 				// Build  By status group
 				oTaskListData.byStatus[oTask.Status] ||= newTaskGroup();
@@ -355,7 +356,11 @@ sap.ui.define([
 						const oByTaskDefinitionIconTabFilter = new sap.m.IconTabFilter({
 							key: "bySource__" + sSource + "__byTaskDefinitionName__" + sTaskDefinitionName,
 							text: sTaskDefinitionName,
-							count: oTaskGroupByTaskDefinitionName.count
+							count: oTaskGroupByTaskDefinitionName.count,
+							customData: [new sap.ui.core.CustomData({
+								key: "TaskDefinitionID",
+								value: oTaskGroupByTaskDefinitionName.TaskDefinitionID
+							})]
 						});
 						if (this._bUseSubIconTabBar)
 							this._oSubIconTabBar.addItem(oByTaskDefinitionIconTabFilter);
@@ -451,27 +456,41 @@ sap.ui.define([
 		},
 
 		onSelectMainIconTabBar: function (oEvent) {
-			const oSelectedItem = oEvent.getParameter("selectedItem");
-			const oTaskGroup = oSelectedItem && this._oGroupsMap.get(oSelectedItem);
+
+			const oSelectedItem = oEvent.getParameter("item");
+			const sSelectedKey = oSelectedItem.getKey();
 
 			if (this._bUseSubIconTabBar && (oEvent.getSource() === this._oMainIconTabBar)) {
 				// Toggle Sub IconTabFilters visibility
 				this._oSubIconTabBar.getItems().forEach(oItem => {
-					const bShowSubIconTabFilter = (oItem.getKey() === "ALL") || oItem.getKey().startsWith(oSelectedItem.getKey());
+					const bShowSubIconTabFilter = (oItem.getKey() === "ALL") || oItem.getKey().startsWith(sSelectedKey);
 					oItem.setVisible(bShowSubIconTabFilter);
 				});
 
 				// Toggle Sub IconTabBar visibility
 				const bShowSubIconTabBar = this._oSubIconTabBar.getItems().some(oItem =>
-					(oItem.getKey() !== "ALL") && oItem.getVisible()
+					(oItem.getKey() !== "ALL") && oItem.getVisible() // Tab Bar gets visible if any Tab Filter (apart from ALL) is visible
 				);
 				this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
 				this._oSubIconTabBar.setSelectedKey("ALL");
 			}
+			// #1 Update bound property
+			const oTaskGroup = oSelectedItem && this._oGroupsMap.get(oSelectedItem);
 			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
 
-			// this._oTable.getColumns()[8].setVisible(true);
-			// this._oTable.getColumns()[9].setVisible(true);
+			this._oFilterBarView ??= this.byId("taskListPage").getContent()[0];
+			this._oTaskdefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
+			this._oTaskdefinitionFilter.setSelectedItems([]);
+
+			if (sSelectedKey.includes("__byTaskDefinitionName__")) {
+				// #2: if is byTaskDefinitionName Update filter in FilterBar and fire SelectionFinish
+				const sSelectedTaskDefinitionID = oSelectedItem.data("TaskDefinitionID");
+				const oSelectedTaskDefinitionFilterItem = this._oTaskdefinitionFilter.getItems().find(oItem => oItem.getKey() === sSelectedTaskDefinitionID.toUpperCase());
+				this._oTaskdefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
+				// this._oTaskdefinitionFilter.setSelectedKeys([sSelectedTaskDefinitionID]);
+			}
+
+			this._oTaskdefinitionFilter.fireSelectionFinish.call(this._oTaskdefinitionFilter);
 		},
 
 		onTaskSelected: function (oEvent) {

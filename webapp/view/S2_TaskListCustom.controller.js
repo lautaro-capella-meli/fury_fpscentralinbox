@@ -329,7 +329,6 @@ sap.ui.define([
 			const oAllSubIconTabFilter = new sap.m.IconTabFilter({
 				key: "ALL",
 				text: this._getI18nCustomText("All"),
-				count: oTaskListData.allTasks.count
 			});
 			this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
 			this._oGroupsMap.set(oAllSubIconTabFilter, oTaskListData.allTasks);

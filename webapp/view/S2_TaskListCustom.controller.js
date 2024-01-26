@@ -477,12 +477,11 @@ sap.ui.define([
 			if (this._bUseSubIconTabBar && (oEvent.getSource() === this._oMainIconTabBar))
 				this._updateSubIconTabBarItemsVisibility(oSelectedItem);
 
-			// update filter for TaskDefinition
-			this._updateFiltersOnTabSelected(oSelectedItem);
-
 			// update Task list items bound property
 			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
 
+			// update filter for TaskDefinition
+			this._updateFiltersOnTabSelected(oSelectedItem);
 		},
 
 		_updateSubIconTabBarItemsVisibility: function (oMainIconTabBarSelectedItem) {
@@ -506,23 +505,23 @@ sap.ui.define([
 			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
 			this._oFilterBarView ??= this.byId("taskListPage").getContent()[0];
 
-			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
-			this._oTaskDefinitionFilter.setSelectedItems([]); // reset selected items
-			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinition__"))
-				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
-			this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
-
 			this._oStatusFilter ??= this._oFilterBarView?.byId("statusFilter");
 			this._oStatusFilter.setSelectedItems([]); // reset selected items
 			if (sMainIconTabBarSelectedKey.includes("byStatus__"))
 				this._updateStatusFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
-			this._oStatusFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
+			// this._oStatusFilter.fireSelectionFinish.call(this._oStatusFilter); // avoid multiple calls as it will be called at this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter)
 
 			this._oPriorityFilter ??= this._oFilterBarView?.byId("priorityFilter");
 			this._oPriorityFilter.setSelectedItems([]); // reset selected items
 			if (sMainIconTabBarSelectedKey.includes("byPriority__"))
 				this._updatePriorityFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
-			this._oPriorityFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
+			// this._oPriorityFilter.fireSelectionFinish.call(this._oPriorityFilter); // avoid multiple calls as it will be called at this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter)
+
+			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
+			this._oTaskDefinitionFilter.setSelectedItems([]); // reset selected items
+			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinition__"))
+				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
+			this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
 
 		},
 

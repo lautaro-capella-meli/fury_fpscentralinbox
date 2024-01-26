@@ -275,12 +275,13 @@ sap.ui.define([
 				oTaskListData.bySource[oTask.SAP__Origin].count++;
 				oTaskListData.bySource[oTask.SAP__Origin].tasks.push(oTask);
 
-				// Build  By source | TaskDefinitionName group
-				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName ||= {};
-				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName] ||= newTaskGroup();
-				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].count++;
-				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].tasks.push(oTask);
-				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinitionName[oTask.TaskDefinitionName].TaskDefinitionID ||= oTask.TaskDefinitionID;
+				// Build  By source | TaskDefinition group
+				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition ||= {};
+				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID] ||= newTaskGroup();
+				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].count++;
+				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].tasks.push(oTask);
+				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].TaskDefinitionName ||= oTask.TaskDefinitionName;
+				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].TaskDefinitionID ||= oTask.TaskDefinitionID;
 
 				// Build  By status group
 				oTaskListData.byStatus[oTask.Status] ||= newTaskGroup();
@@ -349,23 +350,26 @@ sap.ui.define([
 					this._oMainIconTabBar.addItem(oBySourceIconTabFilter);
 					this._oGroupsMap.set(oBySourceIconTabFilter, oTaskGroupBySource);
 
-					for (const sTaskDefinitionName in oTaskGroupBySource.byTaskDefinitionName) {
-						const oTaskGroupByTaskDefinitionName = oTaskGroupBySource.byTaskDefinitionName[sTaskDefinitionName];
+					for (const sKey in oTaskGroupBySource.byTaskDefinition) {
+						const oTaskGroupByTaskDefinition = oTaskGroupBySource.byTaskDefinition[sKey];
 						/// SUB > BY TASK DEFINITION ///
 						const oByTaskDefinitionIconTabFilter = new sap.m.IconTabFilter({
-							key: "bySource__" + sSource + "__byTaskDefinitionName__" + sTaskDefinitionName,
-							text: sTaskDefinitionName,
-							count: oTaskGroupByTaskDefinitionName.count,
+							key: "bySource__" + sSource + "__byTaskDefinition__" + oTaskGroupByTaskDefinition.TaskDefinitionID,
+							text: oTaskGroupByTaskDefinition.TaskDefinitionName,
+							count: oTaskGroupByTaskDefinition.count,
 							customData: [new sap.ui.core.CustomData({
 								key: "TaskDefinitionID",
-								value: oTaskGroupByTaskDefinitionName.TaskDefinitionID
+								value: oTaskGroupByTaskDefinition.TaskDefinitionID
+							}), new sap.ui.core.CustomData({
+								key: "TaskDefinitionName",
+								value: oTaskGroupByTaskDefinition.TaskDefinitionName
 							})]
 						});
 						if (this._bUseSubIconTabBar)
 							this._oSubIconTabBar.addItem(oByTaskDefinitionIconTabFilter);
 						else
 							oBySourceIconTabFilter.addItem(oByTaskDefinitionIconTabFilter);
-						this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinitionName);
+						this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinition);
 					}
 				}
 			}
@@ -474,19 +478,19 @@ sap.ui.define([
 		},
 
 		_updateSubIconTabBarItemsVisibility: function (oMainIconTabBarSelectedItem) {
-				// Toggle Sub IconTabFilters visibility
+			// Toggle Sub IconTabFilters visibility
 			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
-				this._oSubIconTabBar.getItems().forEach(oItem => {
+			this._oSubIconTabBar.getItems().forEach(oItem => {
 				const bShowSubIconTabFilter = (oItem.getKey() === "ALL") || oItem.getKey().startsWith(sMainIconTabBarSelectedKey);
-					oItem.setVisible(bShowSubIconTabFilter);
-				});
+				oItem.setVisible(bShowSubIconTabFilter);
+			});
 
-				// Toggle Sub IconTabBar visibility
-				const bShowSubIconTabBar = this._oSubIconTabBar.getItems().some(oItem =>
-					(oItem.getKey() !== "ALL") && oItem.getVisible() // Tab Bar gets visible if any Tab Filter (apart from ALL) is visible
-				);
-				this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
-				this._oSubIconTabBar.setSelectedKey("ALL");
+			// Toggle Sub IconTabBar visibility
+			const bShowSubIconTabBar = this._oSubIconTabBar.getItems().some(oItem =>
+				(oItem.getKey() !== "ALL") && oItem.getVisible() // Tab Bar gets visible if any Tab Filter (apart from ALL) is visible
+			);
+			this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
+			this._oSubIconTabBar.setSelectedKey("ALL");
 
 		},
 
@@ -496,7 +500,7 @@ sap.ui.define([
 			this._oTaskdefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
 			this._oTaskdefinitionFilter.setSelectedItems([]); // reset selected items
 
-			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinitionName__"))
+			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinition__"))
 				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
 
 			this._oTaskdefinitionFilter.fireSelectionFinish.call(this._oTaskdefinitionFilter);

@@ -457,12 +457,27 @@ sap.ui.define([
 		onSelectMainIconTabBar: function (oEvent) {
 
 			const oSelectedItem = oEvent.getParameter("item");
-			const sSelectedKey = oSelectedItem.getKey();
+			if (!oSelectedItem)
+				return;
+			const oTaskGroup = this._oGroupsMap.get(oSelectedItem);
 
-			if (this._bUseSubIconTabBar && (oEvent.getSource() === this._oMainIconTabBar)) {
+			// update Sub IconTabBar items visibility according to Main IconTabBar selected item
+			if (this._bUseSubIconTabBar && (oEvent.getSource() === this._oMainIconTabBar))
+				this._updateSubIconTabBarItemsVisibility(oSelectedItem);
+
+			// update filter for TaskDefinition
+			this._updateTaskDefinitionFilterOnTabSelected(oSelectedItem);
+
+			// update Task list items bound property
+			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
+
+		},
+
+		_updateSubIconTabBarItemsVisibility: function (oMainIconTabBarSelectedItem) {
 				// Toggle Sub IconTabFilters visibility
+			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
 				this._oSubIconTabBar.getItems().forEach(oItem => {
-					const bShowSubIconTabFilter = (oItem.getKey() === "ALL") || oItem.getKey().startsWith(sSelectedKey);
+				const bShowSubIconTabFilter = (oItem.getKey() === "ALL") || oItem.getKey().startsWith(sMainIconTabBarSelectedKey);
 					oItem.setVisible(bShowSubIconTabFilter);
 				});
 
@@ -472,23 +487,26 @@ sap.ui.define([
 				);
 				this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
 				this._oSubIconTabBar.setSelectedKey("ALL");
-			}
-			// #1 Update bound property
-			const oTaskGroup = oSelectedItem && this._oGroupsMap.get(oSelectedItem);
-			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
 
+		},
+
+		_updateTaskDefinitionFilterOnTabSelected: function (oMainIconTabBarSelectedItem) {
+			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
 			this._oFilterBarView ??= this.byId("taskListPage").getContent()[0];
 			this._oTaskdefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
-			this._oTaskdefinitionFilter.setSelectedItems([]);
+			this._oTaskdefinitionFilter.setSelectedItems([]); // reset selected items
 
-			if (sSelectedKey.includes("__byTaskDefinitionName__")) {
-				// #2: if is byTaskDefinitionName Update filter in FilterBar and fire SelectionFinish
-				const sSelectedTaskDefinitionID = oSelectedItem.data("TaskDefinitionID");
-				const oSelectedTaskDefinitionFilterItem = this._oTaskdefinitionFilter.getItems().find(oItem => oItem.getKey() === sSelectedTaskDefinitionID.toUpperCase());
-				this._oTaskdefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
-			}
+			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinitionName__"))
+				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
 
 			this._oTaskdefinitionFilter.fireSelectionFinish.call(this._oTaskdefinitionFilter);
+		},
+
+		_updateTaskDefinitionFilterOnTaskDefinitionTabSelected: function (oMainIconTabBarSelectedItem) {
+			// update filter in FilterBar before fire SelectionFinish
+			const sSelectedTaskDefinitionID = oMainIconTabBarSelectedItem.data("TaskDefinitionID");
+			const oSelectedTaskDefinitionFilterItem = this._oTaskdefinitionFilter.getItems().find(oItem => oItem.getKey() === sSelectedTaskDefinitionID.toUpperCase());
+			this._oTaskdefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
 		},
 
 		onTaskSelected: function (oEvent) {

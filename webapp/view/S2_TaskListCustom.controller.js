@@ -394,7 +394,11 @@ sap.ui.define([
 					text: this._getI18nCustomText(`Status.${sStatus}`),
 					icon: this._getI18nCustomText(`Status.${sStatus}.Icon`) || undefined,
 					iconColor: this._getI18nCustomText(`Status.${sStatus}.IconColor`) || undefined,
-					count: oTaskGroupByStatus.count
+					count: oTaskGroupByStatus.count,
+					customData: [new sap.ui.core.CustomData({
+						key: "Status",
+						value: sStatus
+					})]
 				});
 				if (this._bUseSubIconTabBar)
 					this._oSubIconTabBar.addItem(oByStatusSubIconTabFilter);
@@ -421,7 +425,11 @@ sap.ui.define([
 					text: this._getI18nCustomText(`Priority.${sPriority}`),
 					icon: this._getI18nCustomText(`Priority.${sPriority}.Icon`) || undefined,
 					iconColor: this._getI18nCustomText(`Priority.${sPriority}.IconColor`) || undefined,
-					count: oTaskGroupByPriority.count
+					count: oTaskGroupByPriority.count,
+					customData: [new sap.ui.core.CustomData({
+						key: "Priority",
+						value: sPriority
+					})]
 				});
 				if (this._bUseSubIconTabBar)
 					this._oSubIconTabBar.addItem(oByPrioritySubIconTabFilter);
@@ -470,7 +478,7 @@ sap.ui.define([
 				this._updateSubIconTabBarItemsVisibility(oSelectedItem);
 
 			// update filter for TaskDefinition
-			this._updateTaskDefinitionFilterOnTabSelected(oSelectedItem);
+			this._updateFiltersOnTabSelected(oSelectedItem);
 
 			// update Task list items bound property
 			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
@@ -494,23 +502,52 @@ sap.ui.define([
 
 		},
 
-		_updateTaskDefinitionFilterOnTabSelected: function (oMainIconTabBarSelectedItem) {
+		_updateFiltersOnTabSelected: function (oMainIconTabBarSelectedItem) {
 			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
 			this._oFilterBarView ??= this.byId("taskListPage").getContent()[0];
-			this._oTaskdefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
-			this._oTaskdefinitionFilter.setSelectedItems([]); // reset selected items
 
+			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
+			this._oTaskDefinitionFilter.setSelectedItems([]); // reset selected items
 			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinition__"))
 				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
+			this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
 
-			this._oTaskdefinitionFilter.fireSelectionFinish.call(this._oTaskdefinitionFilter);
+			this._oStatusFilter ??= this._oFilterBarView?.byId("statusFilter");
+			this._oStatusFilter.setSelectedItems([]); // reset selected items
+			if (sMainIconTabBarSelectedKey.includes("byStatus__"))
+				this._updateStatusFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
+			this._oStatusFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
+
+			this._oPriorityFilter ??= this._oFilterBarView?.byId("priorityFilter");
+			this._oPriorityFilter.setSelectedItems([]); // reset selected items
+			if (sMainIconTabBarSelectedKey.includes("byPriority__"))
+				this._updatePriorityFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
+			this._oPriorityFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
+
 		},
 
 		_updateTaskDefinitionFilterOnTaskDefinitionTabSelected: function (oMainIconTabBarSelectedItem) {
 			// update filter in FilterBar before fire SelectionFinish
 			const sSelectedTaskDefinitionID = oMainIconTabBarSelectedItem.data("TaskDefinitionID");
-			const oSelectedTaskDefinitionFilterItem = this._oTaskdefinitionFilter.getItems().find(oItem => oItem.getKey() === sSelectedTaskDefinitionID.toUpperCase());
-			this._oTaskdefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
+			const aTaskDefinitionFilterItems = this._oTaskDefinitionFilter.getItems();
+			const oSelectedTaskDefinitionFilterItem = aTaskDefinitionFilterItems.find(oItem => oItem.getKey() === sSelectedTaskDefinitionID.toUpperCase());
+			this._oTaskDefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
+		},
+
+		_updateStatusFilterOnTaskDefinitionTabSelected: function (oMainIconTabBarSelectedItem) {
+			// update filter in FilterBar before fire SelectionFinish
+			const sSelectedStatus = oMainIconTabBarSelectedItem.data("Status");
+			const aStatusFilterItems = this._oStatusFilter.getItems();
+			const oSelectedStatusFilterItem = aStatusFilterItems.find(oItem => oItem.getKey() === sSelectedStatus.toUpperCase());
+			this._oStatusFilter.setSelectedItems([oSelectedStatusFilterItem]);
+		},
+
+		_updatePriorityFilterOnTaskDefinitionTabSelected: function (oMainIconTabBarSelectedItem) {
+			// update filter in FilterBar before fire SelectionFinish
+			const sSelectedPriority = oMainIconTabBarSelectedItem.data("Priority");
+			const aPriorityFilterItems = this._oPriorityFilter.getItems();
+			const oSelectedPriorityFilterItem = aPriorityFilterItems.find(oItem => oItem.getKey() === sSelectedPriority.toUpperCase());
+			this._oPriorityFilter.setSelectedItems([oSelectedPriorityFilterItem]);
 		},
 
 		onTaskSelected: function (oEvent) {

@@ -487,7 +487,6 @@ sap.ui.define([
 				const sSelectedTaskDefinitionID = oSelectedItem.data("TaskDefinitionID");
 				const oSelectedTaskDefinitionFilterItem = this._oTaskdefinitionFilter.getItems().find(oItem => oItem.getKey() === sSelectedTaskDefinitionID.toUpperCase());
 				this._oTaskdefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
-				// this._oTaskdefinitionFilter.setSelectedKeys([sSelectedTaskDefinitionID]);
 			}
 
 			this._oTaskdefinitionFilter.fireSelectionFinish.call(this._oTaskdefinitionFilter);

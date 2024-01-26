@@ -209,6 +209,8 @@ sap.ui.define([
 					this._onChangeInternal(oEvent);
 				}, this));
 			}
+
+			this.onFBFilterChange();
 		},
 
 		_onChangeInternal:function(oEvent) {

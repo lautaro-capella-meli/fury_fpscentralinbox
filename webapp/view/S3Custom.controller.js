@@ -562,6 +562,7 @@ sap.ui.define([
 			}).then(function (oFragmentContent) {
 				oIconTabFilter.addContent(oFragmentContent);
 			}.bind(this));
+
 			return true;
 		},
 
@@ -3510,6 +3511,7 @@ sap.ui.define([
 					}
 					break;*/
 				case "ObjectLinks":
+					return;//No Mostrar la Lista
 					if (oItemData.TaskSupports.TaskObject && that.oDataManager.bShowTaskObjects) {
 						this.oDataManager.fnGetCount(sSapOrigin, sInstanceID, function (sNumberOfLinks) {
 							that.oModel2.setProperty("/ObjectLinksCount", sNumberOfLinks);
@@ -3684,6 +3686,7 @@ sap.ui.define([
 		},
 
 		fnFetchObjectLinks: function () {
+			return;//No Mostrar la Lista
 			var iObjectLinkNumber = 0;
 			var oTaskObjectsControl = this._getIconTabControl("TaskObjects");
 			this._setBusyIncdicatorOnDetailControls(oTaskObjectsControl, true);

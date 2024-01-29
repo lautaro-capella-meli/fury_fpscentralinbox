@@ -5,7 +5,7 @@
 -->
 <mvc:View controllerName="cross.fnd.fiori.inbox.view.S2_FilterBar" id="S2_FilterBarSubView" xmlns:core="sap.ui.core"
 	xmlns:mvc="sap.ui.core.mvc" xmlns:fb="sap.ui.comp.filterbar" xmlns:mfb="cross.fnd.fiori.inbox.filterbar" xmlns="sap.m">
-	<mfb:MyFilterBar id="filterBar" filterBarExpanded="true" showClearButton="true" showClearOnFB="true" showRestoreButton="false" 
+	<mfb:MyFilterBar id="filterBar" filterBarExpanded="false" showClearButton="true" showClearOnFB="true" showRestoreButton="false" 
 		search="onSearchPressed" cancel="onClearPressed" clear="onClearPressed" afterVariantLoad="onFBVariantLoaded" filterContainerWidth="17.5rem">
 		<mfb:filterItems>
 			<fb:FilterItem id="taskdefinitionFI" name="taskdefinition" visibleInFilterBar="true"  label="{i18n>filter.taskType}">

@@ -18,8 +18,8 @@
 			<semantic:FullscreenPage id="taskListPage" navButtonPress="onNavBack" showNavButton="true" title="{i18n>SHELL_TITLE}">
 				<semantic:content>
 					<!-- the count mode on the item binding is set to obtain the $count information for the Task collection -->
-					<VBox fitContainer="true" class="sapUiMediumMarginBeginEnd">
-						<OverflowToolbar class="sapUiMediumMarginTop">
+					<VBox fitContainer="true">
+						<OverflowToolbar design="Transparent">
 							<ToolbarSpacer/>
 							<ToolbarSpacer id="toolbarSpacer" visible="{= !${device>/system/phone}}"/>
 							<OverflowToolbarButton icon="sap-icon://refresh" id="refreshBtn" press="onRefreshPressed" text="{i18n>XBUT_REFRESH}"

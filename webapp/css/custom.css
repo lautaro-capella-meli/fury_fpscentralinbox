@@ -7,6 +7,5 @@
     border-radius: 0 !important;
 }
 .meliCustomRemoveIconTabBarMarginTop {
-    margin-top: -0.5rem;
-    z-index: -1;
+    margin-top: -0.25rem;
 }

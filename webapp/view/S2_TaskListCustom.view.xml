@@ -59,7 +59,6 @@
 									<headerToolbar>
 										<OverflowToolbar design="Transparent">
 											<ToolbarSpacer/>
-											<ToolbarSpacer id="toolbarSpacer" visible="{= !${device>/system/phone}}"/>
 											<OverflowToolbarButton icon="sap-icon://refresh" id="refreshBtn" press="onRefreshPressed" text="{i18n>XBUT_REFRESH}"
 												tooltip="{i18n>XBUT_REFRESH}"/>
 											<OverflowToolbarButton icon="sap-icon://sort" id="sortBtn" press="onSortPressed" text="{i18n>sort.title}" tooltip="{i18n>sort.title}"/>
@@ -67,12 +66,13 @@
 												tooltip="{i18n>group.dialog.title}"/>
 											<OverflowToolbarButton enabled="{taskListView>/personalizationActive}" icon="sap-icon://action-settings" id="personalizationBtn"
 												press="onPersonalizationPressed" text="{i18n>xbut.personalization}" tooltip="{i18n>xbut.personalization}"/>
+											<ToolbarSpacer id="toolbarSpacer" visible="{= ${device>/isPhone}}"/>
 										</OverflowToolbar>
 									</headerToolbar>
 									<columns>
 										<!-- Columns must have unique IDs because table personalization service is used -->
 										<!-- Task Title -->
-										<Column demandPopin="true" hAlign="Begin" id="taskTitleColumn" width="{= !${device>/system/phone}? '22%' : '80%'}"
+										<Column demandPopin="true" hAlign="Begin" id="taskTitleColumn" width="{= !${device>/isPhone}? '22%' : '80%'}"
 											popinDisplay="WithoutHeader">
 											<header>
 												<Label id="taskTitleLbl" text="{i18n>multi.summary.title}"/>
@@ -123,7 +123,7 @@
 										<!-- Add Button 
 										<Column demandPopin="true" hAlign="End" id="buttonColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" width="15%">
 											<header>
-												<Label id="directActions" text="" visible="{= ${device>/system/phone}}"/>
+												<Label id="directActions" text="" visible="{= ${device>/isPhone}}"/>
 											</header>
 										</Column>
 										-->

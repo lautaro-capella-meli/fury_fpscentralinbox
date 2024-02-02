@@ -79,17 +79,17 @@
 											</header>
 										</Column>
 										<!-- Status -->
-										<Column demandPopin="true" hAlign="Center" id="statusColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
+										<!-- <Column demandPopin="true" hAlign="Center" id="statusColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
 											<header>
 												<Label id="statusLbl" text="{i18n>group.status}"/>
 											</header>
-										</Column>
+										</Column> -->
 										<!-- Priority -->
-										<Column demandPopin="true" hAlign="Begin" id="priorityColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
+										<!-- <Column demandPopin="true" hAlign="Begin" id="priorityColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
 											<header>
 												<Label id="priorityLbl" text="{i18n>group.priority}"/>
 											</header>
-										</Column>
+										</Column> -->
 										<!-- Created By -->
 										<Column demandPopin="true" hAlign="Begin" id="createdByColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="true">
 											<header>
@@ -166,12 +166,12 @@
 													titleActive="{parts: [{path: 'taskList>GUI_Link'}, {path: 'taskList>TaskSupports/UIExecutionLink'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterTaskTitleLink'}"
 													titlePress="onTaskTitlePressed"/> -->
 												<!-- Status -->
-												<Text class="sapMTableContentMargin" id="statusTxt" maxLines="2" textAlign="Center"
-													text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"/>
+												<!-- <Text class="sapMTableContentMargin" id="statusTxt" maxLines="2" textAlign="Center"
+													text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"/> -->
 												<!-- Priority -->
-												<ObjectStatus class="sapMTableContentMargin" id="PriorityTxt"
+												<!-- <ObjectStatus class="sapMTableContentMargin" id="PriorityTxt"
 													text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Priority'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriority'}"
-													state="{path: 'taskList>Priority', formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriorityState'}"/>
+													state="{path: 'taskList>Priority', formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriorityState'}"/> -->
 												<!-- Created By -->
 												<Text class="sapMTableContentMargin" id="CreatedByTxt" maxLines="2"
 													text="{parts: [{path: 'taskList>CreatedByName'}, {path: 'taskList>CustomAttributeData'}], formatter: 'cross.fnd.fiori.inbox.Conversions.formatterCreatedByTaskList'}"/>

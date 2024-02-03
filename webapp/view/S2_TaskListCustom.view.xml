@@ -72,32 +72,32 @@
 									<columns>
 										<!-- Columns must have unique IDs because table personalization service is used -->
 										<!-- Task Title -->
-										<Column demandPopin="true" hAlign="Begin" id="taskTitleColumn" width="{= !${device>/isPhone}? '22%' : '80%'}"
+										<Column demandPopin="true" importance="High" hAlign="Begin" id="taskTitleColumn" width="{= !${device>/isPhone}? '30rem' : '80%'}"
 											popinDisplay="WithoutHeader">
 											<header>
 												<Label id="taskTitleLbl" text="{i18n>multi.summary.title}"/>
 											</header>
 										</Column>
 										<!-- Status -->
-										<!-- <Column demandPopin="true" hAlign="Center" id="statusColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
+										<Column demandPopin="true" hAlign="Center" id="statusColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
 											<header>
 												<Label id="statusLbl" text="{i18n>group.status}"/>
 											</header>
-										</Column> -->
+										</Column>
 										<!-- Priority -->
-										<!-- <Column demandPopin="true" hAlign="Begin" id="priorityColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
+										<Column demandPopin="true" hAlign="Begin" id="priorityColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="false">
 											<header>
 												<Label id="priorityLbl" text="{i18n>group.priority}"/>
 											</header>
-										</Column> -->
+										</Column>
 										<!-- Created By -->
-										<Column demandPopin="true" hAlign="Begin" id="createdByColumn" minScreenWidth="Tablet" popinDisplay="WithoutHeader" visible="true">
+										<Column hAlign="Begin" id="createdByColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline">
 											<header>
 												<Label id="createdByLbl" text="{i18n>multi.summary.createdBy}"/>
 											</header>
 										</Column>
 										<!-- On Behalf Of -->
-										<Column demandPopin="true" hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="true">
+										<Column hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline">
 											<header>
 												<Label id="onBehalfOfLbl" text="{i18n>custom.meli.Labels.OnBehalfOf}"/>
 											</header>
@@ -109,13 +109,13 @@
 											</header>
 										</Column> -->
 										<!-- Created On -->
-										<Column hAlign="Right" id="createdOnColumn" minScreenWidth="Tablet" popinDisplay="Inline">
+										<Column hAlign="Right" id="createdOnColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline">
 											<header>
 												<Label id="createdOnLbl" text="{i18n>view.Information.createdOn}"/>
 											</header>
 										</Column>
 										<!-- Completion Deadline -->
-										<Column demandPopin="true" hAlign="Right" id="dueDateColumn" minScreenWidth="Tablet" popinDisplay="Inline" visible="false">
+										<Column hAlign="Right" id="dueDateColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="dueDateLbl" text="{i18n>multi.summary.dueDate}"/>
 											</header>
@@ -166,12 +166,12 @@
 													titleActive="{parts: [{path: 'taskList>GUI_Link'}, {path: 'taskList>TaskSupports/UIExecutionLink'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterTaskTitleLink'}"
 													titlePress="onTaskTitlePressed"/> -->
 												<!-- Status -->
-												<!-- <Text class="sapMTableContentMargin" id="statusTxt" maxLines="2" textAlign="Center"
-													text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"/> -->
+												<Text class="sapMTableContentMargin" id="statusTxt" maxLines="2" textAlign="Center"
+													text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"/>
 												<!-- Priority -->
-												<!-- <ObjectStatus class="sapMTableContentMargin" id="PriorityTxt"
+												<ObjectStatus class="sapMTableContentMargin" id="PriorityTxt"
 													text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Priority'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriority'}"
-													state="{path: 'taskList>Priority', formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriorityState'}"/> -->
+													state="{path: 'taskList>Priority', formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriorityState'}"/>
 												<!-- Created By -->
 												<Text class="sapMTableContentMargin" id="CreatedByTxt" maxLines="2"
 													text="{parts: [{path: 'taskList>CreatedByName'}, {path: 'taskList>CustomAttributeData'}], formatter: 'cross.fnd.fiori.inbox.Conversions.formatterCreatedByTaskList'}"/>

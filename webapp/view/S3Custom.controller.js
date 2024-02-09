@@ -1509,6 +1509,18 @@ sap.ui.define([
 			}
 		},
 
+		fnNavigateToAppCustom: function (oParsedParams) {
+			// Step 1: Get Service for app to app navigation
+			var navigationService = sap.ushell.Container.getService('CrossApplicationNavigation');
+			// Step 2: Navigate using your semantic object
+			var hash = navigationService.hrefForExternal({
+			  target: {semanticObject : oParsedParams.semanticObject, action: oParsedParams.action},
+			  params:  oParsedParams.params
+			});
+			var url = window.location.href.split('#')[0] + hash;
+			sap.m.URLHelper.redirect(url, true);
+		},
+
 		fnViewTaskInDefaultView: function (oItem, oRefreshData, fnSuccess) {
 			this.oModel2.setProperty("/showGenericComponent", false);
 			this.oModel2.setProperty("/embedFioriElements", false);
@@ -2918,6 +2930,33 @@ sap.ui.define([
 				this.fnNavigateToApp(oIntentParams, oIntentParams.OpenInEmbedMode);
 			}
 			else {
+				if(oTaskData.CustomAttributeData.length){
+					try {
+						let oIntentParamsF0717 = {};
+						let oDocNumber = oTaskData.CustomAttributeData.find(({ Name }) => Name === "DOC_NUMBER"),
+							oFiscalYear = oTaskData.CustomAttributeData.find(({ Name }) => Name === "FISCAL_YEAR"),
+							oCompanyCode = oTaskData.CustomAttributeData.find(({ Name }) => Name === "COMPANY_CODE");
+
+						oIntentParamsF0717.semanticObject = 'AccountingDocument';
+						oIntentParamsF0717.action = 'manage';
+						
+						oIntentParamsF0717.params =  {
+														'CompanyCode': oCompanyCode.Value,
+														'AccountingDocument': oDocNumber.Value,
+														'FiscalYear': oFiscalYear.Value
+													};
+													
+						oIntentParamsF0717.appSpecificRoute = '';
+						this.fnNavigateToAppCustom(oIntentParamsF0717);
+					}
+					catch(err) {
+						MessageToast.show(err.message);
+					}
+				}else{
+					MessageToast.show(this.i18nBundle.getText("custom.meli.msj.NoCustomAttributeData"));
+				}
+				return;
+				
 				var oDataManager = this.getOwnerComponent().getDataManager();
 				oActionHelper.fnValidateOpenTaskURLAndRedirect(this.oModel2.getData().GUI_Link || this.oModel2.getData().UIExecutionLink.GUI_Link, oDataManager.isForwardUserSettings());
 			}

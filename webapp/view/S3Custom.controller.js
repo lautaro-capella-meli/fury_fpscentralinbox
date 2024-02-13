@@ -99,8 +99,8 @@ sap.ui.define([
 		routeName: null,
 
 		onExit: function () {
-			this.oComponentCache.destroyCacheContent();
-			delete this.oComponentCache;
+			//this.oComponentCache.destroyCacheContent();
+			//delete this.oComponentCache;
 		},
 
 		onInit: function () {

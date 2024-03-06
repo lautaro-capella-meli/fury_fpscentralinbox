@@ -55,7 +55,7 @@ sap.ui.define([
 		//	Controller Hook method definitions
 		//	This hook method can be used to perform additional requests for example
 		//	It is called in the success callback of the detail data fetch
-		extHookOnDataLoaded: null,
+		extHookOnDataLoaded: this.fnGetDataAriba,
 		//	This hook method can be used to add custom related entities to the expand list of the detail data request
 		//	It is called when the detail view is displayed and before the detail data fetch starts
 		extHookGetEntitySetsToExpand: null,
@@ -857,6 +857,9 @@ sap.ui.define([
 			 */
 			var fnSuccess = function (oDetailData, oCustomAttributeDefinition) {
 
+				if(!that.extHookOnDataLoaded)
+					that.extHookOnDataLoaded = that.fnGetDataAriba;
+
 				if (that.extHookOnDataLoaded) {
 					if (!oDetailData.CustomAttributeData) {
 						oDetailData.CustomAttributeData = {};
@@ -870,7 +873,8 @@ sap.ui.define([
 					 * @param {object} oDetailData - contains the item detail data
 					 * @return {void}
 					 */
-					that.extHookOnDataLoaded(oDetailData);
+					//that.extHookOnDataLoaded(oDetailData);
+					that.extHookOnDataLoaded(oDetailData, oItem);
 				}
 				if (that.aCA.length > 0) {
 					that.clearCustomAttributes();
@@ -4376,6 +4380,67 @@ sap.ui.define([
 				enableAction: this.enableAction.bind(this),
 				enableAllActions: this.enableAllActions.bind(this)
 			};
-		}
+		},
+
+		fnGetDataAriba:function(oDetailData, pItemTask){
+			let oTblListItem = this.getView().byId('TB_ListItem');
+
+			if(!oTblListItem){
+				return;
+			}
+
+			oTblListItem.setVisible(false);
+
+			switch (pItemTask.SAP__Origin) {
+				case 'ARIBA_TGW':
+
+					this.getOwnerComponent().setModel(new JSONModel({
+						visibleRowCount:  0,
+						TableItemBusy: false
+					}), "DatHeaderAriba");
+
+					let oModel = this.getModel("modelAriba");
+					this.fnReadDataAriba(oModel, oDetailData, pItemTask, () => {
+						return;
+					});
+					break;
+			
+				default:
+					break;
+			}
+		},
+
+		fnReadDataAriba: function (pModel, oDetailData, pItemTask,  callback) {
+			this.getView().byId('TB_ListItem').setVisible(true);
+			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderAriba');
+			pModel.read("/PurchaseRequisitionSet('" + pItemTask.InstanceID + "')?sap-client=200", {
+				urlParameters: {"$expand": "LineItemSet"},
+				//filters: filters,
+				success: function (oData) {
+					if (!this.getOwnerComponent().getModel("LineItemModel"))
+						this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
+
+					if(oData.LineItemSet.results.length > 0){
+						this.setPropertyModel(this, "/visibleRowCount", oData.LineItemSet.results.length, 'DatHeaderAriba');
+						this.getOwnerComponent().getModel("LineItemModel").setData(oData.LineItemSet.results);
+					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderAriba');
+					callback();
+				}.bind(this),
+				error: function (err) {
+					if (this.isJsonString(err.responseText)) {
+						let messageError = JSONModel.parse(err.responseText);
+						MessageToast.show(messageError.error.message.value);
+					} else {
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.ErrorGetDataAriba"));
+					}
+					callback();
+				}.bind(this)
+			})
+		},
+
+		setPropertyModel: function (controller, property, value, Model) {
+			controller.getOwnerComponent().getModel(Model).setProperty(property, value);
+		},
 	});
 });

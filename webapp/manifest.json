@@ -18,6 +18,15 @@
 					"localUri": "localService/metadata.xml",
 					"odataVersion": "2.0"
 				}
+			},
+			"dataAriba": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_ARIBA_PR_DETAIL_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
 			}
 		}
 	},
@@ -96,6 +105,11 @@
 			},
 			"kpiModel": {
 				"dataSource": "kpiService",
+				"preload": true,
+				"settings": {}
+			},
+			"modelAriba": {
+				"dataSource": "dataAriba",
 				"preload": true,
 				"settings": {}
 			}

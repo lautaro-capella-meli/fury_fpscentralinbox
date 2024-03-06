@@ -1,0 +1,64 @@
+<core:FragmentDefinition 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:m="sap.m">
+	<m:Table 
+        headerText="Items({DatHeaderAriba>/visibleRowCount})"
+        busy="{DatHeaderAriba>/TableItemBusy}"
+		id="TB_ListItem" items="{ path: 'LineItemModel>/'}" ariaLabelledBy="title"
+        visible="false">
+		<m:columns>
+			<m:Column
+				width="12em">
+				<m:Text text="Texto Breve" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Tablet"
+				demandPopin="true">
+				<m:Text text="Commodity" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="End">
+				<m:Text text="Proveedor" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Center">
+				<m:Text text="Fecha de Entrega" />
+			</m:Column>
+			<m:Column
+				hAlign="End">
+				<m:Text text="Precio Neto" />
+			</m:Column>
+		</m:columns>
+		<m:items>
+			<m:ColumnListItem vAlign="Middle">
+				<m:cells>
+					<m:Text
+						text="{LineItemModel>description}" />
+					<m:Text
+						text="{LineItemModel>commonCommodityCode}" />
+					<m:Text
+						text="{LineItemModel>supplierName} - {LineItemModel>supplier}" />
+                    <m:Text text="{
+                        path: 'LineItemModel>needBy',
+                        type: 'sap.ui.model.type.Date',
+                        formatOptions: {
+                            style: 'medium'
+                        }
+                    }" />
+					<m:ObjectNumber
+							number="{
+								parts:[{path:'LineItemModel>price'},{path:'LineItemModel>currency'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{LineItemModel>currency}" />
+				</m:cells>
+			</m:ColumnListItem>
+		</m:items>
+    </m:Table>
+</core:FragmentDefinition>

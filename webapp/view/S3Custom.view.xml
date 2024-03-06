@@ -99,7 +99,12 @@
 						<core:ExtensionPoint name="CustomerExtensionForAdditionalTabs"/>
 					</items>
 				</IconTabBar>
-				<core:ExtensionPoint name="CustomerExtensionForAdditionalDetails"/>
+					<core:ExtensionPoint name="CustomerExtensionForAdditionalDetails"/>
+
+					<core:ExtensionPoint name="CustomerExtensionForAdditionalDetails">
+						<core:Fragment fragmentName="cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3_ListItemCustom" type="XML"/>
+					</core:ExtensionPoint>
+
 			</layout:mainContent>
 			<layout:sideContent>
 				<IconTabBar id="tabBarLogs" select="onLogTabSelect" visible="{= ${detail>/ShowLogPressed}}">

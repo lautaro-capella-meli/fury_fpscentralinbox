@@ -4422,7 +4422,8 @@ sap.ui.define([
 
 					if(oData.LineItemSet.results.length > 0){
 						this.setPropertyModel(this, "/visibleRowCount", oData.LineItemSet.results.length, 'DatHeaderAriba');
-						this.getOwnerComponent().getModel("LineItemModel").setData(oData.LineItemSet.results);
+						const oListModel = this.getOwnerComponent().getModel("LineItemModel");
+						oListModel.setData(oData.LineItemSet.results);
 					}
 					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderAriba');
 					callback();
@@ -4434,6 +4435,7 @@ sap.ui.define([
 					} else {
 						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.ErrorGetDataAriba"));
 					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderAriba');
 					callback();
 				}.bind(this)
 			})

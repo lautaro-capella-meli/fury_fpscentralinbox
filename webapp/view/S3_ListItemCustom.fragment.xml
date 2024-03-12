@@ -20,18 +20,30 @@
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
-				hAlign="End">
+				hAlign="Begin">
 				<m:Text text="Proveedor" />
 			</m:Column>
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
-				hAlign="Center">
-				<m:Text text="Fecha de Entrega" />
+				hAlign="Begin">
+				<m:Text text="Cantidad" />
 			</m:Column>
 			<m:Column
-				hAlign="End">
+				hAlign="Begin">
 				<m:Text text="Precio Neto" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="Destinatario" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="Grupo Compras" />
 			</m:Column>
 		</m:columns>
 		<m:items>
@@ -43,23 +55,25 @@
 						text="{LineItemModel>commonCommodityCode}" />
 					<m:Text
 						text="{LineItemModel>supplierName} - {LineItemModel>supplier}" />
-                    <m:Text text="{
-                        path: 'LineItemModel>needBy',
-                        type: 'sap.ui.model.type.Date',
-                        formatOptions: {
-                            style: 'medium',
-                            source: {
-                                pattern: 'yyyy-MM-dd'
-                            }
-                        }
-                    }" />
+					<m:ObjectNumber
+						number="{path: 'LineItemModel>quantity',
+						type: 'sap.ui.model.type.Float',
+						formatOptions: { 	maxFractionDigits: 2
+						} }"
+						unit=""
+						emphasized="false"
+						textDirection="RTL" />
 					<m:ObjectNumber
 							number="{
-								parts:[{path:'LineItemModel>price'},{path:'LineItemModel>currency'}],
+								parts:[{path:'LineItemModel>amount'},{path:'LineItemModel>currency'}],
 								type: 'sap.ui.model.type.Currency',
 								formatOptions: {showMeasure: false}
 							}"
 							unit="{LineItemModel>currency}" />
+					<m:Text
+						text="{LineItemModel>purchaseOrg} - {LineItemModel>purchaseOrgName}" />
+					<m:Text
+						text="{LineItemModel>purchaseGroup} - {LineItemModel>purchaseGroupName}" />
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

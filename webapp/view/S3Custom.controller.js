@@ -4411,18 +4411,21 @@ sap.ui.define([
 		},
 
 		fnReadDataAriba: function (pModel, oDetailData, pItemTask,  callback) {
+
+			if (!this.getOwnerComponent().getModel("LineItemModel"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
+
+			const oListModel = this.getOwnerComponent().getModel("LineItemModel");
+			oListModel.setData({});
+
 			this.getView().byId('TB_ListItem').setVisible(true);
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderAriba');
 			pModel.read("/PurchaseRequisitionSet('" + pItemTask.InstanceID + "')?sap-client=200", {
 				urlParameters: {"$expand": "LineItemSet"},
 				//filters: filters,
 				success: function (oData) {
-					if (!this.getOwnerComponent().getModel("LineItemModel"))
-						this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
-
 					if(oData.LineItemSet.results.length > 0){
 						this.setPropertyModel(this, "/visibleRowCount", oData.LineItemSet.results.length, 'DatHeaderAriba');
-						const oListModel = this.getOwnerComponent().getModel("LineItemModel");
 						oListModel.setData(oData.LineItemSet.results);
 					}
 					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderAriba');

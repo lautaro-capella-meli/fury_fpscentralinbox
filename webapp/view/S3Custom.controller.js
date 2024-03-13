@@ -1276,13 +1276,15 @@ sap.ui.define([
 				else {
 					MessageToast.show(sMessage);
 				}
-
+				
+				that.fnNavBackToTableVw();
+				/*
 				if (that.bIsTableViewActive) {
 					that.fnNavBackToTableVw();
 				}
 				if (Device.system.phone) {
 					that.fnOnNavBackInMobile();
-				}
+				*/
 			};
 
 			var fnError = function (oError) {
@@ -2068,12 +2070,17 @@ sap.ui.define([
 						oView.getModel().bCheckPassed = true; // boolean that shows whether task has upper properties
 						return;
 					}
+
+					this.fnNavBackToTableVw();
+					
+					/*
 					if (bIsTableViewActive) {
 						this.fnNavBackToTableVw();
 					}
 					else {
 						this.fnOnNavBackInMobile();
 					}
+					*/
 				}
 				else if (this.isGenericComponentRendered) { // Make full refresh in case ob AnnotBasedTaskUI and Custom UI (WFS)
 					oRefreshData = {

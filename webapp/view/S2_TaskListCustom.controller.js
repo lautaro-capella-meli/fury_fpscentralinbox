@@ -607,5 +607,24 @@ sap.ui.define([
 			}
 			this._oDataModel.read(data.contextPath, params);
 		},
+
+		handleActionPerformed: function(aSuccessList, aErrorList, aChangedItems) {
+			if (aErrorList.length === 0) {
+				// TODO show messages according to the type of the action ?
+				// for now, showing a generic message.
+				setTimeout(function() {
+					MessageToast.show(this._oResourceBundle.getText(aSuccessList.length > 1 ? "dialog.success.multi_complete_plural" :
+						"dialog.success.multi_complete", aSuccessList.length));
+				}.bind(this), 500);
+
+				this.updateTableOnActionComplete(aChangedItems);
+				this.onRefreshPressed();
+			}
+			else {
+				MultiSelectDialog.openMessageDialog(aSuccessList, aErrorList,
+					this.updateTableOnActionComplete.bind(this, aChangedItems));
+			}
+		},
+
 	});
 });

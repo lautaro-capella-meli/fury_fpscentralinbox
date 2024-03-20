@@ -575,6 +575,56 @@ sap.ui.define([
 				this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME"));
 
 			oTaskListViewModel.setProperty("/noDataText", this._oResourceBundle.getText("view.Workflow.noDataTasks"));
-		}
+		},
+
+		_refreshTask: function(channelId, eventId, data) {
+			this.onRefreshPressed();
+
+			return;
+			var _handleTaskQueryResponse = function(oData, response) {
+				if (response.statusCode === "200") {
+					var tasks = [oData];
+					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
+						tasks = this._dataMassage([oData]);
+					}
+					var jsonModel = this.getView().getModel("taskList");
+					jsonModel.setProperty(this.selectedTaskPath, tasks[0]);
+					this.selectedTaskPath = undefined;
+					this.handleSelectionChange();
+				}
+			};
+			var params;
+			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
+				params = {
+						success:_handleTaskQueryResponse.bind(this),
+						urlParameters:{$expand:"CustomAttributeData"}
+						};
+			}
+			else {
+				params = {
+						success:_handleTaskQueryResponse.bind(this)
+						};
+			}
+			this._oDataModel.read(data.contextPath, params);
+		},
+
+		handleActionPerformed: function(aSuccessList, aErrorList, aChangedItems) {
+			if (aErrorList.length === 0) {
+				// TODO show messages according to the type of the action ?
+				// for now, showing a generic message.
+				setTimeout(function() {
+					MessageToast.show(this._oResourceBundle.getText(aSuccessList.length > 1 ? "dialog.success.multi_complete_plural" :
+						"dialog.success.multi_complete", aSuccessList.length));
+				}.bind(this), 500);
+
+				this.updateTableOnActionComplete(aChangedItems);
+				this.onRefreshPressed();
+			}
+			else {
+				MultiSelectDialog.openMessageDialog(aSuccessList, aErrorList,
+					this.updateTableOnActionComplete.bind(this, aChangedItems));
+			}
+		},
+
 	});
 });

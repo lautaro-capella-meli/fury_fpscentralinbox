@@ -2855,6 +2855,7 @@ sap.ui.define([
 					}
 				default:
 					{
+						this.getOwnerComponent().oDataManager.isActionS3Custom = true;//Esta variable ayuda a controlar cuando ir por datos al Back
 						this.oDataManager.sendAction(sFunctionImportName, oDecision, sNote, sReasonOptionCode,
 							function (oData) {
 								setTimeout(function () {
@@ -4427,7 +4428,7 @@ sap.ui.define([
 
 			this.getView().byId('TB_ListItem').setVisible(true);
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderAriba');
-			pModel.read("/PurchaseRequisitionSet('" + pItemTask.InstanceID + "')?sap-client=200", {
+			pModel.read("/PurchaseRequisitionSet('" + pItemTask.InstanceID + "')", {
 				urlParameters: {"$expand": "LineItemSet"},
 				//filters: filters,
 				success: function (oData) {

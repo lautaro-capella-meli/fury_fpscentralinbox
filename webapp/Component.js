@@ -48,6 +48,7 @@ cross.fnd.fiori.inbox.Component.extend("cross.fnd.fiori.inbox.CA_FIORI_INBOXExte
 
 		oRootView.addStyleClass(this.getContentDensityClass());
 		var oDataManager = this.getDataManager();
+		oDataManager.isActionS3Custom = false; 
 		var sInstanceID = oDataManager.sTaskInstanceID;
 		// eslint-disable-next-line camelcase
 		var sSAP__Origin = oDataManager.sSapOrigin;

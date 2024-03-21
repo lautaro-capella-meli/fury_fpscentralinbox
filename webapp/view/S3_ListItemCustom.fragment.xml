@@ -26,9 +26,16 @@
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
+				hAlign="Center">
+				<m:Text text="Fecha de Entrega" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
 				hAlign="Begin">
 				<m:Text text="Cantidad" />
 			</m:Column>
+
 			<m:Column
 				hAlign="Begin">
 				<m:Text text="Precio Neto" />
@@ -55,6 +62,14 @@
 						text="{LineItemModel>commonCommodityCode}" />
 					<m:Text
 						text="{LineItemModel>supplierName} - {LineItemModel>supplier}" />
+
+                    <m:Text text="{
+                        path: 'LineItemModel>needBy',
+						type: 'sap.ui.model.type.Date',
+						formatOptions: {
+							style: 'short'
+						}
+					}" />
 					<m:ObjectNumber
 						number="{path: 'LineItemModel>quantity',
 						type: 'sap.ui.model.type.Float',

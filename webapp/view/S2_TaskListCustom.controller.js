@@ -329,7 +329,7 @@ sap.ui.define([
 			/// SUB > ALL TASKS ///
 			const oAllSubIconTabFilter = new sap.m.IconTabFilter({
 				key: "ALL",
-				text: this._getI18nCustomText("All"),
+				text: this._getI18nCustomText("All")
 			});
 			this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
 			this._oGroupsMap.set(oAllSubIconTabFilter, oTaskListData.allTasks);
@@ -578,9 +578,11 @@ sap.ui.define([
 		},
 
 		_refreshTask: function(channelId, eventId, data) {
-			this.onRefreshPressed();
-
-			return;
+			if(this.getOwnerComponent().oDataManager.isActionS3Custom){
+				this.getOwnerComponent().oDataManager.isActionS3Custom = false;
+				this.onRefreshPressed();
+				return;
+			}
 			var _handleTaskQueryResponse = function(oData, response) {
 				if (response.statusCode === "200") {
 					var tasks = [oData];

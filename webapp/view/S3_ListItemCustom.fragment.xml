@@ -9,53 +9,67 @@
         visible="false">
 		<m:columns>
 			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="{i18n>custom.meli.S3_ListItem.LineItem}" />
+			</m:Column>
+<!-- 			<m:Column
 				width="12em">
-				<m:Text text="Texto Breve" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.CatalogType}" />
+			</m:Column> -->
+			<m:Column
+				width="12em">
+				<m:Text text="{i18n>custom.meli.S3_ListItem.Text}" />
 			</m:Column>
 			<m:Column
 				minScreenWidth="Tablet"
 				demandPopin="true">
-				<m:Text text="Commodity" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.Commodity}" />
 			</m:Column>
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
-				<m:Text text="Proveedor" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.Supplier}" />
 			</m:Column>
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Center">
-				<m:Text text="Fecha de Entrega" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.DeliveryDate}" />
 			</m:Column>
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
-				<m:Text text="Cantidad" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.Quantity}" />
 			</m:Column>
 
 			<m:Column
 				hAlign="Begin">
-				<m:Text text="Precio Neto" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.Amount}" />
 			</m:Column>
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
-				<m:Text text="Destinatario" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.Recipient}" />
 			</m:Column>
 			<m:Column
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
-				<m:Text text="Grupo Compras" />
+				<m:Text text="{i18n>custom.meli.S3_ListItem.PurchasingGroup}" />
 			</m:Column>
 		</m:columns>
 		<m:items>
 			<m:ColumnListItem vAlign="Middle">
 				<m:cells>
+					<m:Text
+						text="{LineItemModel>numberInCollection}" />
+<!-- 					<m:Text
+						text="{LineItemModel>CatalogType}" /> -->
 					<m:Text
 						text="{LineItemModel>description}" />
 					<m:Text

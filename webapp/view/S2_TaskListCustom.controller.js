@@ -578,6 +578,12 @@ sap.ui.define([
 		},
 
 		_refreshTask: function(channelId, eventId, data) {
+
+			const oListModel = this.getOwnerComponent().getModel("LineItemModel");
+			if(oListModel){
+				oListModel.setData({});
+			}
+
 			if(this.getOwnerComponent().oDataManager.isActionS3Custom){
 				this.getOwnerComponent().oDataManager.isActionS3Custom = false;
 				this.onRefreshPressed();

@@ -4426,13 +4426,13 @@ sap.ui.define([
 			const oListModel = this.getOwnerComponent().getModel("LineItemModel");
 			oListModel.setData({});
 
-			this.getView().byId('TB_ListItem').setVisible(true);
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderAriba');
 			pModel.read("/PurchaseRequisitionSet('" + pItemTask.InstanceID + "')", {
 				urlParameters: {"$expand": "LineItemSet"},
 				//filters: filters,
 				success: function (oData) {
 					if(oData.LineItemSet.results.length > 0){
+						this.getView().byId('TB_ListItem').setVisible(true);
 						this.setPropertyModel(this, "/visibleRowCount", oData.LineItemSet.results.length, 'DatHeaderAriba');
 						oListModel.setData(oData.LineItemSet.results);
 					}
@@ -4440,6 +4440,7 @@ sap.ui.define([
 					callback();
 				}.bind(this),
 				error: function (err) {
+					this.getView().byId('TB_ListItem').setVisible(false);
 					if (this.isJsonString(err.responseText)) {
 						let messageError = JSONModel.parse(err.responseText);
 						MessageToast.show(messageError.error.message.value);

@@ -236,6 +236,12 @@ sap.ui.define([
 
 		resetDetailView: function () {
 
+			let oTblListItem = this.getView().byId('TB_ListItem');
+
+			if(oTblListItem){
+				oTblListItem.setVisible(false);
+			}
+
 			if (!this.oModel2) return;
 
 			this.oModel2.setProperty("/showDefaultView", false);

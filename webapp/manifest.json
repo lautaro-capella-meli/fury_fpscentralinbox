@@ -27,6 +27,15 @@
 					"localUri": "localService/metadata.xml",
 					"odataVersion": "2.0"
 				}
+			},
+			"dataShipment": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_SHIPMENT_GRP_DETAIL_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
 			}
 		}
 	},
@@ -110,6 +119,11 @@
 			},
 			"modelAriba": {
 				"dataSource": "dataAriba",
+				"preload": true,
+				"settings": {}
+			},
+			"modelShipment": {
+				"dataSource": "dataShipment",
 				"preload": true,
 				"settings": {}
 			}

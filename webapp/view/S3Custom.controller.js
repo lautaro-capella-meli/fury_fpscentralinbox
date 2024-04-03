@@ -55,7 +55,7 @@ sap.ui.define([
 		//	Controller Hook method definitions
 		//	This hook method can be used to perform additional requests for example
 		//	It is called in the success callback of the detail data fetch
-		extHookOnDataLoaded: this.fnGetDataAriba,
+		extHookOnDataLoaded: this.fnGets3DetailCustom,
 		//	This hook method can be used to add custom related entities to the expand list of the detail data request
 		//	It is called when the detail view is displayed and before the detail data fetch starts
 		extHookGetEntitySetsToExpand: null,
@@ -236,7 +236,7 @@ sap.ui.define([
 
 		resetDetailView: function () {
 
-			let oTblListItem = this.getView().byId('TB_ListItem');
+			let oTblListItem = this.getView().byId('TB_ListItemAriba');
 
 			if(oTblListItem){
 				oTblListItem.setVisible(false);
@@ -864,7 +864,7 @@ sap.ui.define([
 			var fnSuccess = function (oDetailData, oCustomAttributeDefinition) {
 
 				if(!that.extHookOnDataLoaded)
-					that.extHookOnDataLoaded = that.fnGetDataAriba;
+					that.extHookOnDataLoaded = that.fnGets3DetailCustom;
 
 				if (that.extHookOnDataLoaded) {
 					if (!oDetailData.CustomAttributeData) {
@@ -4396,18 +4396,19 @@ sap.ui.define([
 			};
 		},
 
-		fnGetDataAriba:function(oDetailData, pItemTask){
-			let oTblListItem = this.getView().byId('TB_ListItem');
+		fnGets3DetailCustom:function(oDetailData, pItemTask){
+			let oTblListItemAriba = this.getView().byId('TB_ListItemAriba');
+			let oTblListItemShipment = this.getView().byId('TB_ListItemShipment');
 
-			if(!oTblListItem){
+			if(!oTblListItemAriba){
 				return;
 			}
-
-			oTblListItem.setVisible(false);
+			
+			oTblListItemAriba.setVisible(false);
+			oTblListItemShipment.setVisible(false);
 
 			switch (pItemTask.SAP__Origin) {
 				case 'ARIBA_TGW':
-
 					this.getOwnerComponent().setModel(new JSONModel({
 						visibleRowCount:  0,
 						TableItemBusy: false
@@ -4418,7 +4419,18 @@ sap.ui.define([
 						return;
 					});
 					break;
-			
+				
+				case 'LOCAL_FIGR_TGW':
+					this.getOwnerComponent().setModel(new JSONModel({
+						visibleRowCount:  0,
+						TableItemBusy: false
+					}), "DatHeaderShipment");
+
+					let oModelShipment = this.getModel("modelShipment");
+					this.fnReadDataShipment(oModelShipment, oDetailData, pItemTask, () => {
+						return;
+					});
+					break;
 				default:
 					break;
 			}
@@ -4438,7 +4450,7 @@ sap.ui.define([
 				//filters: filters,
 				success: function (oData) {
 					if(oData.LineItemSet.results.length > 0){
-						this.getView().byId('TB_ListItem').setVisible(true);
+						this.getView().byId('TB_ListItemAriba').setVisible(true);
 						this.setPropertyModel(this, "/visibleRowCount", oData.LineItemSet.results.length, 'DatHeaderAriba');
 						oListModel.setData(oData.LineItemSet.results);
 					}
@@ -4446,14 +4458,49 @@ sap.ui.define([
 					callback();
 				}.bind(this),
 				error: function (err) {
-					this.getView().byId('TB_ListItem').setVisible(false);
+					this.getView().byId('TB_ListItemAriba').setVisible(false);
 					if (this.isJsonString(err.responseText)) {
 						let messageError = JSONModel.parse(err.responseText);
 						MessageToast.show(messageError.error.message.value);
 					} else {
-						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.ErrorGetDataAriba"));
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
 					}
 					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderAriba');
+					callback();
+				}.bind(this)
+			})
+		},
+
+		fnReadDataShipment: function (pModel, oDetailData, pItemTask,  callback) {
+
+			if (!this.getOwnerComponent().getModel("LineItemModel"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
+
+			const oListModel = this.getOwnerComponent().getModel("LineItemModel");
+			oListModel.setData({});
+
+			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderShipment');
+			pModel.read("/ShipmentGroup('" + pItemTask.InstanceID + "')", {
+				urlParameters: {"$expand": "WorkItemSet"},
+				//filters: filters,
+				success: function (oData) {
+					if(oData.WorkItemSet.results.length > 0){
+						this.getView().byId('TB_ListItemShipment').setVisible(true);
+						this.setPropertyModel(this, "/visibleRowCount", oData.WorkItemSet.results.length, 'DatHeaderShipment');
+						oListModel.setData(oData.WorkItemSet.results);
+					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderShipment');
+					callback();
+				}.bind(this),
+				error: function (err) {
+					this.getView().byId('TB_ListItemShipment').setVisible(false);
+					if (this.isJsonString(err.responseText)) {
+						let messageError = JSONModel.parse(err.responseText);
+						MessageToast.show(messageError.error.message.value);
+					} else {
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
+					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderShipment');
 					callback();
 				}.bind(this)
 			})
@@ -4462,5 +4509,32 @@ sap.ui.define([
 		setPropertyModel: function (controller, property, value, Model) {
 			controller.getOwnerComponent().getModel(Model).setProperty(property, value);
 		},
+
+		handleSAPDocumentPress: function(oEvent){
+			let oSource = oEvent.getSource();
+			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
+
+			try {
+				let oIntentParamsF0717 = {};
+				let DocNumber = oItemList.documentNumber,
+					FiscalYear = oItemList.fiscalYear,
+					CompanyCode = oItemList.companyCode;
+
+				oIntentParamsF0717.semanticObject = 'AccountingDocument';
+				oIntentParamsF0717.action = 'manage';
+				
+				oIntentParamsF0717.params =  {
+												'CompanyCode': CompanyCode,
+												'AccountingDocument': DocNumber,
+												'FiscalYear': FiscalYear
+											};
+											
+				oIntentParamsF0717.appSpecificRoute = '';
+				this.fnNavigateToAppCustom(oIntentParamsF0717);
+			}
+			catch(err) {
+				MessageToast.show(err.message);
+			}
+		}
 	});
 });

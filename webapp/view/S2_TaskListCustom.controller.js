@@ -145,6 +145,8 @@ sap.ui.define([
 			const aTaskListModel = new JSONModel({ TaskCollection: [] });
 			this.getView().setModel(aTaskListModel, "taskList");
 
+			const ProviderSystemModel = this.getProviderSystem();
+
 			// set up Request configuration
 			this.fnAddAditionalSelectPropertiesAndInitBinding()
 				.then(function () {
@@ -167,17 +169,27 @@ sap.ui.define([
 						}
 					};
 
+					
 					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 						oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
-
-					this._oDataModel.read("/TaskCollection/$count", {
-						filters: [oFilter],
-						success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration)
+				
+		
+					ProviderSystemModel.forEach((ProviderSystem) => {
+						//let oModel = this.getModel(ProviderSystem.Alias);
+						let oModel = new sap.ui.model.odata.v2.ODataModel(ProviderSystem.URL, {
+							useBatch: false
+						});
+						oModel.read("/TaskCollection/$count", {
+							filters: [oFilter],
+							success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel)
+						});
 					});
+
+
 				}.bind(this));
 		},
 
-		_retrieveTasksByChunks: function (oRequestConfiguration, iTaskCount) {
+		_retrieveTasksByChunks: function (oRequestConfiguration, pDataModel, iTaskCount) {
 
 			console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
 			this._iTaskCount = iTaskCount;
@@ -194,7 +206,7 @@ sap.ui.define([
 				iTaskCount -= iChunkSize;
 				const pDataModelRead = new Promise(function (resolve, reject) {
 					const sGroupId = Math.random().toString(36).slice(2, 8); // e.g.: 's5gzlj'
-					this._oDataModel.read("/TaskCollection", {
+					pDataModel.read("/TaskCollection", {
 						...oRequestConfiguration,
 						success: function (oData, oResponse) { return resolve([oData, oResponse]) },
 						error: function (oError) { return reject(oError) },
@@ -205,7 +217,7 @@ sap.ui.define([
 							$skip: iSkip
 						}
 					});
-					this._oDataModel.submitChanges({
+					pDataModel.submitChanges({
 						groupId: sGroupId
 					});
 				}.bind(this));
@@ -633,6 +645,14 @@ sap.ui.define([
 					this.updateTableOnActionComplete.bind(this, aChangedItems));
 			}
 		},
+
+		getProviderSystem: function(){
+			const ProviderSystem = new JSONModel();
+			let sRootPath = jQuery.sap.getModulePath("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2");
+			let JSONProviderSystem = "/model/ProviderSystem.JSON";
+			ProviderSystem.loadData(sRootPath + JSONProviderSystem, "", false);
+			return ProviderSystem.getData().System;
+		}
 
 	});
 });

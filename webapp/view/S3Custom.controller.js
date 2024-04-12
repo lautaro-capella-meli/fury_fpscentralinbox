@@ -990,6 +990,7 @@ sap.ui.define([
 				oItem.UIExecutionLink = UIExecutionLinkData;
 				that.oModel2.setProperty("/UIExecutionLink", UIExecutionLinkData);
 
+				this.ClearTableLineItemCustom();
 				this.fnHandleIntentValidationAndNavigation(oItem, oRefreshData, fnSuccess);
 			}.bind(this, this._taskSwitchCount);
 
@@ -4399,6 +4400,7 @@ sap.ui.define([
 		fnGets3DetailCustom:function(oDetailData, pItemTask){
 			let oTblListItemAriba = this.getView().byId('TB_ListItemAriba');
 			let oTblListItemShipment = this.getView().byId('TB_ListItemShipment');
+			let oTblListItemContract = this.getView().byId('TB_ListItemContract');
 
 			if(!oTblListItemAriba){
 				return;
@@ -4406,6 +4408,7 @@ sap.ui.define([
 			
 			oTblListItemAriba.setVisible(false);
 			oTblListItemShipment.setVisible(false);
+			oTblListItemContract.setVisible(false);
 
 			switch (pItemTask.SAP__Origin) {
 				case 'ARIBA_TGW':
@@ -4431,6 +4434,19 @@ sap.ui.define([
 						return;
 					});
 					break;
+				case 'LOCAL_TGW':
+					let ContractNumber = oDetailData.CustomAttributeData.results.find(({ Name }) => Name === "CONTRACT_NUMBER");
+					if(ContractNumber){
+
+						this.getOwnerComponent().setModel(new JSONModel({
+							visibleRowCount:  0,
+							TableItemBusy: false
+						}), "DatHeaderContract");
+						let oModelContract = this.getModel("modelContract");
+						this.fnReadDataContract(oModelContract, ContractNumber.Value, () => {
+							return;
+						});
+					}
 				default:
 					break;
 			}
@@ -4506,6 +4522,41 @@ sap.ui.define([
 			})
 		},
 
+		fnReadDataContract: function (pModel, ContractNumber,  callback) {
+
+			if (!this.getOwnerComponent().getModel("LineItemModel"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
+
+			const oListModel = this.getOwnerComponent().getModel("LineItemModel");
+			oListModel.setData({});
+
+			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderContract');
+			pModel.read("/A_PurchaseContract('" + ContractNumber + "')/to_PurchaseContractItem", {
+				//urlParameters: {"$expand": "WorkItemSet"},
+				//filters: filters,
+				success: function (oData) {
+					if(oData.results.length > 0){
+						this.getView().byId('TB_ListItemContract').setVisible(true);
+						this.setPropertyModel(this, "/visibleRowCount", oData.results.length, 'DatHeaderContract');
+						oListModel.setData(oData.results);
+					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderContract');
+					callback();
+				}.bind(this),
+				error: function (err) {
+					this.getView().byId('TB_ListItemContract').setVisible(false);
+					if (this.isJsonString(err.responseText)) {
+						let messageError = JSONModel.parse(err.responseText);
+						MessageToast.show(messageError.error.message.value);
+					} else {
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
+					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderContract');
+					callback();
+				}.bind(this)
+			})
+		},
+
 		setPropertyModel: function (controller, property, value, Model) {
 			controller.getOwnerComponent().getModel(Model).setProperty(property, value);
 		},
@@ -4535,6 +4586,20 @@ sap.ui.define([
 			catch(err) {
 				MessageToast.show(err.message);
 			}
+		},
+
+		ClearTableLineItemCustom: function(){
+			let oTblListItemAriba = this.getView().byId('TB_ListItemAriba');
+			let oTblListItemShipment = this.getView().byId('TB_ListItemShipment');
+			let oTblListItemContract = this.getView().byId('TB_ListItemContract');
+
+			if(!oTblListItemAriba){
+				return;
+			}
+			
+			oTblListItemAriba.setVisible(false);
+			oTblListItemShipment.setVisible(false);
+			oTblListItemContract.setVisible(false);
 		}
 	});
 });

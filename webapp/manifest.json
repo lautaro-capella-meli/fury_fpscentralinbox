@@ -37,35 +37,8 @@
 					"odataVersion": "2.0"
 				}
 			},
-			"System_LOCAL_TGW": {
-				"uri": "/sap/opu/odata/IWPGW/TASKPROCESSING;mo;v=2;o=LOCAL_TGW",
-				"type": "OData",
-				"settings": {
-					"annotations": [],
-					"localUri": "localService/metadata.xml",
-					"odataVersion": "2.0"
-				}
-			},
-			"System_ARIBA_TGW": {
-				"uri": "/sap/opu/odata/IWPGW/TASKPROCESSING;mo;v=2;o=ARIBA_TGW",
-				"type": "OData",
-				"settings": {
-					"annotations": [],
-					"localUri": "localService/metadata.xml",
-					"odataVersion": "2.0"
-				}
-			},
-			"System_CONCUR_TGW": {
-				"uri": "/sap/opu/odata/IWPGW/TASKPROCESSING;mo;v=2;o=CONCUR_TGW",
-				"type": "OData",
-				"settings": {
-					"annotations": [],
-					"localUri": "localService/metadata.xml",
-					"odataVersion": "2.0"
-				}
-			},
-			"System_LOCAL_FIGR_TGW": {
-				"uri": "/sap/opu/odata/IWPGW/TASKPROCESSING;mo;v=2;o=LOCAL_FIGR_TGW",
+			"dataContract": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_PURCHASECONTRACT_SRV/",
 				"type": "OData",
 				"settings": {
 					"annotations": [],
@@ -163,23 +136,8 @@
 				"preload": true,
 				"settings": {}
 			},
-			"LOCAL_TGW": {
-				"dataSource": "System_LOCAL_TGW",
-				"preload": true,
-				"settings": {}
-			},
-			"ARIBA_TGW": {
-				"dataSource": "System_ARIBA_TGW",
-				"preload": true,
-				"settings": {}
-			},
-			"CONCUR_TGW": {
-				"dataSource": "System_CONCUR_TGW",
-				"preload": true,
-				"settings": {}
-			},
-			"LOCAL_FIGR_TGW": {
-				"dataSource": "System_LOCAL_FIGR_TGW",
+			"modelContract": {
+				"dataSource": "dataContract",
 				"preload": true,
 				"settings": {}
 			}

@@ -2071,7 +2071,7 @@ sap.ui.define([
 				}
 				var sAction = oEvent.getParameter("sAction");
 				var sStatus = oEvent.getParameter("sStatus");
-				if (oItem.Status === "COMPLETED" || oItem.Status === "FOR_RESUBMISSION" ||
+				if (oItem.Status === "COMPLETED" || oItem.Status === "FOR_RESUBMISSION" || oItem.Status === "READY" ||
 					((sAction && sAction === "FORWARD") && (sStatus && sStatus === "Success"))
 				) {
 					// standaloneDetailDeep mode works only when it is not navigated from master detail or table view

@@ -173,15 +173,18 @@ sap.ui.define([
 					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 						oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
 				
-		
 					ProviderSystemModel.forEach((ProviderSystem) => {
 
 						let oModel = new sap.ui.model.odata.v2.ODataModel(ProviderSystem.URL, {
 							useBatch: false
 						});
+
 						oModel.read("/TaskCollection/$count", {
 							filters: [oFilter],
-							success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel)
+							success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.Alias),
+							error: function (oError) { 
+								return MessageToast.show(ProviderSystem.Alias + ": " + oError.message  + " " + oError.responseText);
+							},
 						});
 					});
 
@@ -189,7 +192,7 @@ sap.ui.define([
 				}.bind(this));
 		},
 
-		_retrieveTasksByChunks: function (oRequestConfiguration, pDataModel, iTaskCount) {
+		_retrieveTasksByChunks: function (oRequestConfiguration, pDataModel, ProviderSystem, iTaskCount) {
 
 			console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
 			this._iTaskCount = iTaskCount;
@@ -209,7 +212,9 @@ sap.ui.define([
 					pDataModel.read("/TaskCollection", {
 						...oRequestConfiguration,
 						success: function (oData, oResponse) { return resolve([oData, oResponse]) },
-						error: function (oError) { return reject(oError) },
+						error: function (oError) { 
+							return reject(oError) 
+						},
 						groupId: sGroupId,
 						urlParameters: {
 							...oRequestConfiguration.urlParameters,
@@ -223,7 +228,9 @@ sap.ui.define([
 				}.bind(this));
 
 				// call partial OData read handler
-				pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this));
+				pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this), function(oError){
+					return MessageToast.show(ProviderSystem + ": " + oError.message  + " " + oError.responseText);
+				});
 				// collect Promises
 				this._aODataModelReadPromises.push(pDataModelRead);
 
@@ -240,15 +247,25 @@ sap.ui.define([
 				return MessageToast.show(oResponse.statusText + ":" + oResponse.body);
 
 			console.log(`>>> GOT ${oData.results.length} TASKS. <<<`);
-			var aTasks = oData.results;
+			let aTasks = oData.results;
 
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 				aTasks = this._dataMassage(oData.results);
 
+
 			// Add tasks to taskList model
-			var aTaskListModel = this.getView().getModel("taskList");
+			let aTaskListModel = this.getView().getModel("taskList");
+			let oTaskGroupAll = aTaskListModel.getProperty("/TaskCollection");
+
+			if(aTaskListModel.getProperty("/TaskCollection").length > 0){
+				if(this._oGroupsMap.get(this.byId("idMainIconTabBar").getItems()[0])){
+					oTaskGroupAll = this._oGroupsMap.get(this.byId("idMainIconTabBar").getItems()[0]).tasks;
+				}
+			}
+
 			aTaskListModel.setProperty("/TaskCollection", [
-				...aTaskListModel.getProperty("/TaskCollection"),
+				//...aTaskListModel.getProperty("/TaskCollection"),
+				...oTaskGroupAll,
 				...aTasks
 			]);
 
@@ -266,6 +283,7 @@ sap.ui.define([
 			this._filterDeferred?.resolve();
 
 			const aTasks = this.getView().getModel("taskList").getProperty("/TaskCollection");
+			
 			const oTaskListData = this._processTaskListData(aTasks);
 			this._initTabBars();
 			this._createTabFilters(oTaskListData);

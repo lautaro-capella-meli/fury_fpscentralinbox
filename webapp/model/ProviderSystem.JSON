@@ -6,16 +6,6 @@
       "Descri": "S/4 HANA"
     },
     {
-      "Alias": "ARIBA_TGW",
-      "URL": "/sap/opu/odata/IWPGW/TASKPROCESSING;mo;v=2;o=ARIBA_TGW",
-      "Descri": "Ariba"
-    },
-    {
-      "Alias": "CONCUR_TGW",
-      "URL": "/sap/opu/odata/IWPGW/TASKPROCESSING;mo;v=2;o=CONCUR_TGW",
-      "Descri": "Concur"
-    },
-    {
       "Alias": "LOCAL_FIGR_TGW",
       "URL": "/sap/opu/odata/IWPGW/TASKPROCESSING;mo;v=2;o=LOCAL_FIGR_TGW",
       "Descri": "S/4 HANA - SHIPPING"

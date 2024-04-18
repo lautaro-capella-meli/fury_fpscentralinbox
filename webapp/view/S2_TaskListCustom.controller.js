@@ -142,7 +142,8 @@ sap.ui.define([
 				.attachSelect(this.onSelectMainIconTabBar.bind(this));
 
 			// Init taskList model
-			const aTaskListModel = new JSONModel({ TaskCollection: [] });
+			const aTaskListModel = new JSONModel({ TaskCollection: [],
+												   TaskCollectionAll: [] });
 			this.getView().setModel(aTaskListModel, "taskList");
 
 			const ProviderSystemModel = this.getProviderSystem();
@@ -255,17 +256,15 @@ sap.ui.define([
 
 			// Add tasks to taskList model
 			let aTaskListModel = this.getView().getModel("taskList");
-			let oTaskGroupAll = aTaskListModel.getProperty("/TaskCollection");
-
-			if(aTaskListModel.getProperty("/TaskCollection").length > 0){
-				if(this._oGroupsMap.get(this.byId("idMainIconTabBar").getItems()[0])){
-					oTaskGroupAll = this._oGroupsMap.get(this.byId("idMainIconTabBar").getItems()[0]).tasks;
-				}
-			}
 
 			aTaskListModel.setProperty("/TaskCollection", [
-				//...aTaskListModel.getProperty("/TaskCollection"),
-				...oTaskGroupAll,
+				...aTaskListModel.getProperty("/TaskCollectionAll"),
+				...aTasks
+			]);
+
+			//Esto es una copia exacta para que no afecte cuando se seleccione algún Icon Tab que se modifica el TaskCollection
+			aTaskListModel.setProperty("/TaskCollectionAll", [
+				...aTaskListModel.getProperty("/TaskCollectionAll"),
 				...aTasks
 			]);
 

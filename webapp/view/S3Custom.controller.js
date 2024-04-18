@@ -2951,6 +2951,13 @@ sap.ui.define([
 			else {
 				if(oTaskData.CustomAttributeData.length){
 					try {
+
+						let oContractNumber = oTaskData.CustomAttributeData.find(({ Name }) => Name === "CONTRACT_NUMBER");
+						if(oContractNumber){
+							this.openFrioriAppME33K(oContractNumber.Value);
+							return;
+						}
+						
 						let oIntentParamsF0717 = {};
 						let oDocNumber = oTaskData.CustomAttributeData.find(({ Name }) => Name === "DOC_NUMBER"),
 							oFiscalYear = oTaskData.CustomAttributeData.find(({ Name }) => Name === "FISCAL_YEAR"),
@@ -4600,6 +4607,26 @@ sap.ui.define([
 			oTblListItemAriba.setVisible(false);
 			oTblListItemShipment.setVisible(false);
 			oTblListItemContract.setVisible(false);
-		}
+		},
+
+		openFrioriAppME33K: function(pContractNumber){
+			try {
+				let oIntentParamsME33K = {};
+
+				oIntentParamsME33K.semanticObject = 'PurchaseContract';
+				oIntentParamsME33K.action = 'display';
+				
+				oIntentParamsME33K.params =  {
+												'PurchaseContract': pContractNumber
+											};
+											
+				oIntentParamsME33K.appSpecificRoute = '';
+				this.fnNavigateToAppCustom(oIntentParamsME33K);
+			}
+			catch(err) {
+				MessageToast.show(err.message);
+			}
+		},
+
 	});
 });

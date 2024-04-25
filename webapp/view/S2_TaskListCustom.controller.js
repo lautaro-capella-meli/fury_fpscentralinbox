@@ -312,6 +312,7 @@ sap.ui.define([
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].TaskDefinitionName ||= oTask.TaskDefinitionName;
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].TaskDefinitionID ||= oTask.TaskDefinitionID;
 
+				/* //Definieron que no querían estos Iconos 25/04/2024
 				// Build  By status group
 				oTaskListData.byStatus[oTask.Status] ||= newTaskGroup();
 				oTaskListData.byStatus[oTask.Status].count++;
@@ -326,14 +327,15 @@ sap.ui.define([
 					oTaskListData.withCompletionDeadLine.count++;
 					oTaskListData.withCompletionDeadLine.tasks.push(oTask);
 				}
+				*/
 
 				return oTaskListData;
 			}, {
 				allTasks: newTaskGroup(),
-				bySource: {},
-				byStatus: {},
-				byPriority: {},
-				withCompletionDeadLine: newTaskGroup()
+				bySource: {}
+				//byStatus: {},
+				//byPriority: {},
+				//withCompletionDeadLine: newTaskGroup()
 			});
 
 			// Fill All Tasks group
@@ -402,6 +404,8 @@ sap.ui.define([
 					}
 				}
 			}
+
+			/* //Definieron que no querían estos Iconos 25/04/2024
 			/// MAIN > |SEPARATOR| ///
 			this._oMainIconTabBar.addItem(new sap.m.IconTabSeparator);
 
@@ -476,6 +480,7 @@ sap.ui.define([
 			});
 			this._oMainIconTabBar.addItem(oNewMainIconTabFilter);
 			this._oGroupsMap.set(oNewMainIconTabFilter, oTaskListData.withCompletionDeadLine);
+			*/
 		},
 
 		_initTabBars: function () {
@@ -534,6 +539,7 @@ sap.ui.define([
 			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
 			this._oFilterBarView ??= this.byId("taskListPage").getContent()[0];
 
+			/* //Definieron que no querían estos Iconos 25/04/2024
 			this._oStatusFilter ??= this._oFilterBarView?.byId("statusFilter");
 			this._oStatusFilter.setSelectedItems([]); // reset selected items
 			if (sMainIconTabBarSelectedKey.includes("byStatus__"))
@@ -545,6 +551,7 @@ sap.ui.define([
 			if (sMainIconTabBarSelectedKey.includes("byPriority__"))
 				this._updatePriorityFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
 			// this._oPriorityFilter.fireSelectionFinish.call(this._oPriorityFilter); // avoid multiple calls as it will be called at this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter)
+			*/
 
 			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
 			this._oTaskDefinitionFilter.setSelectedItems([]); // reset selected items

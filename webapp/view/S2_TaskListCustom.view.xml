@@ -154,10 +154,10 @@
 															text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"
 															state="Information"
 															inverted="true"/>
-<!-- 														<ObjectStatus id="PriorityTxtInline" class="sapUiTinyMarginEnd"
+														<ObjectStatus id="PriorityTxtInline" class="sapUiTinyMarginEnd"
 															text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Priority'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriority'}"
 															state="{path: 'taskList>Priority', formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriorityState'}"
-															inverted="true"/> -->
+															inverted="true"/>
 													</HBox>
 												</VBox>
 												<!-- Task Title and Has Attachments indication -->

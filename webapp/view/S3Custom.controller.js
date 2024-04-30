@@ -2260,6 +2260,7 @@ sap.ui.define([
 				}
 
 				// add the claim button
+				/*
 				if (that.fnFormatterSupportsProperty(oItem.TaskSupports.Claim, oItem.SupportsClaim)) {
 					iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
 					iDisplayOrderPriorityTemp++;
@@ -2275,6 +2276,7 @@ sap.ui.define([
 						}
 					});
 				}
+				*/
 
 				// add the release button
 				if (that.fnFormatterSupportsProperty(oItem.TaskSupports.Release, oItem.SupportsRelease)) {
@@ -2294,6 +2296,7 @@ sap.ui.define([
 				}
 
 				// add the forward button
+				/*
 				if (that.fnFormatterSupportsProperty(oItem.TaskSupports.Forward, oItem.SupportsForward)) {
 					iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
 					iDisplayOrderPriorityTemp++;
@@ -2303,8 +2306,10 @@ sap.ui.define([
 						onBtnPressed: this.onForwardPopUp.bind(this)
 					});
 				}
+				*/
 
 				// add the resubmit button
+				/*
 				if (oItem.TaskSupports) { // If task does not support TaskSupports
 					if (oItem.TaskSupports.Resubmit) {
 						iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
@@ -2315,7 +2320,7 @@ sap.ui.define([
 							onBtnPressed: this.showResubmitPopUp.bind(this)
 						});
 					}
-				}
+				}*/
 
 				if (oParsedParams && xNavService) {
 					bIsOpenButtonCreationInPromise = true;

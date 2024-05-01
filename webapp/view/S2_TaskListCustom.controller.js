@@ -670,6 +670,167 @@ sap.ui.define([
 			}
 		},
 
+
+		createFooterButtonsForSelectedTasks: function(aDecisionsAvailable) {
+
+			var iDisplayOrderPriorityTemp = 1;
+			var iDisplayOrderPriorityValue = 0;
+
+			// do not create decision buttons if any selected task is confirmable
+			if (this.oSelectedTasksDetails.bContainsConfirmableItem && this.oSelectedTasksDetails.SupportsConfirm) {
+
+				iDisplayOrderPriorityValue = iDisplayOrderPriorityTemp;
+				iDisplayOrderPriorityTemp++;
+				// create confirm button in case all selected tasks are confirmable
+				var confirmButton = this.getPositiveButton(null);
+				if (confirmButton) {
+					confirmButton.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+				}
+				this._oFullScreenPage.addCustomFooterContent(confirmButton);
+			}
+
+			else if (!this.oSelectedTasksDetails.bContainsConfirmableItem) {
+
+				// create decision buttons
+				for (var i = 0; i < aDecisionsAvailable.length; i++) {
+					var oDecision = aDecisionsAvailable[i];
+					var button = new Button({
+						text: oDecision.DecisionText,
+						press: this.showDecisionDialog.bind(this, oDecision)
+					});
+					if (!oDecision.Nature) {
+						iDisplayOrderPriorityValue = 400 + iDisplayOrderPriorityTemp;
+						iDisplayOrderPriorityTemp++;
+					}
+					else if (oDecision.Nature.toUpperCase() === "POSITIVE") {
+						iDisplayOrderPriorityValue = iDisplayOrderPriorityTemp;
+						iDisplayOrderPriorityTemp++;
+						button.setType(ButtonType.Accept);
+					}
+					else if (oDecision.Nature.toUpperCase() === "NEGATIVE") {
+						iDisplayOrderPriorityValue = 200 + iDisplayOrderPriorityTemp;
+						iDisplayOrderPriorityTemp++;
+						button.setType(ButtonType.Reject);
+					}
+					else {
+						iDisplayOrderPriorityValue = 400 + iDisplayOrderPriorityTemp;
+						iDisplayOrderPriorityTemp++;
+					}
+					button.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+
+
+					this._oFullScreenPage.addCustomFooterContent(button);
+				}
+			}
+
+			// create standard buttons
+
+			// claim button
+			/*
+			if (this.oSelectedTasksDetails.SupportsClaim) {
+				iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
+				iDisplayOrderPriorityTemp++;
+				var claimButton = this.getClaimButton();
+				if (claimButton) {
+					claimButton.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+				}
+				this._oFullScreenPage.addCustomFooterContent(claimButton);
+			}
+			*/
+
+			// Release button
+			if (this.oSelectedTasksDetails.SupportsRelease) {
+				iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
+				iDisplayOrderPriorityTemp++;
+				var releaseButton = this.getReleaseButton();
+				if (releaseButton) {
+					releaseButton.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+				}
+				this._oFullScreenPage.addCustomFooterContent(releaseButton);
+			}
+
+			// Forward button
+			/*
+			if (this.oSelectedTasksDetails.aSelectedTaskTypes.length === 1 && this.oSelectedTasksDetails.SupportsForward) {
+				iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
+				iDisplayOrderPriorityTemp++;
+				var forwardButton = this.getForwardButton();
+				if (forwardButton) {
+					forwardButton.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+				}
+				this._oFullScreenPage.addCustomFooterContent(forwardButton);
+			}
+			*/
+
+			// Resubmit button
+			/*
+			if (this.oSelectedTasksDetails.SupportsResubmit) {
+				iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
+				iDisplayOrderPriorityTemp++;
+				var resubmitButton = this.getResubmitButton();
+				if (resubmitButton) {
+					resubmitButton.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+				}
+				this._oFullScreenPage.addCustomFooterContent(resubmitButton);
+			}
+			*/
+
+			var oButtonList = {};
+			oButtonList.aFooterButtons = this._oFullScreenPage.getCustomFooterContent();
+			oButtonList.oPositiveAction = this._oFullScreenPage.getPositiveAction();
+			oButtonList.oNegativeAction = this._oFullScreenPage.getNegativeAction();
+			/**
+			 * @ControllerHook Modify the footer buttons in table view
+			 * This hook method can be used to add and change buttons for the table view footer
+			 * It is called when the task is selected in the table view
+			 * @callback cross.fnd.fiori.inbox.view.S2~extHookChangeFooterButtonsForExpertMode
+			 * @param {object} oButtonList - contains the positive, negative buttons and the additional button list.
+			 * @return {void}
+			 */
+			if (this.extHookChangeFooterButtonsForExpertMode) {
+				this.extHookChangeFooterButtonsForExpertMode(oButtonList);
+
+				this._oFullScreenPage.removeAllCustomFooterContent();
+
+				if (oButtonList) {
+					if (oButtonList.oPositiveAction) {
+						if (!oButtonList.oPositiveAction.iDisplayOrderPriority) {
+							iDisplayOrderPriorityValue = iDisplayOrderPriorityTemp;
+							iDisplayOrderPriorityTemp++;
+							oButtonList.oPositiveAction.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+						}
+						this._oFullScreenPage.addCustomFooterContent(oButtonList.oPositiveAction);
+					}
+					if (oButtonList.oNegativeAction) {
+						if (!oButtonList.oNegativeAction.iDisplayOrderPriority) {
+							iDisplayOrderPriorityValue = iDisplayOrderPriorityTemp;
+							iDisplayOrderPriorityTemp++;
+							oButtonList.oNegativeAction.iDisplayOrderPriority = iDisplayOrderPriorityValue;
+						}
+						this._oFullScreenPage.addCustomFooterContent(oButtonList.oNegativeAction);
+					}
+					if (oButtonList.aFooterButtons) {
+						var iButtonsLength = oButtonList.aFooterButtons.length;
+						for (var j =0; j< iButtonsLength; j++) {
+							this._oFullScreenPage.addCustomFooterContent(oButtonList.aFooterButtons[j]);
+						}
+					}
+				}
+			}
+			if (this._oFullScreenPage.getCustomFooterContent()) {
+				this._oFullScreenPage.getCustomFooterContent().sort(CommonFunctions.compareButtons);
+				var tempFooter = this._oFullScreenPage.getCustomFooterContent();
+				this._oFullScreenPage.removeAllCustomFooterContent();
+				if (tempFooter.length <= 0) {
+					MessageBox.warning(this._oResourceBundle.getText("NO_COMMON_ACTIONS"));
+					this._oFullScreenPage.setShowFooter(false);
+				}
+				for (var k=0; k<tempFooter.length; k++) {
+					this._oFullScreenPage.addCustomFooterContent(tempFooter[k]);
+				}
+			}
+		},
+
 		getProviderSystem: function(){
 			const ProviderSystem = new JSONModel();
 			let sRootPath = jQuery.sap.getModulePath("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2");

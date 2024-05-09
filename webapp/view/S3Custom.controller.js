@@ -2388,6 +2388,20 @@ sap.ui.define([
 					});
 				}
 
+
+				if (this.oKPIManager.shouldTaskShowKPIsTab(oItem)) {
+					iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
+                    iDisplayOrderPriorityTemp++;
+                    aButtonList.push({
+                        iDisplayOrderPriority: iDisplayOrderPriorityValue,
+                        sI18nBtnTxt: "XBUT_OPEN",
+                        onBtnPressed: function (oEvent) {
+                            that.checkStatusAndOpenTaskUI();
+                        }
+                    });
+				}
+
+
 				//add calendar integration button if supported
 				if (window.plugins && window.plugins.calendar) {
 					var oData = this.oModel2.getData();
@@ -2954,6 +2968,21 @@ sap.ui.define([
 				this.fnNavigateToApp(oIntentParams, oIntentParams.OpenInEmbedMode);
 			}
 			else {
+				//If is Purchase Order(PO)
+				if (this.oKPIManager.shouldTaskShowKPIsTab(oTaskData)) {
+					try {
+						let oPO_Number = sap.ui.getCore().byId('inb_VFMyMDAwMDE2NkxPQ0FMX1RHVw---templateView').getBindingContext().getProperty('PurchaseOrder');
+						if(oPO_Number){
+							this.openFrioriAppME23N(oPO_Number);
+						}
+					}
+					catch(err) {
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.NoConfigure"));
+					}
+
+					return;
+				}
+
 				if(oTaskData.CustomAttributeData.length){
 					try {
 
@@ -2962,7 +2991,7 @@ sap.ui.define([
 							this.openFrioriAppME33K(oContractNumber.Value);
 							return;
 						}
-						
+
 						let oIntentParamsF0717 = {};
 						let oDocNumber = oTaskData.CustomAttributeData.find(({ Name }) => Name === "DOC_NUMBER"),
 							oFiscalYear = oTaskData.CustomAttributeData.find(({ Name }) => Name === "FISCAL_YEAR"),
@@ -2981,7 +3010,7 @@ sap.ui.define([
 						this.fnNavigateToAppCustom(oIntentParamsF0717);
 					}
 					catch(err) {
-						MessageToast.show(err.message);
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.NoConfigure"));
 					}
 				}else{
 					MessageToast.show(this.i18nBundle.getText("custom.meli.msj.NoCustomAttributeData"));
@@ -4627,6 +4656,26 @@ sap.ui.define([
 											
 				oIntentParamsME33K.appSpecificRoute = '';
 				this.fnNavigateToAppCustom(oIntentParamsME33K);
+			}
+			catch(err) {
+				MessageToast.show(err.message);
+			}
+		},
+
+		openFrioriAppME23N: function(pPO_Number){
+			try {
+				let oIntentParamsME23N = {};
+
+				oIntentParamsME23N.semanticObject = 'PurchaseOrder';
+				oIntentParamsME23N.action = 'display';
+				
+				oIntentParamsME23N.params =  {
+												'PurchaseOrder': pPO_Number,
+												'uitype': 'advanced'
+											};
+											
+				oIntentParamsME23N.appSpecificRoute = '';
+				this.fnNavigateToAppCustom(oIntentParamsME23N);
 			}
 			catch(err) {
 				MessageToast.show(err.message);

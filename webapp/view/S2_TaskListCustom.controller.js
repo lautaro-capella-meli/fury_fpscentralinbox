@@ -558,6 +558,13 @@ sap.ui.define([
 			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinition__"))
 				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
 			this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
+	
+
+			let ColumItemsPosition = this._oTablePersoController._oPersonalizations.aColumns.find(({ id}) => id=== "table-taskListTable-TS20000166ITEMOVERVIEWColumn");
+			if(ColumItemsPosition){
+				ColumItemsPosition.visible = false;
+				this._oTablePersoController.getPersoService().setPersData(this._oTablePersoController._oPersonalizations)
+			}
 
 		},
 

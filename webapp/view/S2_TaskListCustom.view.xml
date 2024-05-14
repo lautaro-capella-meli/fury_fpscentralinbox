@@ -97,7 +97,7 @@
 											</header>
 										</Column>
 										<!-- On Behalf Of -->
-										<Column hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline">
+										<Column hAlign="Begin" id="onBehalfOfColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="onBehalfOfLbl" text="{i18n>custom.meli.Labels.OnBehalfOf}"/>
 											</header>
@@ -118,6 +118,11 @@
 										<Column hAlign="Right" id="dueDateColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline" visible="false">
 											<header>
 												<Label id="dueDateLbl" text="{i18n>multi.summary.dueDate}"/>
+											</header>
+										</Column>
+										<Column hAlign="Begin" id="SubstitutedUserColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline">
+											<header>
+												<Label id="SubstitutedUserLbl" text="{i18n>custom.meli.Labels.SubstitutedUser}"/>
 											</header>
 										</Column>
 										<!-- Add Button 
@@ -188,6 +193,8 @@
 												<ObjectStatus class="sapMTableContentMargin" id="DueDateTxt"
 													text="{path: 'taskList>CompletionDeadLine', formatter:'cross.fnd.fiori.inbox.Conversions.formatterDate'}"
 													state="{path: 'taskList>CompletionDeadLine', formatter:'cross.fnd.fiori.inbox.Conversions.formatterDeadLineIndicatorState'}"/>
+												
+												<Text class="sapMTableContentMargin" id="SubstitutedUserTxt" maxLines="2" text="{path: 'taskList>SubstitutedUser'}"></Text>
 												<!-- Add Button 
 												<Button class="sapMTableContentMargin" id="btnAddToCart" press="onAddToCartPressed" text="Approve" type="Accept"/>
 												-->

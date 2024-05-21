@@ -4682,5 +4682,20 @@ sap.ui.define([
 			}
 		},
 
+		getTextStatusContract: function(pStatus){
+			let sTextStatus;
+			switch(pStatus) {
+				case 'L':
+					sTextStatus = this.i18nBundle.getText("custom.meli.S3_ItemContract.MarkedDeletion");
+				  break;
+				case 'S':
+					sTextStatus = this.i18nBundle.getText("custom.meli.S3_ItemContract.Locked");
+				  break;
+				default:
+					sTextStatus = "";
+			  }
+			return sTextStatus;
+		}
+
 	});
 });

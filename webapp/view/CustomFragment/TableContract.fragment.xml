@@ -40,6 +40,12 @@
 				hAlign="Begin">
 				<m:Text text="{i18n>custom.meli.S3_ListItemContract.Amount}" />
 			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="{i18n>custom.meli.S3_ListItemContract.Status}" />
+			</m:Column>
 		</m:columns>
 		<m:items>
 			<m:ColumnListItem vAlign="Middle">
@@ -67,6 +73,7 @@
 								formatOptions: {showMeasure: false}
 							}"
 							unit="{LineItemModel>DocumentCurrency}" />
+					<m:Text text="{path: 'LineItemModel>PurchasingContractDeletionCode', formatter:'.getTextStatusContract'}"/>
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

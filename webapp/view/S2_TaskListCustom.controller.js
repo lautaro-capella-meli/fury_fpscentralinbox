@@ -146,51 +146,55 @@ sap.ui.define([
 												   TaskCollectionAll: [] });
 			this.getView().setModel(aTaskListModel, "taskList");
 
-			const ProviderSystemModel = this.getProviderSystem();
+			//const ProviderSystemModel = this.getProviderSystem();
 
-			// set up Request configuration
-			this.fnAddAditionalSelectPropertiesAndInitBinding()
-				.then(function () {
-					const aFilters = [this._getinitialStatusFilters()];
-					const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
+			this.getProviderSystem(function(ProviderSystemModel){
+				// set up Request configuration
+				this.fnAddAditionalSelectPropertiesAndInitBinding()
+					.then(function () {
+						const aFilters = [this._getinitialStatusFilters()];
+						const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
 
-					if (oTaskDefinitionFilter)
-						aFilters.push(oTaskDefinitionFilter);
+						if (oTaskDefinitionFilter)
+							aFilters.push(oTaskDefinitionFilter);
 
-					const oFilter = new Filter({
-						filters: aFilters,
-						and: true
-					});
-					const oRequestConfiguration = {
-						filters: [oFilter],
-						sorters: [this._getCurrentSorter()],
-						success: this.onSuccessTaskCollectionRequest.bind(this),
-						urlParameters: {
-							$select: this._getTaskPropertiesToFetch().join(",")
-						}
-					};
-
-					
-					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
-						oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
-				
-					ProviderSystemModel.forEach((ProviderSystem) => {
-
-						let oModel = new sap.ui.model.odata.v2.ODataModel(ProviderSystem.URL, {
-							useBatch: false
+						const oFilter = new Filter({
+							filters: aFilters,
+							and: true
 						});
-
-						oModel.read("/TaskCollection/$count", {
+						const oRequestConfiguration = {
 							filters: [oFilter],
-							success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.Alias),
-							error: function (oError) { 
-								return MessageToast.show(ProviderSystem.Alias + ": " + oError.message  + " " + oError.responseText);
-							},
+							sorters: [this._getCurrentSorter()],
+							success: this.onSuccessTaskCollectionRequest.bind(this),
+							urlParameters: {
+								$select: this._getTaskPropertiesToFetch().join(",")
+							}
+						};
+
+						
+						if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
+							oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
+					
+						ProviderSystemModel.forEach((ProviderSystem) => {
+							let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+							let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
+
+							let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
+								useBatch: false
+							});
+
+							oModel.read("/TaskCollection/$count", {
+								filters: [oFilter],
+								success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
+								error: function (oError) { 
+									return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message  + " " + oError.responseText);
+								},
+							});
 						});
-					});
 
 
-				}.bind(this));
+					}.bind(this));
+			}.bind(this));
 		},
 
 		_retrieveTasksByChunks: function (oRequestConfiguration, pDataModel, ProviderSystem, iTaskCount) {
@@ -838,13 +842,43 @@ sap.ui.define([
 			}
 		},
 
-		getProviderSystem: function(){
+		getProviderSystemOld: function(){
 			const ProviderSystem = new JSONModel();
 			let sRootPath = jQuery.sap.getModulePath("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2");
 			let JSONProviderSystem = "/model/ProviderSystem.JSON";
 			ProviderSystem.loadData(sRootPath + JSONProviderSystem, "", false);
 			return ProviderSystem.getData().System;
-		}
+		},
 
+		getProviderSystem: function(callback) {
+			let oModel = this.getOwnerComponent().getModel();
+
+			if (this.getOwnerComponent().getModel("ProviderSystem")){
+				callback(this.getOwnerComponent().getModel("ProviderSystem").getData());
+			}
+			
+			this.getOwnerComponent().setModel(new JSONModel({}), "ProviderSystem");
+
+			const SystemModel = this.getOwnerComponent().getModel("ProviderSystem");
+			SystemModel.setData({});
+
+			oModel.read("/SystemInfoCollection", {
+				success: function (oData) {
+					if(oData.results.length > 0){
+						SystemModel.setData(oData.results);
+					}
+					callback(SystemModel.getData());
+				},
+				error: function (err) {
+					if (this.isJsonString(err.responseText)) {
+						let messageError = JSONModel.parse(err.responseText);
+						MessageToast.show(messageError.error.message.value);
+					} else {
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.SystemInfoCollection"));
+					}
+					callback(SystemModel.getData());
+				}.bind(this)
+			})
+		},
 	});
 });

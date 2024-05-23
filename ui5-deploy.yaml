@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "3.1"
+metadata:
+  name: cross.fnd.fiori.inbox.ca_fiori_inboxextension2
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          destination: s4desrt_200
+          url: http://sapds401.melisap.com:44301
+        app:
+          name: Z_CENTRAL_INBOX
+          description: My Central Inbox
+          package: ZMIU2_PROCESS
+          transport: DS4K9A2NP2
+        exclude:
+          - /test/

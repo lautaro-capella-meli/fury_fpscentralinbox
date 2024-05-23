@@ -133,7 +133,7 @@ sap.ui.define([
 
 			this._bUseSubIconTabBar ??= true;
 			this._oGroupsMap ??= new Map();
-			this._aODataModelReadPromises = [];
+			//this._aODataModelReadPromises = [];
 
 			this._oProgressIndicator ??= this.byId("idLoadingProgressIndicator");
 			this._oMainIconTabBar ??= this.byId("idMainIconTabBar")
@@ -199,6 +199,8 @@ sap.ui.define([
 
 		_retrieveTasksByChunks: function (oRequestConfiguration, pDataModel, ProviderSystem, iTaskCount) {
 
+			let _aODataModelReadPromises = [];
+
 			console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
 			this._iTaskCount = iTaskCount;
 
@@ -237,13 +239,13 @@ sap.ui.define([
 					return MessageToast.show(ProviderSystem + ": " + oError.message  + " " + oError.responseText);
 				});
 				// collect Promises
-				this._aODataModelReadPromises.push(pDataModelRead);
+				_aODataModelReadPromises.push(pDataModelRead);
 
 				iSkip += iChunkSize;
 			} while (iTaskCount > 0);
 
 			// set final OData read handler
-			Promise.all(this._aODataModelReadPromises)
+			Promise.all(_aODataModelReadPromises)
 				.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
 		},
 

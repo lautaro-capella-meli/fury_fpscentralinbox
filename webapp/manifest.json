@@ -1,155 +1,150 @@
 {
-    "_version": "1.1.0",
-    "sap.app": {
-        "_version": "1.1.0",
-        "id": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2",
-        "type": "application",
-        "applicationVersion": {
-            "version": "1.0"
-        },
-        "title": "{{SHELL_TITLE}}",
-        "i18n": "i18n/i18n.properties",
-        "dataSources": {
-            "kpiService": {
-                "uri": "/sap/opu/odata/sap/ZGW_MIU2_CUSTOM_KPI_SRV/",
-                "type": "OData",
-                "settings": {
-                    "annotations": [],
-                    "localUri": "localService/metadata.xml",
-                    "odataVersion": "2.0"
-                }
-            },
-            "dataAriba": {
-                "uri": "/sap/opu/odata/sap/ZGW_MIU2_ARIBA_PR_DETAIL_SRV/",
-                "type": "OData",
-                "settings": {
-                    "annotations": [],
-                    "localUri": "localService/metadata.xml",
-                    "odataVersion": "2.0"
-                }
-            },
-            "dataShipment": {
-                "uri": "/sap/opu/odata/sap/ZGW_MIU2_SHIPMENT_GRP_DETAIL_SRV/",
-                "type": "OData",
-                "settings": {
-                    "annotations": [],
-                    "localUri": "localService/metadata.xml",
-                    "odataVersion": "2.0"
-                }
-            },
-            "dataContract": {
-                "uri": "/sap/opu/odata/sap/ZGW_MIU2_PURCHASECONTRACT_SRV/",
-                "type": "OData",
-                "settings": {
-                    "annotations": [],
-                    "localUri": "localService/metadata.xml",
-                    "odataVersion": "2.0"
-                }
-            }
-        },
-        "sourceTemplate": {
-            "id": "@sap/ux-app-migrator:extension",
-            "version": "1.13.4",
-            "toolsId": "110095ca-0886-4544-9ec4-94ca71fd253d"
-        }
-    },
-    "sap.ui": {
-        "_version": "1.1.0",
-        "technology": "UI5",
-        "fullWidth": true,
-        "icons": {
-            "icon": "sap-icon://approvals",
-            "favIcon": "./resources/sap/ca/ui/themes/base/img/favicon/Approve_Requests.ico"
-        },
-        "deviceTypes": {
-            "desktop": true,
-            "tablet": true,
-            "phone": true
-        },
-        "supportedThemes": [
-            "sap_hcb,sap_bluecrystal"
-        ]
-    },
-    "sap.ui5": {
-        "_version": "1.1.0",
-        "dependencies": {
-            "minUI5Version": "1.90.7"
-        },
-        "extends": {
-            "component": "cross.fnd.fiori.inbox",
-            "extensions": {
-                "sap.ui.controllerExtensions": {
-                    "cross.fnd.fiori.inbox.controller.App": {
-                        "controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.controller.AppCustom"
-                    },
-                    "cross.fnd.fiori.inbox.view.S2_TaskList": {
-                        "controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom"
-                    },
-                    "cross.fnd.fiori.inbox.view.S3": {
-                        "controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom"
-                    },
-                    "cross.fnd.fiori.inbox.view.S2_FilterBar": {
-                        "controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom"
-                    }
-                },
-                "sap.ui.viewReplacements": {
-                    "cross.fnd.fiori.inbox.view.S2_TaskList": {
-                        "viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom",
-                        "type": "XML"
-                    },
-                    "cross.fnd.fiori.inbox.view.S2_FilterBar": {
-                        "viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom",
-                        "type": "XML"
-                    },
-                    "cross.fnd.fiori.inbox.view.S3": {
-                        "viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom",
-                        "type": "XML"
-                    }
-                }
-            }
-        },
-        "contentDensities": {
-            "compact": true,
-            "cozy": true
-        },
-        "resources": {
-            "css": [
-                {
-                    "uri": "css/custom.css"
-                }
-            ]
-        },
-        "models": {
-            "i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "settings": {
-                    "bundleName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.i18n.i18n"
-                }
-            },
-            "kpiModel": {
-                "dataSource": "kpiService",
-                "preload": true,
-                "settings": {}
-            },
-            "modelAriba": {
-                "dataSource": "dataAriba",
-                "preload": true,
-                "settings": {}
-            },
-            "modelShipment": {
-                "dataSource": "dataShipment",
-                "preload": true,
-                "settings": {}
-            },
-            "modelContract": {
-                "dataSource": "dataContract",
-                "preload": true,
-                "settings": {}
-            }
-        }
-    },
-    "sap.platform.abap": {
-        "uri": "/sap/bc/ui5_ui5/sap/z_central_inbox/webapp",
-        "_version": "1.1.0"
-    }
+	"_version": "1.1.0",
+	"sap.app": {
+		"_version": "1.1.0",
+		"id": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2",
+		"type": "application",
+		"applicationVersion": {
+			"version": "1.0"
+		},
+		"title": "{{SHELL_TITLE}}",
+		"i18n": "i18n/i18n.properties",
+		"dataSources": {
+			"kpiService": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_CUSTOM_KPI_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
+			},
+			"dataAriba": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_ARIBA_PR_DETAIL_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
+			},
+			"dataShipment": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_SHIPMENT_GRP_DETAIL_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
+			},
+			"dataContract": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_PURCHASECONTRACT_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
+			}
+		}
+	},
+	"sap.ui": {
+		"_version": "1.1.0",
+		"technology": "UI5",
+		"fullWidth": true,
+		"icons": {
+			"icon": "sap-icon://approvals",
+			"favIcon": "./resources/sap/ca/ui/themes/base/img/favicon/Approve_Requests.ico"
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_hcb,sap_bluecrystal"
+		]
+	},
+	"sap.ui5": {
+		"_version": "1.1.0",
+		"dependencies": {
+			"minUI5Version": "1.90.7"
+		},
+		"extends": {
+			"component": "cross.fnd.fiori.inbox",
+			"extensions": {
+				"sap.ui.controllerExtensions": {
+					"cross.fnd.fiori.inbox.controller.App": {
+						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.controller.AppCustom"
+					},
+					"cross.fnd.fiori.inbox.view.S2_TaskList": {
+						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom"
+					},
+					"cross.fnd.fiori.inbox.view.S3": {
+						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom"
+					},
+					"cross.fnd.fiori.inbox.view.S2_FilterBar": {
+						"controllerName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom"
+					}
+				},
+				"sap.ui.viewReplacements": {
+					"cross.fnd.fiori.inbox.view.S2_TaskList": {
+						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom",
+						"type": "XML"
+					},
+					"cross.fnd.fiori.inbox.view.S2_FilterBar": {
+						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom",
+						"type": "XML"
+					},
+					"cross.fnd.fiori.inbox.view.S3": {
+						"viewName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S3Custom",
+						"type": "XML"
+					}
+				}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/custom.css"
+				}
+			]
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.i18n.i18n"
+				}
+			},
+			"kpiModel": {
+				"dataSource": "kpiService",
+				"preload": true,
+				"settings": {}
+			},
+			"modelAriba": {
+				"dataSource": "dataAriba",
+				"preload": true,
+				"settings": {}
+			},
+			"modelShipment": {
+				"dataSource": "dataShipment",
+				"preload": true,
+				"settings": {}
+			},
+			"modelContract": {
+				"dataSource": "dataContract",
+				"preload": true,
+				"settings": {}
+			}
+		}
+	},
+	"sap.platform.abap": {
+		"uri": "/sap/bc/ui5_ui5/sap/z_central_inbox/webapp",
+		"_version": "1.1.0"
+	}
 }

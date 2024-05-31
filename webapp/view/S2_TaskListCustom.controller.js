@@ -36,13 +36,14 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 	"sap/ui/core/format/DateFormat",
 	"sap/ui/thirdparty/jquery",
+	"cross/fnd/fiori/inbox/util/MultiSelect",
 	"cross/fnd/fiori/inbox/CA_FIORI_INBOXExtension2/util/CustomFormatters",
 ], function (UIComponent, XMLView, Sorter, Filter, FilterOperator, JSONModel, Column, MessageToast,
 	MessageBox, TablePersoController, GroupHeaderListItem, TableOperations, TaskListGroupingHelper,
 	TaskListSortingHelper, TaskListCustomAttributeHelper, DataManager, BaseController, PositiveAction,
 	NegativeAction, Button, Log, ConfirmationDialogManager, Forward, Resubmit, MultiSelect, ActionHelper,
 	CommonFunctions, ForwardSimple, Conversions, syncStyleClass, Device, MessagePopoverItem, library,
-	MessagePopover, Fragment, DateFormat, jquery, CustomFormatters) {
+	MessagePopover, Fragment, DateFormat, jquery, MultiSelectDialog, CustomFormatters) {
 	"use strict";
 	var ButtonType = library.ButtonType;
 	const I18N_CUSTOM_PREFIX = "custom.meli."
@@ -126,6 +127,7 @@ sap.ui.define([
 
 
 		_initTaskModel: function () {
+			let vGetData = true;
 
 			// Get Task count
 			this._oTable.setBusy(true);
@@ -133,7 +135,6 @@ sap.ui.define([
 
 			this._bUseSubIconTabBar ??= true;
 			this._oGroupsMap ??= new Map();
-			//this._aODataModelReadPromises = [];
 
 			this._oProgressIndicator ??= this.byId("idLoadingProgressIndicator");
 			this._oMainIconTabBar ??= this.byId("idMainIconTabBar")
@@ -145,8 +146,6 @@ sap.ui.define([
 			const aTaskListModel = new JSONModel({ TaskCollection: [],
 												   TaskCollectionAll: [] });
 			this.getView().setModel(aTaskListModel, "taskList");
-
-			//const ProviderSystemModel = this.getProviderSystem();
 
 			this.getProviderSystem(function(ProviderSystemModel){
 				// set up Request configuration
@@ -174,23 +173,26 @@ sap.ui.define([
 						
 						if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 							oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
-					
-						ProviderSystemModel.forEach((ProviderSystem) => {
-							let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
-							let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
+						
+						if(vGetData){
+							vGetData = false;
+							ProviderSystemModel.forEach((ProviderSystem) => {
+								let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+								let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
 
-							let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
-								useBatch: false
-							});
+								let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
+									useBatch: false
+								});
 
-							oModel.read("/TaskCollection/$count", {
-								filters: [oFilter],
-								success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
-								error: function (oError) { 
-									return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message  + " " + oError.responseText);
-								},
+								oModel.read("/TaskCollection/$count", {
+									filters: [oFilter],
+									success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
+									error: function (oError) { 
+										return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message  + " " + oError.responseText);
+									},
+								});
 							});
-						});
+						}
 
 
 					}.bind(this));

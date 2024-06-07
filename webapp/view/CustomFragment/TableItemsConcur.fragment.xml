@@ -1,0 +1,65 @@
+<core:FragmentDefinition 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:m="sap.m">
+	<m:Table 
+        headerText="{i18n>custom.meli.S3_ListItem.Items}({DatHeaderConcur>/visibleRowCount})"
+        busy="{DatHeaderConcur>/TableItemBusy}"
+		id="TB_ListItemConcur" items="{ path: 'LineItemModel>/'}" ariaLabelledBy="title"
+        visible="false">
+		<m:columns>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.expenseTypeName}" />
+			</m:Column>
+			<m:Column
+				width="12em">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.approvedAmount}" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Tablet"
+				demandPopin="true">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.claimedAmount}" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.vendorDescription}" />
+			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="" />
+			</m:Column>
+		</m:columns>
+		<m:items>
+			<m:ColumnListItem vAlign="Middle">
+				<m:cells>
+					<m:Text
+						text="{LineItemModel>expenseTypeName}" />
+					<m:ObjectNumber
+							number="{
+								parts:[{path:'LineItemModel>approvedAmount'},{path:'LineItemModel>approvedAmountCurrency'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{LineItemModel>approvedAmountCurrency}" />
+					<m:ObjectNumber
+							number="{
+								parts:[{path:'LineItemModel>claimedAmount'},{path:'LineItemModel>claimedAmountCurrency'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{LineItemModel>claimedAmountCurrency}" />
+					<m:Text
+						text="{LineItemModel>vendorDescription}" />
+					<m:Button text="" press="onPressComment" icon="sap-icon://comment" />
+				</m:cells>
+			</m:ColumnListItem>
+		</m:items>
+    </m:Table>
+</core:FragmentDefinition>

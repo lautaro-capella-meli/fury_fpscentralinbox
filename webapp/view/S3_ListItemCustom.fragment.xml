@@ -10,4 +10,6 @@
 
 	<core:Fragment 
 		fragmentName="cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.CustomFragment.TableContract" type="XML"/>
+	<core:Fragment 
+		fragmentName="cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.CustomFragment.TableItemsConcur" type="XML"/>
 </core:FragmentDefinition>

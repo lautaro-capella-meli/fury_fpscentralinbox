@@ -4442,6 +4442,8 @@ sap.ui.define([
 			let oTblListItemAriba = this.getView().byId('TB_ListItemAriba');
 			let oTblListItemShipment = this.getView().byId('TB_ListItemShipment');
 			let oTblListItemContract = this.getView().byId('TB_ListItemContract');
+			let oTblListItemConcur = this.getView().byId('TB_ListItemConcur');
+			
 
 			if(!oTblListItemAriba){
 				return;
@@ -4450,6 +4452,7 @@ sap.ui.define([
 			oTblListItemAriba.setVisible(false);
 			oTblListItemShipment.setVisible(false);
 			oTblListItemContract.setVisible(false);
+			oTblListItemConcur.setVisible(false);
 
 			switch (pItemTask.SAP__Origin) {
 				case 'ARIBA_TGW':
@@ -4488,6 +4491,18 @@ sap.ui.define([
 							return;
 						});
 					}
+					break;
+				case 'CONCUR_TGW':
+					this.getOwnerComponent().setModel(new JSONModel({
+						visibleRowCount:  0,
+						TableItemBusy: false
+					}), "DatHeaderConcur");
+
+					let oModelConcur = this.getModel("modelConcur");
+					this.fnReadDataConcur(oModelConcur, oDetailData, pItemTask, () => {
+						return;
+					});
+					break;
 				default:
 					break;
 			}
@@ -4695,7 +4710,101 @@ sap.ui.define([
 					sTextStatus = "";
 			  }
 			return sTextStatus;
-		}
+		},
+
+		fnReadDataConcur: function (pModel, oDetailData, pItemTask,  callback) {
+
+			if (!this.getOwnerComponent().getModel("LineItemModel"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
+
+			const oListModel = this.getOwnerComponent().getModel("LineItemModel");
+			oListModel.setData({});
+
+			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderConcur');
+			pModel.read("/Report('" + pItemTask.InstanceID + "')", {
+				urlParameters: {"$expand": "ExpenseSet,ExpenseSet/CommentSet"},
+				//filters: filters,
+				success: function (oData) {
+					if(oData.ExpenseSet.results.length > 0){
+						this.getView().byId('TB_ListItemConcur').setVisible(true);
+						this.setPropertyModel(this, "/visibleRowCount", oData.ExpenseSet.results.length, 'DatHeaderConcur');
+						oListModel.setData(oData.ExpenseSet.results);
+					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderConcur');
+					callback();
+				}.bind(this),
+				error: function (err) {
+					this.getView().byId('TB_ListItemConcur').setVisible(false);
+					if (this.isJsonString(err.responseText)) {
+						let messageError = JSONModel.parse(err.responseText);
+						MessageToast.show(messageError.error.message.value);
+					} else {
+						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
+					}
+					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderConcur');
+					callback();
+				}.bind(this)
+			})
+		},
+
+		onPressComment: function(oEvent){
+			let oSource = oEvent.getSource();
+			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
+
+			if (!this.getOwnerComponent().getModel("ListComments"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "ListComments");
+
+			const oListModel = this.getOwnerComponent().getModel("ListComments");
+			oListModel.setData({});
+			if(oItemList.CommentSet.results.length > 0){
+				oListModel.setData(oItemList.CommentSet.results);
+				this.openDialogComments();
+			}else{
+				
+			}
+		},
+
+		/**
+		 * Formatea una fecha TimeStamp (JS Object Date) a formato de salida (sin hora y en UTC)
+		 * @param {*} begda 
+		 * @returns 
+		 */
+		formatSingleDate: function (begda) {
+
+			var d = DateFormat.getDateInstance({
+				style: "medium",
+				UTC: true
+			});
+
+			if (begda) {
+				return d.format(begda);
+			} else {
+				return "";
+			}
+		},	
+
+		openDialogComments: function () {
+
+			if (!this.oCommentsDialog) {
+				this.oCommentsDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.CustomFragment.ListCommentsConcur",
+					controller: this
+				}).then(function (oDialog) {
+					this.getView().addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.oCommentsDialog.then(function (oDialog) {
+				oDialog.open();
+				return oDialog;
+			}.bind(this));
+
+		},
+
+		onCloseCommentDialog: function (evt) {
+			this.byId("CommentsConcurDialog").close();
+		},
 
 	});
 });

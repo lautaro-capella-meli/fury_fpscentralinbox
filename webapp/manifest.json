@@ -45,6 +45,15 @@
 					"localUri": "localService/metadata.xml",
 					"odataVersion": "2.0"
 				}
+			},
+			"dataConcur": {
+				"uri": "/sap/opu/odata/sap/ZGW_MIU2_CONCUR_REP_EXPENSES_SRV/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"localUri": "localService/metadata.xml",
+					"odataVersion": "2.0"
+				}
 			}
 		}
 	},
@@ -138,6 +147,11 @@
 			},
 			"modelContract": {
 				"dataSource": "dataContract",
+				"preload": true,
+				"settings": {}
+			},
+			"modelConcur": {
+				"dataSource": "dataConcur",
 				"preload": true,
 				"settings": {}
 			}

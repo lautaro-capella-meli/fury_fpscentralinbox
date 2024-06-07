@@ -1,0 +1,34 @@
+<core:FragmentDefinition 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:m="sap.m">
+		<m:Dialog 
+		id="CommentsConcurDialog" 
+		title="{i18n>custom.meli.S3_Concur.CommentsConcurDialog}" 
+		icon="sap-icon://comment" 
+		busy="false" 
+		busyIndicatorDelay="0" 
+		class="sapUiSizeCompact">
+		<m:content>
+			<m:List showSeparators="Inner" items="{ path: 'ListComments>/'}">
+				<m:FeedListItem 
+					sender="" 
+					icon="{
+						path: 'sap-icon://discussion'
+					}" 
+					senderPress="iconOpenPopUp" 
+					iconPress="iconOpenPopUp" 
+					iconDensityAware="false" 
+					info="{ListComments>createdForEmployeeFirstName} {ListComments>createdForEmployeeLastName}" 
+					timestamp="{
+						path: 'ListComments>creationDate'
+					}" 
+					text="{ListComments>comment}" >
+				</m:FeedListItem>
+			</m:List>
+		</m:content>
+		<m:endButton>
+			<m:Button text="{i18n>custom.meli.S3_Concur.commentDialogCloseButton}" press=".onCloseCommentDialog"/>
+		</m:endButton>
+	</m:Dialog>
+</core:FragmentDefinition>

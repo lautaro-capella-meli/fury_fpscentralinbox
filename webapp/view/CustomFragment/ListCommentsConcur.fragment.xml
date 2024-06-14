@@ -21,7 +21,8 @@
 					iconDensityAware="false" 
 					info="{ListComments>createdForEmployeeFirstName} {ListComments>createdForEmployeeLastName}" 
 					timestamp="{
-						path: 'ListComments>creationDate'
+						path: 'ListComments>creationDate',
+						formatter: '.formatSingleDate'
 					}" 
 					text="{ListComments>comment}" >
 				</m:FeedListItem>

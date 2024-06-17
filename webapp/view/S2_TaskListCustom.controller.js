@@ -206,9 +206,9 @@ sap.ui.define([
 			console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
 			this._iTaskCount = iTaskCount;
 
-			var iSkip = 0;
+			let iSkip = 0;
 			const iTargetChunkSize = Math.min(200, this.oDataManager.getListSize());
-			const iChunkSize = Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
+			const iChunkSize = ProviderSystem === 'ARIBA_TGW' ? 25 : Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
 
 			// show progress bar if taskCount exceeds request pagination
 			this._oProgressIndicator.setVisible(iTaskCount > iChunkSize);

@@ -4722,7 +4722,7 @@ sap.ui.define([
 
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderConcur');
 			pModel.read("/Report('" + pItemTask.InstanceID + "')", {
-				urlParameters: {"$expand": "ExpenseSet,ExpenseSet/CommentSet"},
+				urlParameters: {"$expand": "ExpenseSet,ExpenseSet/CommentSet,ExpenseSet/ExceptionSet"},
 				//filters: filters,
 				success: function (oData) {
 					if(oData.ExpenseSet.results.length > 0){
@@ -4804,6 +4804,46 @@ sap.ui.define([
 
 		onCloseCommentDialog: function (evt) {
 			this.byId("CommentsConcurDialog").close();
+		},
+
+		onPressExceptions: function(oEvent){
+			let oSource = oEvent.getSource();
+			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
+
+			if (!this.getOwnerComponent().getModel("ListExceptions"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "ListExceptions");
+
+			const oListModel = this.getOwnerComponent().getModel("ListExceptions");
+			oListModel.setData({});
+			if(oItemList.ExceptionSet.results.length > 0){
+				oListModel.setData(oItemList.ExceptionSet.results);
+				this.openDialogExceptions();
+			}else{
+				
+			}
+		},
+
+		openDialogExceptions: function () {
+
+			if (!this.oExceptionsDialog) {
+				this.oExceptionsDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.CustomFragment.ListExceptionConcur",
+					controller: this
+				}).then(function (oDialog) {
+					this.getView().addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.oExceptionsDialog.then(function (oDialog) {
+				oDialog.open();
+				return oDialog;
+			}.bind(this));
+
+		},
+
+		onCloseExceptionDialog: function (evt) {
+			this.byId("ExceptionsConcurDialog").close();
 		},
 
 	});

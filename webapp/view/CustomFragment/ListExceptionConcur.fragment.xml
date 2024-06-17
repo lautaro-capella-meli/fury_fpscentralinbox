@@ -1,0 +1,28 @@
+<core:FragmentDefinition 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:m="sap.m">
+		<m:Dialog 
+		id="ExceptionsConcurDialog" 
+		title="{i18n>custom.meli.S3_Concur.ExceptionsConcurDialog}" 
+		icon="sap-icon://alert" 
+		busy="false" 
+		busyIndicatorDelay="0" 
+		class="sapUiSizeCompact">
+		<m:content>
+			<m:List showSeparators="Inner" items="{ path: 'ListExceptions>/'}">
+				<m:FeedListItem 
+					sender="" 
+					icon="sap-icon://warning2"
+					senderPress="iconOpenPopUp" 
+					iconPress="iconOpenPopUp" 
+					iconDensityAware="false" 
+					text="{ListExceptions>message}" >
+				</m:FeedListItem>
+			</m:List>
+		</m:content>
+		<m:endButton>
+			<m:Button text="{i18n>custom.meli.S3_Concur.commentDialogCloseButton}" press=".onCloseExceptionDialog"/>
+		</m:endButton>
+	</m:Dialog>
+</core:FragmentDefinition>

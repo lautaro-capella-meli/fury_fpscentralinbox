@@ -35,6 +35,12 @@
 				hAlign="Begin">
 				<m:Text text="" />
 			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="" />
+			</m:Column>
 		</m:columns>
 		<m:items>
 			<m:ColumnListItem vAlign="Middle">
@@ -57,7 +63,14 @@
 							unit="{LineItemModel>claimedAmountCurrency}" />
 					<m:Text
 						text="{LineItemModel>vendorDescription}" />
-					<m:Button text="" press="onPressComment" icon="sap-icon://comment" />
+					<m:Button text="{= ${LineItemModel>CommentSet}.results.length}" press="onPressComment" icon="sap-icon://comment" />		
+					<m:ObjectStatus
+							class="sapUiSmallMarginBottom"
+							text="{= ${LineItemModel>ExceptionSet}.results.length}"
+							press="onPressExceptions"
+							active="true"
+							state="Warning"
+							icon="sap-icon://alert" />	
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

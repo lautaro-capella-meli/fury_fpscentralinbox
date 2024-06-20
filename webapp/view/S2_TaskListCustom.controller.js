@@ -45,8 +45,9 @@ sap.ui.define([
 	CommonFunctions, ForwardSimple, Conversions, syncStyleClass, Device, MessagePopoverItem, library,
 	MessagePopover, Fragment, DateFormat, jquery, MultiSelectDialog, CustomFormatters) {
 	"use strict";
-	var ButtonType = library.ButtonType;
-	const I18N_CUSTOM_PREFIX = "custom.meli."
+	let ButtonType = library.ButtonType;
+	const I18N_CUSTOM_PREFIX = "custom.meli.";
+	const C_ARIBA = 'ARIBA_TGW';
 
 	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
@@ -161,19 +162,10 @@ sap.ui.define([
 							filters: aFilters,
 							and: true
 						});
-						const oRequestConfiguration = {
-							filters: [oFilter],
-							sorters: [this._getCurrentSorter()],
-							success: this.onSuccessTaskCollectionRequest.bind(this),
-							urlParameters: {
-								$select: this._getTaskPropertiesToFetch().join(",")
-							}
-						};
 
-						
-						if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
-							oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
-						
+						let oCurrentSorter = this._getCurrentSorter();
+						let oSelect = this._getTaskPropertiesToFetch().join(",");
+
 						if(vGetData){
 							vGetData = false;
 							ProviderSystemModel.forEach((ProviderSystem) => {
@@ -183,6 +175,18 @@ sap.ui.define([
 								let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
 									useBatch: false
 								});
+							
+								const oRequestConfiguration = {
+									filters: [oFilter],
+									sorters: ProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
+									success: this.onSuccessTaskCollectionRequest.bind(this),
+									urlParameters: {
+										$select: oSelect
+									}
+								};
+
+								if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
+									oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
 
 								oModel.read("/TaskCollection/$count", {
 									filters: [oFilter],
@@ -208,7 +212,7 @@ sap.ui.define([
 
 			let iSkip = 0;
 			const iTargetChunkSize = Math.min(200, this.oDataManager.getListSize());
-			const iChunkSize = ProviderSystem === 'ARIBA_TGW' ? 25 : Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
+			const iChunkSize = ProviderSystem === C_ARIBA ? 25 : Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
 
 			// show progress bar if taskCount exceeds request pagination
 			this._oProgressIndicator.setVisible(iTaskCount > iChunkSize);

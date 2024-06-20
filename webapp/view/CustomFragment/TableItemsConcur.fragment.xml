@@ -29,13 +29,13 @@
 				hAlign="Begin">
 				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.vendorDescription}" />
 			</m:Column>
-			<m:Column
+			<m:Column width="3rem"
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
 				<m:Text text="" />
 			</m:Column>
-			<m:Column
+			<m:Column width="4rem"
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
@@ -63,7 +63,6 @@
 							unit="{LineItemModel>claimedAmountCurrency}" />
 					<m:Text
 						text="{LineItemModel>vendorDescription}" />
-					<m:Button text="{= ${LineItemModel>CommentSet}.results.length}" press="onPressComment" icon="sap-icon://comment" />		
 					<m:ObjectStatus
 							class="sapUiSmallMarginBottom"
 							text="{= ${LineItemModel>ExceptionSet}.results.length}"
@@ -71,6 +70,7 @@
 							active="true"
 							state="Warning"
 							icon="sap-icon://alert" />	
+					<m:Button text="{= ${LineItemModel>CommentSet}.results.length}" press="onPressComment" icon="sap-icon://comment" />
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

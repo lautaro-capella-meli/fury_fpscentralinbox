@@ -14,20 +14,11 @@
 				hAlign="Begin">
 				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.expenseTypeName}" />
 			</m:Column>
-			<m:Column
-				width="12em">
-				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.approvedAmount}" />
-			</m:Column>
-			<m:Column
-				minScreenWidth="Tablet"
-				demandPopin="true">
-				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.claimedAmount}" />
-			</m:Column>
-			<m:Column
+			<m:Column width="9rem"
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
-				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.vendorDescription}" />
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.transactionDate}" />
 			</m:Column>
 			<m:Column width="3rem"
 				minScreenWidth="Desktop"
@@ -41,12 +32,65 @@
 				hAlign="Begin">
 				<m:Text text="" />
 			</m:Column>
+			<m:Column
+				width="12em">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.Amount}" />
+			</m:Column>
+			<m:Column
+				width="12em"
+				minScreenWidth="Tablet"
+				demandPopin="true">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.approvedAmount}" />
+			</m:Column>
+			<m:Column
+				width="15em"
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.Employee}" />
+			</m:Column>
+			<m:Column
+				width="15em"
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.CityOfPurchase}" />
+			</m:Column>
+			<m:Column width="4rem"
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="" />
+			</m:Column>
 		</m:columns>
 		<m:items>
 			<m:ColumnListItem vAlign="Middle">
 				<m:cells>
 					<m:Text
 						text="{LineItemModel>expenseTypeName}" />
+                    <m:Text text="{
+                        path: 'LineItemModel>transactionDate',
+						type: 'sap.ui.model.type.Date',
+						formatOptions: {
+							style: 'short'
+						}
+					}" />
+					<m:ObjectStatus
+							class="sapUiSmallMarginBottom"
+							text="{= ${LineItemModel>ExceptionSet}.results.length}"
+							press="onPressExceptions"
+							active="true"
+							state="Warning"
+							icon="sap-icon://alert" 
+					/>	
+					<m:Button text="{= ${LineItemModel>CommentSet}.results.length}" press="onPressComment" icon="sap-icon://comment" />
+					<m:ObjectNumber
+							number="{
+								parts:[{path:'LineItemModel>postedAmount'},{path:'LineItemModel>postedAmountCurrency'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{LineItemModel>postedAmountCurrency}" />
 					<m:ObjectNumber
 							number="{
 								parts:[{path:'LineItemModel>approvedAmount'},{path:'LineItemModel>approvedAmountCurrency'}],
@@ -54,23 +98,11 @@
 								formatOptions: {showMeasure: false}
 							}"
 							unit="{LineItemModel>approvedAmountCurrency}" />
-					<m:ObjectNumber
-							number="{
-								parts:[{path:'LineItemModel>claimedAmount'},{path:'LineItemModel>claimedAmountCurrency'}],
-								type: 'sap.ui.model.type.Currency',
-								formatOptions: {showMeasure: false}
-							}"
-							unit="{LineItemModel>claimedAmountCurrency}" />
 					<m:Text
 						text="{LineItemModel>vendorDescription}" />
-					<m:ObjectStatus
-							class="sapUiSmallMarginBottom"
-							text="{= ${LineItemModel>ExceptionSet}.results.length}"
-							press="onPressExceptions"
-							active="true"
-							state="Warning"
-							icon="sap-icon://alert" />	
-					<m:Button text="{= ${LineItemModel>CommentSet}.results.length}" press="onPressComment" icon="sap-icon://comment" />
+					<m:Text
+						text="{LineItemModel>locationCityName}" />
+					<m:Button text="" press="onPressAttachment" icon="sap-icon://attachment" enabled="false" />
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

@@ -4802,7 +4802,7 @@ sap.ui.define([
 
 		},
 
-		onCloseCommentDialog: function (evt) {
+		onCloseCommentDialog: function (oEvent) {
 			this.byId("CommentsConcurDialog").close();
 		},
 
@@ -4842,8 +4842,48 @@ sap.ui.define([
 
 		},
 
-		onCloseExceptionDialog: function (evt) {
+		onCloseExceptionDialog: function (oEvent) {
 			this.byId("ExceptionsConcurDialog").close();
+		},
+
+		onPressAttachment: function(oEvent){
+			let oSource = oEvent.getSource();
+			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
+
+			if (!this.getOwnerComponent().getModel("ListAttachment"))
+				this.getOwnerComponent().setModel(new JSONModel({}), "ListAttachment");
+
+			const oListModel = this.getOwnerComponent().getModel("ListAttachment");
+			oListModel.setData({});
+			if(oItemList.AttachmentSet.results.length > 0){
+				oListModel.setData(oItemList.AttachmentSet.results);
+				this.openDialogAttachment();
+			}else{
+				
+			}
+		},
+
+		openDialogAttachment: function () {
+
+			if (!this.oAttachmentDialog) {
+				this.oAttachmentDialog = Fragment.load({
+					id: this.getView().getId(),
+					name: "cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.CustomFragment.ListAttachmentConcur",
+					controller: this
+				}).then(function (oDialog) {
+					this.getView().addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+			}
+			return this.oAttachmentDialog.then(function (oDialog) {
+				oDialog.open();
+				return oDialog;
+			}.bind(this));
+
+		},
+
+		onCloseAttachmentDialog: function (oEvent) {
+			this.byId("AttachmentConcurDialog").close();
 		},
 
 	});

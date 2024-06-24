@@ -1,0 +1,40 @@
+<core:FragmentDefinition 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns:m="sap.m">
+		<m:Dialog 
+		id="AttachmentConcurDialog" 
+		title="" 
+		icon="sap-icon://chain-link" 
+		busy="false" 
+		busyIndicatorDelay="0" 
+		class="sapUiSizeCompact">
+		<m:content>
+		<m:Table 
+			headerText="{i18n>custom.meli.S3_Concur.HeadAttachment}"
+			id="TB_Attachment" items="{ path: 'ListAttachment>/'}" ariaLabelledBy="title">
+			<m:columns>
+				<m:Column
+					minScreenWidth="Desktop"
+					demandPopin="true"
+					hAlign="Begin">
+					<m:Text text="" />
+				</m:Column>
+			</m:columns>
+			<m:items>
+				<m:ColumnListItem vAlign="Middle">
+					<m:cells>
+						<m:Link
+							text="{i18n>custom.meli.S3_Concur.Attachment} {ListAttachment>ExpenseIndex}"
+							target="_blank"
+							href="{ListAttachment>url}" />
+					</m:cells>
+				</m:ColumnListItem>
+			</m:items>
+		</m:Table>
+		</m:content>
+		<m:endButton>
+			<m:Button text="{i18n>custom.meli.S3_Concur.commentDialogCloseButton}" press=".onCloseAttachmentDialog"/>
+		</m:endButton>
+	</m:Dialog>
+</core:FragmentDefinition>

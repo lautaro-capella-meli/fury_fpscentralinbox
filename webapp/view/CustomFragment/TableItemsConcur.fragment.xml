@@ -56,11 +56,11 @@
 				hAlign="Begin">
 				<m:Text text="{i18n>custom.meli.S3_ListItemConcur.CityOfPurchase}" />
 			</m:Column>
-			<m:Column width="4rem"
+			<m:Column width="10rem"
 				minScreenWidth="Desktop"
 				demandPopin="true"
 				hAlign="Begin">
-				<m:Text text="" />
+				<m:Text text="{i18n>custom.meli.S3_ListItemConcurAttachment.Link}" />
 			</m:Column>
 		</m:columns>
 		<m:items>
@@ -76,6 +76,7 @@
 						}
 					}" />
 					<m:ObjectStatus
+							visible="{= ${LineItemModel>ExceptionSet}.results.length > 0  ? true : false }"
 							class="sapUiSmallMarginBottom"
 							text="{= ${LineItemModel>ExceptionSet}.results.length}"
 							press="onPressExceptions"
@@ -83,7 +84,9 @@
 							state="Warning"
 							icon="sap-icon://alert" 
 					/>	
-					<m:Button text="{= ${LineItemModel>CommentSet}.results.length}" press="onPressComment" icon="sap-icon://comment" />
+					<m:Button 
+						visible="{= ${LineItemModel>CommentSet}.results.length > 0  ? true : false }"
+						text="{= ${LineItemModel>CommentSet}.results.length}" press="onPressComment" icon="sap-icon://comment" />
 					<m:ObjectNumber
 							number="{
 								parts:[{path:'LineItemModel>postedAmount'},{path:'LineItemModel>postedAmountCurrency'}],
@@ -102,7 +105,11 @@
 						text="{LineItemModel>vendorDescription}" />
 					<m:Text
 						text="{LineItemModel>locationCityName}" />
-					<m:Button text="" press="onPressAttachment" icon="sap-icon://attachment" enabled="false" />
+					<m:Link
+							visible="{= ${LineItemModel>hasAttachment} ? true : false }"
+							text="{i18n>custom.meli.S3_Concur.Attachment}"
+							target="_blank"
+							href="{LineItemModel>attachmentUrl}" />
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

@@ -4518,7 +4518,7 @@ sap.ui.define([
 
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderAriba');
 			pModel.read("/PurchaseRequisitionSet('" + pItemTask.InstanceID + "')", {
-				urlParameters: {"$expand": "LineItemSet"},
+				urlParameters: {"$expand": "LineItemSet,LineItemSet/AccountingSet"},
 				//filters: filters,
 				success: function (oData) {
 					if(oData.LineItemSet.results.length > 0){

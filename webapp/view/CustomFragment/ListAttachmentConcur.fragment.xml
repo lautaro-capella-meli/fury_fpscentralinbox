@@ -18,7 +18,7 @@
 					minScreenWidth="Desktop"
 					demandPopin="true"
 					hAlign="Begin">
-					<m:Text text="" />
+					<m:Text  text="{i18n>custom.meli.S3_ListItemConcurAttachment.Link}" />
 				</m:Column>
 			</m:columns>
 			<m:items>

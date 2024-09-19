@@ -85,7 +85,7 @@ sap.ui.define([
 		sCustomObjectAttributeValue: "CustomObjectAttributeValue",
 		sCustomCreatedByAttribute: "CustomCreatedBy",
 		oCrossNavigationService: null,
-		OPEN_MODES: ["embedIntoDetails","replaceDetails","external","genericEmbedIntoDetails","embedIntoDetailsNestedRouter"],
+		OPEN_MODES: ["embedIntoDetails", "replaceDetails", "external", "genericEmbedIntoDetails", "embedIntoDetailsNestedRouter"],
 		sCustomCreatedByValue: null,
 		// This counter will be used as an unique identifier of every task selection
 		// It will be incremented on every task select. When the program flow face
@@ -105,12 +105,12 @@ sap.ui.define([
 
 		_toggleClaimReleaseFocus: false,
 
-		onExit: function() {
+		onExit: function () {
 			this.oComponentCache.destroyCacheContent();
 			delete this.oComponentCache;
 		},
 
-		onInit: function() {
+		onInit: function () {
 			//-- set the default oData Model
 			var oView = this.getView();
 			this.oModel2 = new JSONModel();
@@ -118,10 +118,10 @@ sap.ui.define([
 			oView.setModel(this.oModel2, "detail");
 
 			this.i18nBundle = this.getResourceBundle();
-			
+
 			// creating a unique ID of add substitute fragment for the current instance of view
 			this.sResubmitUniqueId = this.createId() + "DLG_RESUBMIT";
-			
+
 			//Subscribe to events
 			var oEventBus = this.getOwnerComponent().getEventBus();
 			oEventBus.subscribe("cross.fnd.fiori.inbox", "open_supportinfo", this.onSupportInfoOpenEvent, this);
@@ -166,7 +166,7 @@ sap.ui.define([
 
 			// Looking for SPACE button pressed on "InvisibleTabStop" at the end of Side Content
 			this.getView().byId("InvisibleTabStop").addEventDelegate({
-				onsapspace : function(oEvent) {
+				onsapspace: function (oEvent) {
 					var oTaskBtn;
 					if (this.bShowLogs) {
 						oTaskBtn = this.byId("LogButtonID");
@@ -185,15 +185,15 @@ sap.ui.define([
 						oTaskBtn.focus();
 					}, 300);
 				}
-			},this);
+			}, this);
 
 			// fix for custom attributes to appear after refresh in detail deep or open with url with certain task
 			if (!oDataManager.oServiceMetaModel) {
 				//Execution can only continue - e.g.: metadata fetch success
 				oDataManager.oModel.getMetaModel().loaded()
-				.then(function() {
-					oDataManager.oServiceMetaModel = oDataManager.oModel.getMetaModel();
-				}.bind(this));
+					.then(function () {
+						oDataManager.oServiceMetaModel = oDataManager.oModel.getMetaModel();
+					}.bind(this));
 			}
 
 			this.oAppImp = Application.getImpl();
@@ -202,66 +202,66 @@ sap.ui.define([
 			this.bShowDetails = false;
 		},  // End of init()
 
-		onTaskCollectionFailed: function() {
+		onTaskCollectionFailed: function () {
 			this.getView().setBusy(false);
 		},
 
-		onShowReleaseLoaderOnInfoTab: function(sChannelId, sEventId, oValue) {
+		onShowReleaseLoaderOnInfoTab: function (sChannelId, sEventId, oValue) {
 			var oInfoTab = this.getView().byId("infoTabContent");
 			if (oInfoTab) {
 				oInfoTab.setBusyIndicatorDelay(0).setBusy(oValue.bValue);
 			}
 		},
 
-		onShowReleaseLoader: function(sChannelId, sEventId, oValue) {
+		onShowReleaseLoader: function (sChannelId, sEventId, oValue) {
 			this.getView().setBusyIndicatorDelay(1000);
 			this.getView().setBusy(oValue.bValue);
 		},
 
-	  /**
-		*
-		* @param {sap.ui.core.mvc.View} oView
-		*
-		* @returns {Promise<sap.ui.core.UIComponent>}
-		*/
-		createGenericCommentsComponent: function(oView) {
-			var createCommentsComponent = function() {
+		/**
+		  *
+		  * @param {sap.ui.core.mvc.View} oView
+		  *
+		  * @returns {Promise<sap.ui.core.UIComponent>}
+		  */
+		createGenericCommentsComponent: function (oView) {
+			var createCommentsComponent = function () {
 				return Component.create({
 					name: "cross.fnd.fiori.inbox.comments",
 					componentData: {
 						oModel: this.oModel2 // this model will contain the comments data object
-							// oContainer: oView.byId("commentsContainer") mandatory setting in case of propagate model
+						// oContainer: oView.byId("commentsContainer") mandatory setting in case of propagate model
 					}
 				})
-				.then(function(commentsComponent) {
-					// Set the comments component to the container
-					var oCommentsContainer = this._getEmbedIntoDetailsNestedRouter() ? oView.byId("commentsContainerInDetails") : oView.byId("commentsContainer");
-					commentsComponent.setContainer(oCommentsContainer);
-					oCommentsContainer.setComponent(commentsComponent);
+					.then(function (commentsComponent) {
+						// Set the comments component to the container
+						var oCommentsContainer = this._getEmbedIntoDetailsNestedRouter() ? oView.byId("commentsContainerInDetails") : oView.byId("commentsContainer");
+						commentsComponent.setContainer(oCommentsContainer);
+						oCommentsContainer.setComponent(commentsComponent);
 
-					// Subscribe to events for comment added and to show business card
-					commentsComponent.getEventBus()
-						.subscribe(null, "commentAdded", this.onCommentPost.bind(this));
-					commentsComponent.getEventBus()
-						.subscribe(null, "businessCardRequested", this.onEmployeeLaunchCommentSender.bind(this));
+						// Subscribe to events for comment added and to show business card
+						commentsComponent.getEventBus()
+							.subscribe(null, "commentAdded", this.onCommentPost.bind(this));
+						commentsComponent.getEventBus()
+							.subscribe(null, "businessCardRequested", this.onEmployeeLaunchCommentSender.bind(this));
 
-					return commentsComponent;
-				}.bind(this))
-				.catch(function(error) {
-					Log.error("Comments component was not created successfully " + error.stack);
-				});
+						return commentsComponent;
+					}.bind(this))
+					.catch(function (error) {
+						Log.error("Comments component was not created successfully " + error.stack);
+					});
 			}.bind(this);
 
 			// Destroy the component if present
 			if (this.oGenericCommentsComponentPromise) {
 				return this.oGenericCommentsComponentPromise
-					.then(function(commentsComponent) {
+					.then(function (commentsComponent) {
 						if (commentsComponent) {
 							commentsComponent.destroy();
 						}
 						delete this.oGenericCommentsComponentPromise;
 					}.bind(this))
-					.then(function() {
+					.then(function () {
 						this.oGenericCommentsComponentPromise = createCommentsComponent();
 						return this.oGenericCommentsComponentPromise;
 					}.bind(this));
@@ -276,8 +276,8 @@ sap.ui.define([
 			var oDataManager = this.getOwnerComponent().getDataManager();
 			var showHeader = !oDataManager.isElementHidden("header");
 
-			if(this.routeName === "detail_deep" 
-				&& oDataManager.bHeaderLessMode 
+			if (this.routeName === "detail_deep"
+				&& oDataManager.bHeaderLessMode
 				&& oDataManager.getStandaloneDetailDeep()
 			) {
 				showHeader = false;
@@ -286,30 +286,30 @@ sap.ui.define([
 			this.byId("mainPage").setShowHeader(showHeader);
 		},
 
-		resetDetailView: function() {
+		resetDetailView: function () {
 			this.oModel2.setProperty("/showDefaultView", false);
 			this.oModel2.setProperty("/embedFioriElements", false);
 			this.oModel2.setProperty("/showGenericComponent", false);
 			this._toggleClaimReleaseFocus = false;
 		},
 
-		handleBeforeRouteMatched: function() {
+		handleBeforeRouteMatched: function () {
 			this._suspendTarget(this._lastTargetDisplayed);
 		},
 
-		handleNavToDetail: function(oEvent) {
+		handleNavToDetail: function (oEvent) {
 			var oDataManager = this.getOwnerComponent().getDataManager();
 			this.oRoutingParameters = oEvent.getParameters().arguments;
 			this.routeName = oEvent.getParameter("name");
 			if (this.routeName === "detail" || this.routeName === "detail_deep") {
 				this.bIsTableViewActive = (this.routeName === "detail_deep" && !this.bNavToFullScreenFromLog);
 				var splitContainer = this.getView().getParent().getParent();
-				if(splitContainer && splitContainer._oMasterNav) {
+				if (splitContainer && splitContainer._oMasterNav) {
 					splitContainer._oMasterNav.setVisible(true);
 				}
 
-				if(this.routeName === "detail_deep") {
-					if(splitContainer && splitContainer._oMasterNav && !Device.system.phone) {
+				if (this.routeName === "detail_deep") {
+					if (splitContainer && splitContainer._oMasterNav && !Device.system.phone) {
 						splitContainer._oMasterNav.setVisible(false);
 					}
 					this.bDetailDeep = true;
@@ -332,7 +332,7 @@ sap.ui.define([
 				// Deep link scenario: needs to load the detail view first on executing a deep link URL
 				if (jQuery.isEmptyObject(this.getView().getModel().getProperty(sPath))) {
 					// fix for master detail custom attributes to appear after refresh or open with url to certain task
-					oDataManager.oModel.getMetaModel().loaded().then(function(taskSwitchCount) {
+					oDataManager.oModel.getMetaModel().loaded().then(function (taskSwitchCount) {
 
 						// Exit if another task was clicked while waiting
 						if (taskSwitchCount !== this._taskSwitchCount) {
@@ -347,7 +347,7 @@ sap.ui.define([
 						}
 						oDataManager.setCallFromDeepLinkURL(true);
 						oDataManager.oDataRead(sPath, aParams,
-							function(taskSwitchCount, oDetailData) {
+							function (taskSwitchCount, oDetailData) {
 
 								// Exit if another task was clicked while waiting
 								if (taskSwitchCount !== this._taskSwitchCount) {
@@ -355,13 +355,13 @@ sap.ui.define([
 									return;
 								}
 
-								oDataManager=that.getOwnerComponent().getDataManager();
+								oDataManager = that.getOwnerComponent().getDataManager();
 								if (oDetailData === undefined || jQuery.isEmptyObject(oDetailData)) {
 									oDataManager.setDetailPageLoadedViaDeepLinking(false);
 								}
 								else {
 									var oItem = jQuery.extend(true, {}, oDetailData);
-									if (that.fnIsTaskInstanceAllowed(oItem,oDataManager)) {
+									if (that.fnIsTaskInstanceAllowed(oItem, oDataManager)) {
 										oDataManager.setDetailPageLoadedViaDeepLinking(true);
 										that.fnPerpareToRefreshData(sContextPath, sInstanceID, sOrigin);
 									}
@@ -374,14 +374,14 @@ sap.ui.define([
 									}
 								}
 							}.bind(this, this._taskSwitchCount),
-							function(taskSwitchCount, oError) {
+							function (taskSwitchCount, oError) {
 
 								// Exit if another task was clicked while waiting
 								if (taskSwitchCount !== this._taskSwitchCount) {
 									Log.warning("oDataRead(fail): task switched while waiting!");
 									return;
 								}
-								
+
 								that.getOwnerComponent().getDataManager().setDetailPageLoadedViaDeepLinking(false);
 								var oDataManager = that.getOwnerComponent().getDataManager();
 								// standaloneDetailDeep mode works only when it is not navigated from master detail or table view
@@ -419,7 +419,7 @@ sap.ui.define([
 			}
 		},
 
-		fnPerpareToRefreshData: function(ctxPath, instanceID, sapOrigin) {
+		fnPerpareToRefreshData: function (ctxPath, instanceID, sapOrigin) {
 			if (!this.stayOnDetailScreen || Device.system.phone) {
 				var oDescriptionTab = this.oTabBar.getItems()[0];
 				this.oTabBar.setSelectedItem(oDescriptionTab);
@@ -444,8 +444,8 @@ sap.ui.define([
 			}
 		},
 
-		fnIsTaskInstanceAllowed: function(oItem,oDataManager) {
-			if (oDataManager.bOutbox && ( oItem.Status === "COMPLETED" || oItem.Status === "FOR_RESUBMISSION")) {
+		fnIsTaskInstanceAllowed: function (oItem, oDataManager) {
+			if (oDataManager.bOutbox && (oItem.Status === "COMPLETED" || oItem.Status === "FOR_RESUBMISSION")) {
 				return true;
 			}
 			else if (!(oDataManager.bOutbox) && (oItem.Status === "READY" || oItem.Status === "RESERVED" || oItem.Status === "IN_PROGRESS" || oItem
@@ -457,11 +457,11 @@ sap.ui.define([
 			}
 		},
 
-		fnGetUploadUrl: function(sContextPath) {
+		fnGetUploadUrl: function (sContextPath) {
 			return this.oContext.getModel().sServiceUrl + sContextPath + "/Attachments";
 		},
 
-		fnCreateAttachmentHandle: function(sContextPath) {
+		fnCreateAttachmentHandle: function (sContextPath) {
 			var oAttachmentHandle = {
 				fnOnAttachmentChange: this.onAttachmentChange.bind(this),
 				fnOnAttachmentUploadComplete: this.onAttachmentUploadComplete.bind(this),
@@ -472,8 +472,8 @@ sap.ui.define([
 			return oAttachmentHandle;
 		},
 
-		fnRenderComponent: function(oComponentParameters) {
-			return new Promise(function(resolve) {
+		fnRenderComponent: function (oComponentParameters) {
+			return new Promise(function (resolve) {
 				//Do not use component cache, in case of debug mode
 				if (this.oDataManager.bDebug) {
 					var sPreservedKey = this.oGenericComponent && this.oGenericComponent.getId && this.oGenericComponent.getId();
@@ -489,10 +489,10 @@ sap.ui.define([
 					sKey = this.generateEscapedComponentKey(sKey);
 					sComponentId = sKey;
 				}
-				var sPriorityText = Conversions.formatterPriority.call(this.getView(), sSAPOrigin, oDetailData ? oDetailData["Priority"] : "" );
+				var sPriorityText = Conversions.formatterPriority.call(this.getView(), sSAPOrigin, oDetailData ? oDetailData["Priority"] : "");
 				var sStatusText = oDetailData ? oDetailData["StatusText"] : "";
 				if (!sStatusText) {
-					sStatusText = Conversions.formatterStatus.call(this.getView(), sSAPOrigin, oDetailData ? oDetailData["Status"] : "" );
+					sStatusText = Conversions.formatterStatus.call(this.getView(), sSAPOrigin, oDetailData ? oDetailData["Status"] : "");
 				}
 
 				this.oModel2.setProperty("/PriorityText", sPriorityText);
@@ -504,17 +504,17 @@ sap.ui.define([
 					sAnnoFileURI: oComponentParameters.AnnotationURL,
 					sErrorMessageNoData: this.i18nBundle.getText("annotationcomponent.load.error"),
 					sApplicationPath: oComponentParameters.ApplicationPath,
-					oTaskModel:this.fnCloneTaskModel(oDetailData),
-					oQueryParameters:oComponentParameters.QueryParameters
+					oTaskModel: this.fnCloneTaskModel(oDetailData),
+					oQueryParameters: oComponentParameters.QueryParameters
 				};
 				var oCompData = {
 					startupParameters: {
 						oParameters: oParameters,
 						taskModel: this.fnCloneTaskModel(oDetailData),
 						// API to allow embedded app to communicate with My Inbox
-						inboxAPI : this.getInboxAPI(),
+						inboxAPI: this.getInboxAPI(),
 						//only for internal use
-						inboxInternal:{
+						inboxInternal: {
 							//requests TaskDefinitionCollection and TaskCollection
 							//to be used only when completing a task
 							updateTaskList: this.updateTaskList.bind(this)
@@ -552,7 +552,7 @@ sap.ui.define([
 						});
 					}
 
-					var createComponent = function() {
+					var createComponent = function () {
 						return Component.create({
 							name: oComponentParameters.ComponentName,
 							componentData: oCompData,
@@ -567,7 +567,7 @@ sap.ui.define([
 						createComponent();
 
 					componentPromise
-						.then(function(component) {
+						.then(function (component) {
 							oView.byId("genericComponentContainer").setComponent(component);
 							this.oGenericComponent = component;
 
@@ -582,7 +582,7 @@ sap.ui.define([
 
 							resolve(true);
 						}.bind(this))
-						.catch(function(oError) {
+						.catch(function (oError) {
 							Log.error("Cannot create component" + oComponentParameters.ComponentName + "for smart template rendering. Showing standard task in the detail screen as a fallback: " + oError.message);
 							resolve(false);
 						});
@@ -610,7 +610,7 @@ sap.ui.define([
 			target.suspend();
 		},
 
-		getComponentViaRoutingTarget: function(
+		getComponentViaRoutingTarget: function (
 			targetName,
 			componentName,
 			componentConfig,
@@ -664,54 +664,54 @@ sap.ui.define([
 				JSON.parse(JSON.stringify(parsedParams)),
 				this._taskSwitchCount
 			))
-			.catch(function(taskSwitchCount, oError) {
-				if (taskSwitchCount !== this._taskSwitchCount) {
-					// The task has changed while waiting
-					Log.warning("target.display(fail): task switched while waiting!");
-					return;
-				}
-				// if cannot render component, open default view
-				Log.error(oError);
-				this.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
+				.catch(function (taskSwitchCount, oError) {
+					if (taskSwitchCount !== this._taskSwitchCount) {
+						// The task has changed while waiting
+						Log.warning("target.display(fail): task switched while waiting!");
+						return;
+					}
+					// if cannot render component, open default view
+					Log.error(oError);
+					this.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
 
-			}.bind(this, this._taskSwitchCount));
+				}.bind(this, this._taskSwitchCount));
 
 			this._lastTargetDisplayed = targetName;
 		},
 
-		generateEscapedComponentKey: function(sUnencodedKey) {
+		generateEscapedComponentKey: function (sUnencodedKey) {
 			// Component id has to start with letter and only contain a-z0-9-_:.
 			return "inb_" + btoa(sUnencodedKey).replace(/\+/g, "-").replace(/\//g, "_").replace(/[=]/g, "");
 		},
 
-		fnCloneTaskModel:function(oTaskJson) {
+		fnCloneTaskModel: function (oTaskJson) {
 			var taskProperties = ["SAP__Origin",
-								"InstanceID",
-								"TaskDefinitionID",
-								"TaskDefinitionName",
-								"TaskTitle",
-								"Priority",
-								"PriorityText",
-								"Status",
-								"StatusText",
-								"CreatedOn",
-								"CreatedBy",
-								"CreatedByName",
-								"Processor",
-								"ProcessorName",
-								"SubstitutedUser",
-								"SubstitutedUserName",
-								"StartDeadLine",
-								"CompletionDeadLine",
-								"ExpiryDate",
-								"IsEscalated",
-								"PriorityNumber",
-								"ConfidenceLevel"];
+				"InstanceID",
+				"TaskDefinitionID",
+				"TaskDefinitionName",
+				"TaskTitle",
+				"Priority",
+				"PriorityText",
+				"Status",
+				"StatusText",
+				"CreatedOn",
+				"CreatedBy",
+				"CreatedByName",
+				"Processor",
+				"ProcessorName",
+				"SubstitutedUser",
+				"SubstitutedUserName",
+				"StartDeadLine",
+				"CompletionDeadLine",
+				"ExpiryDate",
+				"IsEscalated",
+				"PriorityNumber",
+				"ConfidenceLevel"];
 
 			var cloneTaskJson = {};
-			for (var i=0; i < taskProperties.length; i++) {
+			for (var i = 0; i < taskProperties.length; i++) {
 				if (oTaskJson.hasOwnProperty(taskProperties[i])) {
-						cloneTaskJson[taskProperties[i]] = oTaskJson[taskProperties[i]];
+					cloneTaskJson[taskProperties[i]] = oTaskJson[taskProperties[i]];
 				}
 			}
 			var oView = this.getView();
@@ -724,7 +724,7 @@ sap.ui.define([
 			return cloneTaskModel;
 		},
 
-		fnShowHideDetailScrollBar: function(bShow) {
+		fnShowHideDetailScrollBar: function (bShow) {
 			if (bShow) {
 				this.byId("mainPage").setEnableScrolling(true);
 			}
@@ -733,11 +733,11 @@ sap.ui.define([
 			}
 		},
 
-		switchToOutbox: function() {
+		switchToOutbox: function () {
 			return this.oDataManager.bOutbox ? true : false;
 		},
 
-		_updateDetailModel: function(oItem, bMerge) {
+		_updateDetailModel: function (oItem, bMerge) {
 			if (this.oModel2) {
 				this.oModel2.setData(oItem, bMerge);
 				this.fnCloneTaskModel(this.oModel2.getData());
@@ -747,16 +747,16 @@ sap.ui.define([
 			}
 		},
 
-		_getCustomAttributesValue: function(oItem) {
+		_getCustomAttributesValue: function (oItem) {
 			var aCustomAttributes = oItem.CustomAttributeData;
 			var aCustomAttributeValues = [];
-			for (var i=0; i<aCustomAttributes.length; i++) {
+			for (var i = 0; i < aCustomAttributes.length; i++) {
 				aCustomAttributeValues[i] = this.getView().getModel().getProperty("/" + aCustomAttributes[i]);
 			}
 			return aCustomAttributeValues;
 		},
 
-		refreshData: function(oRefreshData, oDetailData) {
+		refreshData: function (oRefreshData, oDetailData) {
 			if (oDetailData !== undefined) {
 				this.aTaskDefinitionData = oDetailData;
 			}
@@ -813,7 +813,7 @@ sap.ui.define([
 				.getEventBus().publish("cross.fnd.fiori.inbox", "storeNextItemsToSelect", {
 					"sOrigin": oItem.SAP__Origin,
 					"sInstanceID": oItem.InstanceID
-			});
+				});
 
 			// process custom attribute's data in case CustomAttributeData is already loaded using $expand for list
 			if (this._getShowAdditionalAttributes() === true) {
@@ -852,7 +852,7 @@ sap.ui.define([
 			 * Manual detail request via DataManager in batch with decision options together
 			 * Automatic request with view binding would cause a S2 list re-rendering - SAPUI5 issue
 			 */
-			var fnSuccess = function(oDetailData, oCustomAttributeDefinition) {
+			var fnSuccess = function (oDetailData, oCustomAttributeDefinition) {
 
 				if (that.extHookOnDataLoaded) {
 					if (!oDetailData.CustomAttributeData) {
@@ -883,7 +883,7 @@ sap.ui.define([
 
 				// needed for suport information to show custom attributes info
 				if ((!this.aTaskDefinitionData || jQuery.isEmptyObject(this.aTaskDefinitionData)) && oCustomAttributeDefinition
-						&& oCustomAttributeDefinition[0] && oCustomAttributeDefinition[0].TaskDefinitionID) {
+					&& oCustomAttributeDefinition[0] && oCustomAttributeDefinition[0].TaskDefinitionID) {
 					var TaskDefinitionID = oCustomAttributeDefinition[0].TaskDefinitionID;
 					var CustomAttributeDefinitionData = {};
 					CustomAttributeDefinitionData.results = oCustomAttributeDefinition;
@@ -894,7 +894,7 @@ sap.ui.define([
 				}
 
 				that._updateDetailModel(oDetailData, true);
-				
+
 				//save detail data (used to fix the flickering of ProcessingLogs tab after detail screen refresh)
 				that.oDetailData2 = oDetailData;
 
@@ -905,8 +905,8 @@ sap.ui.define([
 				}
 				else if (sSelectedTabKey === "ATTACHMENTS") {
 					this.fnFetchDataOnTabSelect("Attachments");
-				/*} else if (sSelectedTabKey === "PROCESSINGLOGS") {
-					this.fnFetchDataOnTabSelect("ProcessingLogs");*/
+					/*} else if (sSelectedTabKey === "PROCESSINGLOGS") {
+						this.fnFetchDataOnTabSelect("ProcessingLogs");*/
 				}
 				else if (sSelectedTabKey === "OBJECTLINKS") {
 					that.fnFetchObjectLinks();
@@ -987,12 +987,12 @@ sap.ui.define([
 				fetchUIExecutionLinkCallback.bind(this));
 		},
 
-		loadDecisionOptions: function(oItem, oRefreshData, sGroupName) {
+		loadDecisionOptions: function (oItem, oRefreshData, sGroupName) {
 			var bIsUIExecutionLinkSupported = oItem.TaskSupports && oItem.TaskSupports.UIExecutionLink;
 			// load decision options for the selected task
-			if (!this.oDataManager.bOutbox  && oItem.Status !== "COMPLETED" && oItem.Status !== "FOR_RESUBMISSION") {
+			if (!this.oDataManager.bOutbox && oItem.Status !== "COMPLETED" && oItem.Status !== "FOR_RESUBMISSION") {
 				this.oDataManager.readDecisionOptions(oItem.SAP__Origin, oItem.InstanceID, oItem.TaskDefinitionID,
-					function(taskSwitchCount, aDecisionOptions) {
+					function (taskSwitchCount, aDecisionOptions) {
 
 						// Exit if another task was clicked while waiting
 						if (taskSwitchCount !== this._taskSwitchCount) {
@@ -1003,8 +1003,8 @@ sap.ui.define([
 						this.fnValidateDecisionOptionsAndCreatButtons(
 							bIsUIExecutionLinkSupported, aDecisionOptions, oItem.UIExecutionLink, oRefreshData.sSAP__Origin);
 					}.bind(this, this._taskSwitchCount),
-					function(taskSwitchCount, oError) {
-						
+					function (taskSwitchCount, oError) {
+
 						Log.error("Error while loading decision options");
 
 						// Exit if another task was clicked while waiting
@@ -1034,48 +1034,48 @@ sap.ui.define([
 		 * If the triggerOn taskSelect , it opens on task selection, in place
 		 * If triggerOn openTask, it saves the intent configuration and default view is loaded, on click of open task later, the application is loaded in either embed or external mode
 		 * */
-		fnHandleIntentValidationAndNavigation: function(oItem, oRefreshData, fnSuccess) {
-			var	that = this;
+		fnHandleIntentValidationAndNavigation: function (oItem, oRefreshData, fnSuccess) {
+			var that = this;
 			var sURL = oItem.UIExecutionLink.GUI_Link;
 			var oParsedParams = this._getParsedParamsForIntent(sURL);
 			var xNavService = this._getCrossNavigationService();
 			if (oParsedParams && xNavService) {
 				var aIntents = this._getIntentParam(oParsedParams);
 				xNavService.isNavigationSupported(aIntents, Application.getImpl().getComponent())
-				.done(function(taskSwitchCount, aResponses) {
+					.done(function (taskSwitchCount, aResponses) {
 
-					// Exit if another task was clicked while waiting
-					if (taskSwitchCount !== this._taskSwitchCount) {
-						Log.warning("isNavigationSupported: task switched while waiting!");
-						return;
-					}
+						// Exit if another task was clicked while waiting
+						if (taskSwitchCount !== this._taskSwitchCount) {
+							Log.warning("isNavigationSupported: task switched while waiting!");
+							return;
+						}
 
-					var supportedOpenMode = that._getSupportedOpenMode(aResponses);
-					if (supportedOpenMode) {
-						that.fnHandleIntentNavigation(oParsedParams, supportedOpenMode, oItem, oRefreshData, fnSuccess);
-					}
-					else {
+						var supportedOpenMode = that._getSupportedOpenMode(aResponses);
+						if (supportedOpenMode) {
+							that.fnHandleIntentNavigation(oParsedParams, supportedOpenMode, oItem, oRefreshData, fnSuccess);
+						}
+						else {
+							that.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
+						}
+					}.bind(this, this._taskSwitchCount)
+					).fail(function (taskSwitchCount) {
+
+						// Exit if another task was clicked while waiting
+						if (taskSwitchCount !== this._taskSwitchCount) {
+							Log.warning("isNavigationSupported(fail): task switched while waiting!");
+							return;
+						}
+
 						that.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
-					}
-				}.bind(this, this._taskSwitchCount)
-				).fail(function(taskSwitchCount) {
 
-					// Exit if another task was clicked while waiting
-					if (taskSwitchCount !== this._taskSwitchCount) {
-						Log.warning("isNavigationSupported(fail): task switched while waiting!");
-						return;
-					}
-
-					that.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
-
-				}.bind(this, this._taskSwitchCount));
+					}.bind(this, this._taskSwitchCount));
 			}
 			else {
 				this.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
 			}
 		},
 
-		fnHandleIntentNavigation: function(oParsedParams, supportedOpenMode, oItem, oRefreshData, fnSuccess) {
+		fnHandleIntentNavigation: function (oParsedParams, supportedOpenMode, oItem, oRefreshData, fnSuccess) {
 			oParsedParams.params.openMode = supportedOpenMode;
 			switch (supportedOpenMode) {
 				case "embedIntoDetails":
@@ -1095,7 +1095,7 @@ sap.ui.define([
 			}
 		},
 
-		fnRenderIntentBasedApp: function(oParsedParams, supportedOpenMode, oItem, oRefreshData, fnSuccess) {
+		fnRenderIntentBasedApp: function (oParsedParams, supportedOpenMode, oItem, oRefreshData, fnSuccess) {
 
 			var sNavIntent = oParsedParams.semanticObject + "-" + oParsedParams.action;
 			var sNavigationIntent = "#" + sNavIntent;
@@ -1118,14 +1118,14 @@ sap.ui.define([
 			var oNavigationService = this._getCrossNavigationService();
 			var oComponentData = {
 				startupParameters: {
-					taskModel:this.fnGetTaskModelClone(oRefreshData),
-					queryParameters:oParsedParams.params,
+					taskModel: this.fnGetTaskModelClone(oRefreshData),
+					queryParameters: oParsedParams.params,
 					// API to allow embedded app to communicate with My Inbox
 					// in some versions startupParameters are overrided in the component instance
 					// and this API is not accessible
-					inboxAPI : this.getInboxAPI(),
+					inboxAPI: this.getInboxAPI(),
 					//only for internal use
-					inboxInternal:{
+					inboxInternal: {
 						//requests TaskDefinitionCollection and TaskCollection
 						//to be used only when completing a task
 						updateTaskList: this.updateTaskList.bind(this)
@@ -1137,22 +1137,22 @@ sap.ui.define([
 					getShareControlVisibility: function () {
 						return false;
 					},
-					getIntent: function() {
+					getIntent: function () {
 						return {
 							semanticObject: oParsedParams.semanticObject,
 							action: oParsedParams.action
 						};
 					},
-					getShellService: function() {
+					getShellService: function () {
 						return {
-							setHierarchy: function(aHierarchyLevels) {},
-							setTitle: function(sTitle) {},
-							setBackNavigation: function(callBackFunction) {}
+							setHierarchy: function (aHierarchyLevels) { },
+							setTitle: function (sTitle) { },
+							setBackNavigation: function (callBackFunction) { }
 						};
 					}
 				},
 				// API copy to grant access if startupParameters overrided
-				inboxAPI : this.getInboxAPI(),
+				inboxAPI: this.getInboxAPI(),
 				onTaskUpdate: this.fnDelegateTaskRefresh.bind(this)
 			};
 
@@ -1170,7 +1170,7 @@ sap.ui.define([
 				this.getComponentViaRoutingTarget(
 					targetName,
 					null,
-					{componentData: oComponentData},
+					{ componentData: oComponentData },
 					oParsedParams,
 					oItem,
 					oRefreshData,
@@ -1182,43 +1182,43 @@ sap.ui.define([
 
 				var sParams = "?" + this.fnCreateURLParameters(oParsedParams.params);
 				oNavigationService.createComponentData(sNavigationIntent + sParams)
-				.then(function(routingTargetName, startParams, oResponse) {
+					.then(function (routingTargetName, startParams, oResponse) {
 
-					// If embedding still ON, and that's the last targetName
-					if (this.embedFioriElements && targetName === routingTargetName) {
+						// If embedding still ON, and that's the last targetName
+						if (this.embedFioriElements && targetName === routingTargetName) {
 
-						this.oModel2.setProperty("/embedFioriElements", true);
-						this.oModel2.setProperty("/showGenericComponent", false);
-						this.oModel2.setProperty("/showDefaultView", false);
+							this.oModel2.setProperty("/embedFioriElements", true);
+							this.oModel2.setProperty("/showGenericComponent", false);
+							this.oModel2.setProperty("/showDefaultView", false);
 
-						var componentData = Object.assign(oComponentData, oResponse.componentData);
-						var componentConfig = Object.assign({componentData: componentData}, oResponse.appPropertiesSafe.applicationDependencies);
+							var componentData = Object.assign(oComponentData, oResponse.componentData);
+							var componentConfig = Object.assign({ componentData: componentData }, oResponse.appPropertiesSafe.applicationDependencies);
 
-						this.getComponentViaRoutingTarget(
-							routingTargetName,
-							oResponse.componentProperties.name,
-							componentConfig,
-							startParams,
-							oItem,
-							oRefreshData,
-							fnSuccess
-						);
-						this.fnGetTabCountersForSelectedTask(oItem, oRefreshData, fnSuccess);
-					}
+							this.getComponentViaRoutingTarget(
+								routingTargetName,
+								oResponse.componentProperties.name,
+								componentConfig,
+								startParams,
+								oItem,
+								oRefreshData,
+								fnSuccess
+							);
+							this.fnGetTabCountersForSelectedTask(oItem, oRefreshData, fnSuccess);
+						}
 
-				}.bind(this, targetName, JSON.parse(JSON.stringify(oParsedParams))))
-				.catch(function(taskSwitchCount, oError) {
+					}.bind(this, targetName, JSON.parse(JSON.stringify(oParsedParams))))
+					.catch(function (taskSwitchCount, oError) {
 
-					// Quit if task changed while waiting
-					// More comments on the this._taskSwitchCount declaration
-					if (taskSwitchCount !== this._taskSwitchCount) {
-						Log.warning("createComponentData(fail): task switched while waiting!");
-						return;
-					}
-					// if cannot render component, open default view
-					Log.error(oError);
-					this.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
-				}.bind(this, this._taskSwitchCount));
+						// Quit if task changed while waiting
+						// More comments on the this._taskSwitchCount declaration
+						if (taskSwitchCount !== this._taskSwitchCount) {
+							Log.warning("createComponentData(fail): task switched while waiting!");
+							return;
+						}
+						// if cannot render component, open default view
+						Log.error(oError);
+						this.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
+					}.bind(this, this._taskSwitchCount));
 			}
 			else if (!this.embedFioriElements) {
 
@@ -1226,63 +1226,63 @@ sap.ui.define([
 				oNavigationService.createComponentInstance(sNavigationIntent + sParams, {
 					componentData: oComponentData
 				}, this.getOwnerComponent())
-				.done(function(taskSwitchCount, oComponent) {
+					.done(function (taskSwitchCount, oComponent) {
 
-					// Check if other task was selected while waiting
-					// More comments on the this._taskSwitchCount declaration
-					if (taskSwitchCount !== this._taskSwitchCount) {
-						Log.warning("createComponentInstance: task switched while waiting!");
-						return;
-					}
+						// Check if other task was selected while waiting
+						// More comments on the this._taskSwitchCount declaration
+						if (taskSwitchCount !== this._taskSwitchCount) {
+							Log.warning("createComponentInstance: task switched while waiting!");
+							return;
+						}
 
-					this.oModel2.setProperty("/embedFioriElements", false);
-					this.oModel2.setProperty("/showGenericComponent", true);
-					this.oModel2.setProperty("/showDefaultView", false);
+						this.oModel2.setProperty("/embedFioriElements", false);
+						this.oModel2.setProperty("/showGenericComponent", true);
+						this.oModel2.setProperty("/showDefaultView", false);
 
-					this.embedFioriElements = false;
-					this.showHideSideContent();
+						this.embedFioriElements = false;
+						this.showHideSideContent();
 
-					this.byId("genericComponentContainer").setComponent(oComponent);
+						this.byId("genericComponentContainer").setComponent(oComponent);
 
-					if (supportedOpenMode === "genericEmbedIntoDetails") {
-						this.setShowFooter(false);
-					}
-					else if (supportedOpenMode === "embedIntoDetails") {
-						this.loadDecisionOptions(oItem, oRefreshData, "decisionOptions");
-					}
+						if (supportedOpenMode === "genericEmbedIntoDetails") {
+							this.setShowFooter(false);
+						}
+						else if (supportedOpenMode === "embedIntoDetails") {
+							this.loadDecisionOptions(oItem, oRefreshData, "decisionOptions");
+						}
 
-				}.bind(this, this._taskSwitchCount))
-				.fail(function(taskSwitchCount, oError) {
+					}.bind(this, this._taskSwitchCount))
+					.fail(function (taskSwitchCount, oError) {
 
-					// Check if other task was selected while waiting
-					// More comments on the this._taskSwitchCount declaration
-					if (taskSwitchCount !== this._taskSwitchCount) {
-						Log.warning("createComponentInstance(fail): task switched while waiting!");
-						return;
-					}
+						// Check if other task was selected while waiting
+						// More comments on the this._taskSwitchCount declaration
+						if (taskSwitchCount !== this._taskSwitchCount) {
+							Log.warning("createComponentInstance(fail): task switched while waiting!");
+							return;
+						}
 
-					if (supportedOpenMode === "genericEmbedIntoDetails") {
-						this.setShowFooter(false);
-					}
+						if (supportedOpenMode === "genericEmbedIntoDetails") {
+							this.setShowFooter(false);
+						}
 
-					// if cannot render component, open default view
-					Log.error(oError);
-					this.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
-				}.bind(this, this._taskSwitchCount));
+						// if cannot render component, open default view
+						Log.error(oError);
+						this.fnViewTaskInDefaultView(oItem, oRefreshData, fnSuccess);
+					}.bind(this, this._taskSwitchCount));
 			}
 		},
 
-		updateTask: function(sSapOrigin, TaskInstanceId) {
+		updateTask: function (sSapOrigin, TaskInstanceId) {
 			var oDeferred = new jQuery.Deferred();
 			var that = this;
-			if (!sSapOrigin || !TaskInstanceId ) {
+			if (!sSapOrigin || !TaskInstanceId) {
 				oDeferred.reject("Input parameters SAP__Origin and TaskInstanceId are mandatory");
 				return oDeferred.promise();
 			}
-			var fnSuccess = function(oData) {
+			var fnSuccess = function (oData) {
 				oDeferred.resolve();
 				var splitContainer = that.getView().getParent().getParent();
-				var bMasterVisible = splitContainer && splitContainer._oMasterNav && splitContainer._oMasterNav.getVisible() ? true : false;	
+				var bMasterVisible = splitContainer && splitContainer._oMasterNav && splitContainer._oMasterNav.getVisible() ? true : false;
 				var sMessage = that.i18nBundle.getText("dialog.success.complete");
 				// standaloneDetailDeep mode works only when it is not navigated from master detail or table view
 				if (that._getStandaloneDetailDeep() && !that.oDataManager.getTableView() && !bMasterVisible) {
@@ -1290,10 +1290,10 @@ sap.ui.define([
 					//postMessage only if we are inside an iframe
 					if (window.parent !== window) {
 						Utils.postMessage("updateTask");
-                    }
+					}
 					else { // If no Task Center API proceed as usual
 						that.getView().getModel().sDetailDeepEmptyMessage = sMessage + ". " + that.i18nBundle.getText("detailDeepEmptyView.closingTabMessage");
-						MessageToast.show(sMessage, {duration: 1000, onClose: that.oRouter.navTo.bind(that.oRouter, "detail_deep_empty", null, false)});
+						MessageToast.show(sMessage, { duration: 1000, onClose: that.oRouter.navTo.bind(that.oRouter, "detail_deep_empty", null, false) });
 					}
 					return;
 				}
@@ -1309,14 +1309,14 @@ sap.ui.define([
 				}
 			};
 
-			var fnError = function(oError) {
+			var fnError = function (oError) {
 				oDeferred.reject(oError.message);
 			};
 			this.oDataManager.fnUpdateSingleTask(sSapOrigin, TaskInstanceId, fnSuccess, fnError);
 			return oDeferred.promise();
 		},
 
-		updateTaskList: function() {
+		updateTaskList: function () {
 			//event subscribers: S2.controller and S2_TaskList.controller
 			this.getOwnerComponent().getEventBus().publish("cross.fnd.fiori.inbox", "refreshListInternal");
 		},
@@ -1329,18 +1329,18 @@ sap.ui.define([
 		getDescription: function (sSapOrigin, TaskInstanceId) {
 			var oDeferred = new jQuery.Deferred();
 
-			if (!sSapOrigin || !TaskInstanceId ) {
+			if (!sSapOrigin || !TaskInstanceId) {
 				oDeferred.reject("Input parameters SAP__Origin and TaskInstanceId are mandatory");
 				return oDeferred.promise();
 			}
 
 			// success handler of read data request
-			var fnSuccess = function(data) {
+			var fnSuccess = function (data) {
 				oDeferred.resolve(data);
 			};
 
 			// error handler for read request
-			var fnError = function(oError) {
+			var fnError = function (oError) {
 				oDeferred.reject(oError.message);
 			};
 
@@ -1348,7 +1348,7 @@ sap.ui.define([
 			return oDeferred.promise();
 		},
 
-		_setExtensionState: function(bSetExtension) {
+		_setExtensionState: function (bSetExtension) {
 			if (bSetExtension) {
 				this._isExtended = true;
 			}
@@ -1357,7 +1357,7 @@ sap.ui.define([
 			}
 		},
 
-		_getExtensionState: function() {
+		_getExtensionState: function () {
 			if (this._isExtended) {
 				return true;
 			}
@@ -1366,7 +1366,7 @@ sap.ui.define([
 			}
 		},
 
-		isMainScreen: function() {
+		isMainScreen: function () {
 			if (this._getExtensionState()) {
 				return false;
 			}
@@ -1386,7 +1386,7 @@ sap.ui.define([
 		 * @param {int} taskSwitchCount - "invisible" parameter - not provided by the caller; see comments for the _taskSwitchCount property
 		 * @param {boolean} showFooter - default value = false
 		 */
-		setShowFooterAPI: function(taskSwitchCount, showFooter) {
+		setShowFooterAPI: function (taskSwitchCount, showFooter) {
 			if (taskSwitchCount !== this._taskSwitchCount) {
 				Log.warning("s3.controller.setShowFooterAPI: task switched while waiting!");
 			}
@@ -1400,16 +1400,16 @@ sap.ui.define([
 		 * Show/hide footer of page
 		 * @param {boolean} showFooter - default value = false
 		 */
-		setShowFooter: function(showFooter) {
+		setShowFooter: function (showFooter) {
 			if (showFooter) {
-				this.oHeaderFooterOptions = jQuery.extend(this.oHeaderFooterOptions,this._oPreviousHeaderFooterOptions);
+				this.oHeaderFooterOptions = jQuery.extend(this.oHeaderFooterOptions, this._oPreviousHeaderFooterOptions);
 				this.refreshHeaderFooterOptions();
 				this._setExtensionState(false);
 			}
 			else {
 				this._setExtensionState(true);
 				//Store header/footer options before hiding footer
-				this._oPreviousHeaderFooterOptions =  jQuery.extend({},this.oHeaderFooterOptions);
+				this._oPreviousHeaderFooterOptions = jQuery.extend({}, this.oHeaderFooterOptions);
 				//Nullify all attributes within header/footer options except title and set flag to suppress bookmark button
 				this.oHeaderFooterOptions = jQuery.extend(this.oHeaderFooterOptions, {
 					oPositiveAction: null,
@@ -1434,7 +1434,7 @@ sap.ui.define([
 		 * @param {boolean} showNavButton - default value = false
 		 * @param {function} navEventHandler - optional
 		 */
-		setShowNavButtonAPI: function(taskSwitchCount, showNavButton, navEventHandler) {
+		setShowNavButtonAPI: function (taskSwitchCount, showNavButton, navEventHandler) {
 			if (taskSwitchCount !== this._taskSwitchCount) {
 				Log.warning("s3.controller.setShowNavButtonAPI: task switched while waiting!");
 			}
@@ -1449,7 +1449,7 @@ sap.ui.define([
 		 * @param {boolean} showNavButton - default value = false
 		 * @param {function} navEventHandler - optional
 		 */
-		setShowNavButton: function(showNavButton, navEventHandler) {
+		setShowNavButton: function (showNavButton, navEventHandler) {
 			if (showNavButton) {
 				if (navEventHandler) {
 					this._backButtonHandler = navEventHandler;
@@ -1469,7 +1469,7 @@ sap.ui.define([
 			this.refreshHeaderFooterOptions();
 		},
 
-		onNavButtonPress: function(oEvent) {
+		onNavButtonPress: function (oEvent) {
 			//Navigate back
 			if (window.history.length > 0) {
 				window.history.back();
@@ -1479,20 +1479,20 @@ sap.ui.define([
 			}
 		},
 
-		fnGetTaskModelClone: function(oRefreshData) {
+		fnGetTaskModelClone: function (oRefreshData) {
 			var oView = this.getView();
 			var oContext = new Context(oView.getModel(), oRefreshData.sCtxPath);
 			var oItem = jQuery.extend(true, {}, oView.getModel().getData(oContext.getPath(), oContext));
 			return this.fnCloneTaskModel(oItem);
 		},
 
-		fnCreateURLParameters: function(data) {
-			return Object.keys(data).map(function(key) {
+		fnCreateURLParameters: function (data) {
+			return Object.keys(data).map(function (key) {
 				return [key, data[key]].map(encodeURIComponent).join("=");
 			}).join("&");
 		},
 
-		fnValidateDecisionOptionsAndCreatButtons: function(bIsUIExecutionLinkSupported, aDecisionOptions, UIExecutionLinkData, sSapOrigin) {
+		fnValidateDecisionOptionsAndCreatButtons: function (bIsUIExecutionLinkSupported, aDecisionOptions, UIExecutionLinkData, sSapOrigin) {
 			aDecisionOptions = aDecisionOptions ? aDecisionOptions : [];
 
 			if (bIsUIExecutionLinkSupported) {
@@ -1503,7 +1503,7 @@ sap.ui.define([
 			}
 		},
 
-		fnDelegateTaskRefresh: function() {
+		fnDelegateTaskRefresh: function () {
 			var oNavigationParameters = this.oRoutingParameters;
 			var sSAPOrigin = oNavigationParameters.SAP__Origin;
 			var sInstanceId = oNavigationParameters.InstanceID;
@@ -1516,7 +1516,7 @@ sap.ui.define([
 		/*
 		 * Navigates to an app, either externally or embeds it into the detail page
 		 */
-		fnNavigateToApp: function(oParsedParams, bEmbed) {
+		fnNavigateToApp: function (oParsedParams, bEmbed) {
 			if (!bEmbed) {
 				this._getCrossNavigationService().toExternal({
 					target: {
@@ -1533,12 +1533,12 @@ sap.ui.define([
 			}
 		},
 
-		fnViewTaskInDefaultView: function(oItem, oRefreshData, fnSuccess) {
+		fnViewTaskInDefaultView: function (oItem, oRefreshData, fnSuccess) {
 			this.fnGetDetailsForSelectedTask(oItem, oRefreshData, fnSuccess);
 		},
 
 		// Fetches Tab Counts for embedIntoDetailsNestedRouter
-		fnGetTabCountersForSelectedTask: function(oItem, oRefreshData, fnSuccess) {
+		fnGetTabCountersForSelectedTask: function (oItem, oRefreshData, fnSuccess) {
 
 			var aExpandEntitySets = [];
 			var oItemData = this.oModel2.getData();
@@ -1567,7 +1567,7 @@ sap.ui.define([
 				oRefreshData.sInstanceID,
 				oItemData.TaskDefinitionID,
 				oItem,
-				function(taskSwitchCount, oDetailData, oCustomAttributeDefinition, oTabCounts, aDecisionOptions) {
+				function (taskSwitchCount, oDetailData, oCustomAttributeDefinition, oTabCounts, aDecisionOptions) {
 
 					// Exit if another task was clicked while waiting
 					if (taskSwitchCount !== this._taskSwitchCount) {
@@ -1592,7 +1592,7 @@ sap.ui.define([
 		},
 
 		// Fetches task details like Description, CustomAttributeData, Tab Counts based on whether the task is annotation based
-		fnGetDetailsForSelectedTask: function(oItem, oRefreshData, fnSuccess) {
+		fnGetDetailsForSelectedTask: function (oItem, oRefreshData, fnSuccess) {
 			var oTaskSupports = this.oModel2.getData().TaskSupports;
 			var bIsUIExLinkSupported = (oTaskSupports && oTaskSupports.UIExecutionLink) ? oTaskSupports.UIExecutionLink : false;
 			var isSPA = this.getOwnerComponent().getMetadata().getComponentName() === "com.sap.spa.inbox";
@@ -1600,7 +1600,7 @@ sap.ui.define([
 			var oParameters = isSPA ? Parser.fnParseComponentParametersForSPA(sGUI_Link) : Parser.fnParseComponentParameters(sGUI_Link);
 
 			var isGenericComponentRenderedPromise = !jQuery.isEmptyObject(oParameters) ? this.fnRenderComponent(oParameters) : Promise.resolve(false);
-			isGenericComponentRenderedPromise.then(function(isGenericComponentRendered) {
+			isGenericComponentRenderedPromise.then(function (isGenericComponentRendered) {
 				this.isGenericComponentRendered = isGenericComponentRendered;
 
 				// Show / Hide UI elements
@@ -1628,7 +1628,7 @@ sap.ui.define([
 			}.bind(this));
 		},
 
-		_prepareExpandedEntitySets: function() {
+		_prepareExpandedEntitySets: function () {
 			var aExpandEntitySets = [];
 
 			var oTaskSupports = this.oModel2.getData().TaskSupports;
@@ -1655,7 +1655,7 @@ sap.ui.define([
 			return aExpandEntitySets;
 		},
 
-		_fetchDetailsForDefaultUITask: function(oRefreshData, aExpandEntitySets, oItem, fnSuccess) {
+		_fetchDetailsForDefaultUITask: function (oRefreshData, aExpandEntitySets, oItem, fnSuccess) {
 			var oItemData = this.oModel2.getData();
 			var aTabCounts = [];
 			if (this.fnFormatterSupportsProperty(oItemData.TaskSupports.Comments, oItemData.SupportsComments)) {
@@ -1668,12 +1668,12 @@ sap.ui.define([
 				aTabCounts.push("TaskObjects");
 			}
 
-			this.oDataManager.readDataOnTaskSelection(oRefreshData.sCtxPath, aExpandEntitySets,aTabCounts,
+			this.oDataManager.readDataOnTaskSelection(oRefreshData.sCtxPath, aExpandEntitySets, aTabCounts,
 				oRefreshData.sSAP__Origin,
 				oRefreshData.sInstanceID,
 				oItemData.TaskDefinitionID,
 				oItem,
-				function(taskSwitchCount, oDetailData, oCustomAttributeDefinition, oTabCounts, aDecisionOptions) {
+				function (taskSwitchCount, oDetailData, oCustomAttributeDefinition, oTabCounts, aDecisionOptions) {
 
 					// Exit if another task was clicked while waiting
 					if (taskSwitchCount !== this._taskSwitchCount) {
@@ -1692,7 +1692,7 @@ sap.ui.define([
 						this.fnHandleNoTextCreation("ObjectLinks");
 					}
 
-					this.fnValidateDecisionOptionsAndCreatButtons(oItem.TaskSupports.UIExecutionLink, aDecisionOptions, oItem.UIExecutionLink, oRefreshData.sSAP__Origin );
+					this.fnValidateDecisionOptionsAndCreatButtons(oItem.TaskSupports.UIExecutionLink, aDecisionOptions, oItem.UIExecutionLink, oRefreshData.sSAP__Origin);
 
 					oDetailData.UIExecutionLink = oItem.UIExecutionLink;
 					fnSuccess.call(this, oDetailData, oCustomAttributeDefinition);
@@ -1701,7 +1701,7 @@ sap.ui.define([
 			);
 		},
 
-		_fetchDetailsForAnnotationTask: function(oItem, oRefreshData) {
+		_fetchDetailsForAnnotationTask: function (oItem, oRefreshData) {
 			var sGenericGroupName = "GenericComponentRendered";
 			// set the value of DataManager flag bDetailPageLoaded to solve the busy loader issue after performing action.
 			// TODO improve the busy loader implementation
@@ -1719,7 +1719,7 @@ sap.ui.define([
 			this.loadDecisionOptions(oItem, oRefreshData, sGenericGroupName);
 		},
 
-		clearCustomAttributes: function() {
+		clearCustomAttributes: function () {
 			if (this.aCA.length > 0) {
 				for (var i = 0; i < this.aCA.length; i++) {
 					this.aCA[i].destroy();
@@ -1728,7 +1728,7 @@ sap.ui.define([
 			}
 		},
 
-		onAttachmentChange: function(e) {
+		onAttachmentChange: function (e) {
 			var oUploadCollection = e.getSource();
 			var sFileName = e.getParameters().getParameters().files[0].name;
 			if (oUploadCollection.getHeaderParameters()) {
@@ -1738,7 +1738,7 @@ sap.ui.define([
 			var iLastDot = sFileName.lastIndexOf(".");
 			var extension = "";
 			if (iLastDot != -1) {
-				extension = sFileName.substr(iLastDot+1);
+				extension = sFileName.substr(iLastDot + 1);
 				sFileName = sFileName.substr(0, iLastDot);
 			}
 
@@ -1778,11 +1778,11 @@ sap.ui.define([
 			}
 		},
 
-		onAttachmentUploadComplete: function(e) {
+		onAttachmentUploadComplete: function (e) {
 			var oItem = this.oModel2.getData();
 			var that = this;
 			that.oEventSource = e.getSource();
-			var fnClose = function() {
+			var fnClose = function () {
 				this.oEventSource.updateAggregation("items");
 				this.oEventSource.rerender();
 			};
@@ -1811,11 +1811,11 @@ sap.ui.define([
 			}
 		},
 
-		onAttachmentDeleted: function(e) {
+		onAttachmentDeleted: function (e) {
 			var oUploadCollectionControlPromise = this._getUploadCollectionControl();
 			var eventCopy = jQuery.extend(true, {}, e);
 
-			oUploadCollectionControlPromise.then(function(uploadCollection) {
+			oUploadCollectionControlPromise.then(function (uploadCollection) {
 				var that = this;
 				var sAttachmentId = eventCopy.getParameters().documentId;
 				var oItem = this.oModel2.getData();
@@ -1823,10 +1823,10 @@ sap.ui.define([
 				this._setBusyIncdicatorOnDetailControls(uploadCollection, true);
 
 				this.oDataManager.deleteAttachment(oItem.SAP__Origin, oItem.InstanceID, sAttachmentId,
-					function() {
+					function () {
 						// remove the deleted attachment from the data and update the model
 						var oAttachmentsData = oItem.Attachments.results;
-						jQuery.each(oAttachmentsData, function(i, oAttachment) {
+						jQuery.each(oAttachmentsData, function (i, oAttachment) {
 							if (oAttachment.ID === sAttachmentId) {
 								oAttachmentsData.splice(i, 1);
 								return false;
@@ -1847,7 +1847,7 @@ sap.ui.define([
 
 						MessageToast.show(this.i18nBundle.getText("dialog.success.attachmentDeleted"));
 					}.bind(this),
-					function(oError) {
+					function (oError) {
 						this._setBusyIncdicatorOnDetailControls(uploadCollection, false);
 						var sErrorText = this.i18nBundle.getText("dialog.error.attachmentDelete");
 						MessageBox.error(sErrorText);
@@ -1856,15 +1856,15 @@ sap.ui.define([
 			}.bind(this));
 		},
 
-		getXsrfToken: function() {
+		getXsrfToken: function () {
 			var sToken = this.getView().getModel().getHeaders()["x-csrf-token"];
 			if (!sToken) {
 
 				this.getView().getModel().refreshSecurityToken(
-					function(e, o) {
+					function (e, o) {
 						sToken = o.headers["x-csrf-token"];
 					},
-					function() {
+					function () {
 						MessageBox.error("Could not get XSRF token");
 					},
 					false);
@@ -1872,14 +1872,14 @@ sap.ui.define([
 			return sToken;
 		},
 
-		onFileUploadFailed: function(e) {
+		onFileUploadFailed: function (e) {
 			var sErrorText = this.i18nBundle.getText("dialog.error.attachmentUpload");
 
 			MessageBox.error(sErrorText,
 				{ details: CommonFunctions.fnRemoveHtmlTags(e.getParameters().exception) });
 		},
 
-		addShareOnJamAndEmail: function(oButtonList) {
+		addShareOnJamAndEmail: function (oButtonList) {
 			var oJamOptions = {
 				fGetShareSettings: this.getJamSettings.bind(this)
 			};
@@ -1898,7 +1898,7 @@ sap.ui.define([
 			});
 		},
 
-		_getDescriptionForShare: function(sDescriptionText) {
+		_getDescriptionForShare: function (sDescriptionText) {
 			var oData = this.oModel2.getData();
 			var sBody = "\n\n" + this.i18nBundle.getText("share.email.body.detailsOfTheItem") + "\n\n";
 			var oDateFormatter = DateFormat.getDateInstance();
@@ -1936,11 +1936,11 @@ sap.ui.define([
 			return sBody;
 		},
 
-		_getDescriptionForShareInMail: function(sDescriptionText) {
+		_getDescriptionForShareInMail: function (sDescriptionText) {
 			var sBody = this._getDescriptionForShare(sDescriptionText);
 			if (window.location.href === window.parent.location.href) {
-				sBody += this.i18nBundle.getText("share.email.body.link", 
-							window.location.href.split("(").join("%28").split(")").join("%29").split(",").join("%2C")) + "\n";
+				sBody += this.i18nBundle.getText("share.email.body.link",
+					window.location.href.split("(").join("%28").split(")").join("%29").split(",").join("%2C")) + "\n";
 			}
 			else {
 				sBody += this.i18nBundle.getText("share.email.body.link", window.parent.location.href) + "\n";
@@ -1949,7 +1949,7 @@ sap.ui.define([
 			return sBody;
 		},
 
-		getJamSettings: function() {
+		getJamSettings: function () {
 			return {
 				object: {
 					id: window.location.href,
@@ -1958,13 +1958,13 @@ sap.ui.define([
 			};
 		},
 
-		getJamDescription: function() {
+		getJamDescription: function () {
 			var sBody = this._getDescriptionForShare();
 
 			return sBody;
 		},
 
-		getMailSubject: function() {
+		getMailSubject: function () {
 			var oData = this.oModel2.getData();
 			var sPriority = Conversions.formatterPriority.call(this.getView(), oData.SAP__Origin, oData.Priority);
 			var sCreatedBy = oData.CreatedByName;
@@ -1973,7 +1973,7 @@ sap.ui.define([
 			return Conversions.formatterMailSubject.call(this, sPriority, sCreatedBy, sTaskTitle);
 		},
 
-		getMailBody: function() {
+		getMailBody: function () {
 
 			// Internet Explorer supports only shorter mailto urls, we pass only the items url this case
 			if (Device.browser.msie) {
@@ -2018,7 +2018,7 @@ sap.ui.define([
 			return sFullMailBody;
 		},
 
-		_getIntentParam: function(oParsedParams) {
+		_getIntentParam: function (oParsedParams) {
 			var aMappingConfig = [];
 
 			for (var i = 0; i < this.OPEN_MODES.length; i++) {
@@ -2029,14 +2029,14 @@ sap.ui.define([
 					},
 					//If parsedParams.params contains "openMode" we should replace it with ours in new object
 					//in order to check which navigation is supported:
-					params: jQuery.extend({}, oParsedParams.params,	{"openMode": this.OPEN_MODES[i]})
+					params: jQuery.extend({}, oParsedParams.params, { "openMode": this.OPEN_MODES[i] })
 				});
 			}
 
 			return aMappingConfig;
 		},
 
-		_getIntentWithOutParam: function(oParsedParams) {
+		_getIntentWithOutParam: function (oParsedParams) {
 			var aMappingConfig = [{
 				target: {
 					semanticObject: oParsedParams.semanticObject,
@@ -2047,12 +2047,12 @@ sap.ui.define([
 			return aMappingConfig;
 		},
 
-		_getTrimmedString: function(sText) {
+		_getTrimmedString: function (sText) {
 			// removes spaces in the beginning and at the end. Also removes new line characters, extra spaces and tabs in the description string.
 			return sText.replace(/\s+/g, " ").trim();
 		},
 
-		_handleItemRemoved: function(oEvent) {
+		_handleItemRemoved: function (oEvent) {
 			//Successful request processing - navigate back to list on phone
 			if (Device.system.phone && !this.getView().getParent().getParent().isMasterShown()) {
 
@@ -2075,8 +2075,8 @@ sap.ui.define([
 				}
 			}
 		},
-		
-		_handleDetailRefresh: function(oEvent) {
+
+		_handleDetailRefresh: function (oEvent) {
 			var oRefreshData;
 			var bIsTableViewActive = oEvent.getParameter("bIsTableViewActive");
 			var oView = this.getView();
@@ -2143,7 +2143,7 @@ sap.ui.define([
 			//this.stayOnDetailScreen = false;
 		},
 
-		_updateHeaderTitle: function(oData) {
+		_updateHeaderTitle: function (oData) {
 			//-- update header
 			if (oData) {
 				var sTitle;
@@ -2167,7 +2167,7 @@ sap.ui.define([
 			}
 		},
 
-		_isTaskConfirmable: function(oItem) {
+		_isTaskConfirmable: function (oItem) {
 			//    	if (oItem.TaskSupports.Confirm)
 			if (oItem.Status === "EXECUTED") {
 				return true;
@@ -2177,7 +2177,7 @@ sap.ui.define([
 			}
 		},
 
-		createDecisionButtons: function(aDecisionOptions, oUIExecutionLink, sOrigin) {
+		createDecisionButtons: function (aDecisionOptions, oUIExecutionLink, sOrigin) {
 			var oPositiveAction = null;
 			var oNegativeAction = null;
 			var aButtonList = [];
@@ -2193,7 +2193,7 @@ sap.ui.define([
 			var that = this;
 
 			var oItem = this.oModel2.getData(),
-			oActionHelper = that._getActionHelper();
+				oActionHelper = that._getActionHelper();
 
 			var bIsOpenButtonCreationInPromise = false;
 			var bIsOutbox = false;
@@ -2235,8 +2235,8 @@ sap.ui.define([
 							iDisplayOrderPriority: iDisplayOrderPriorityValue,
 							nature: oDecisionOption.Nature,
 							sBtnTxt: oDecisionOption.DecisionText,
-							onBtnPressed: (function(oDecision) {
-								return function() {
+							onBtnPressed: (function (oDecision) {
+								return function () {
 									that.showDecisionDialog(that.oDataManager.FUNCTION_IMPORT_DECISION, oDecision);
 								};
 							})(oDecisionOption)
@@ -2251,8 +2251,8 @@ sap.ui.define([
 					oPositiveAction = {
 						iDisplayOrderPriority: iDisplayOrderPriorityValue,
 						sI18nBtnTxt: "XBUT_CONFIRM",
-						onBtnPressed: (function(oDecision) {
-							return function() {
+						onBtnPressed: (function (oDecision) {
+							return function () {
 								that.showConfirmationDialog(that.oDataManager.FUNCTION_IMPORT_CONFIRM, oItem);
 							};
 						})(oItem)
@@ -2261,7 +2261,7 @@ sap.ui.define([
 
 				//add the log button
 				//must be positioned before the ShowDetails button and the rest of the standard buttons (120x<130x<150x)
-				if ((oItem.TaskSupports.ProcessingLogs || oItem.TaskSupports.WorkflowLog) 
+				if ((oItem.TaskSupports.ProcessingLogs || oItem.TaskSupports.WorkflowLog)
 					&& that.oDataManager.getShowLogEnabled()
 					&& !that.oDataManager.isElementHidden("ShowLog")
 				) {
@@ -2286,7 +2286,7 @@ sap.ui.define([
 						iDisplayOrderPriority: iDisplayOrderPriorityValue,
 						sI18nBtnTxt: "XBUT_CLAIM",
 						focus: that._toggleClaimReleaseFocus,
-						onBtnPressed: function(oEvent) {
+						onBtnPressed: function (oEvent) {
 							that._toggleClaimReleaseFocus = true;
 							if (Device.system.phone) {
 								that.stayOnDetailScreen = true;
@@ -2307,7 +2307,7 @@ sap.ui.define([
 						iDisplayOrderPriority: iDisplayOrderPriorityValue,
 						sI18nBtnTxt: "XBUT_RELEASE",
 						focus: that._toggleClaimReleaseFocus,
-						onBtnPressed: function(oEvent) {
+						onBtnPressed: function (oEvent) {
 							that._toggleClaimReleaseFocus = true;
 							if (Device.system.phone) {
 								that.stayOnDetailScreen = true;
@@ -2348,7 +2348,7 @@ sap.ui.define([
 				if (oParsedParams && xNavService) {
 					bIsOpenButtonCreationInPromise = true;
 					xNavService.isNavigationSupported(aIntents).done(
-						function(aResponses) {
+						function (aResponses) {
 							var supportedOpenMode = that._getSupportedOpenMode(aResponses);
 							// Display Open Task button if
 							// - intent is supported with valid openMode OR openMode is not maintained at all
@@ -2363,7 +2363,7 @@ sap.ui.define([
 								aButtonList.push({
 									iDisplayOrderPriority: iDisplayOrderPriorityValue,
 									sI18nBtnTxt: "XBUT_OPEN",
-									onBtnPressed: function(oEvent) {
+									onBtnPressed: function (oEvent) {
 										that.checkStatusAndOpenTaskUI();
 									}
 								});
@@ -2378,7 +2378,7 @@ sap.ui.define([
 									sId: "DetailsButtonID", // Add stable ID for Details Button
 									iDisplayOrderPriority: iDisplayOrderPriorityValue,
 									sI18nBtnTxt: that.bShowDetails ? "XBUT_HIDEDETAILS" : "XBUT_SHOWDETAILS",
-									onBtnPressed: function(oEvent) {
+									onBtnPressed: function (oEvent) {
 										that.onDetailsBtnPress();
 									}
 								});
@@ -2386,7 +2386,7 @@ sap.ui.define([
 							that.showHideSideContent();
 							that.addEmailAndCallExtentionHookForButtonOptions(aButtonList, oPositiveAction, oNegativeAction, oItem);
 						}
-					).fail(function() {
+					).fail(function () {
 						that.addEmailAndCallExtentionHookForButtonOptions(aButtonList, oPositiveAction, oNegativeAction, oItem);
 						Log.error("Error while creating open task buttons");
 					});
@@ -2397,7 +2397,7 @@ sap.ui.define([
 					aButtonList.push({
 						iDisplayOrderPriority: iDisplayOrderPriorityValue,
 						sI18nBtnTxt: "XBUT_OPEN",
-						onBtnPressed: function(oEvent) {
+						onBtnPressed: function (oEvent) {
 							that.checkStatusAndOpenTaskUI();
 						}
 					});
@@ -2408,7 +2408,7 @@ sap.ui.define([
 					aButtonList.push({
 						iDisplayOrderPriority: iDisplayOrderPriorityValue,
 						sI18nBtnTxt: "XBUT_OPEN",
-						onBtnPressed: function(oEvent) {
+						onBtnPressed: function (oEvent) {
 							that.checkStatusAndOpenTaskUI();
 						}
 					});
@@ -2419,7 +2419,7 @@ sap.ui.define([
 					var oData = this.oModel2.getData();
 					var oDeadLine = oData.CompletionDeadLine;
 					if (oDeadLine) {
-						var fnAddReminderWithCheck = function(deadline) {
+						var fnAddReminderWithCheck = function (deadline) {
 							if (deadline < new Date()) {
 								this.oConfirmationDialogManager.showDecisionDialog({
 									question: this.i18nBundle.getText("dialog.warning.mq.CalendarEventInThePast"),
@@ -2447,7 +2447,7 @@ sap.ui.define([
 			else {
 				//Outbox buttons:
 
-				 bIsOutbox = true;
+				bIsOutbox = true;
 				//add the log button
 				//must be positioned before the ShowDetails button and the rest of the standard buttons (120x<130x<150x)
 				if ((oItem.TaskSupports.ProcessingLogs || oItem.TaskSupports.WorkflowLog) && that.oDataManager.getShowLogEnabled()) {
@@ -2468,7 +2468,7 @@ sap.ui.define([
 					aButtonList.push({
 						iDisplayOrderPriority: iDisplayOrderPriorityValue,
 						sI18nBtnTxt: "XBUT_RESUME",
-						onBtnPressed: function(oEvent) {
+						onBtnPressed: function (oEvent) {
 							that.sendAction("CancelResubmission", oItem, null);
 						}
 					});
@@ -2476,7 +2476,7 @@ sap.ui.define([
 
 				if (oParsedParams && xNavService) {
 					xNavService.isNavigationSupported(aIntents).done(
-						function(aResponses) {
+						function (aResponses) {
 							var supportedOpenMode = that._getSupportedOpenMode(aResponses);
 							// add the details button
 							// must be positioned after the ShowLog button and the rest of the standard buttons (120x<130x<150x)
@@ -2488,7 +2488,7 @@ sap.ui.define([
 									sId: "DetailsButtonID", // Add stable ID for Details Button
 									iDisplayOrderPriority: iDisplayOrderPriorityValue,
 									sI18nBtnTxt: that.bShowDetails ? "XBUT_HIDEDETAILS" : "XBUT_SHOWDETAILS",
-									onBtnPressed: function(oEvent) {
+									onBtnPressed: function (oEvent) {
 										that.onDetailsBtnPress();
 									}
 								});
@@ -2496,7 +2496,7 @@ sap.ui.define([
 								that.addEmailAndCallExtentionHookForButtonOptions(aButtonList, oPositiveAction, oNegativeAction, oItem);
 							}
 						}
-					).fail(function() {
+					).fail(function () {
 						that.addEmailAndCallExtentionHookForButtonOptions(aButtonList, oPositiveAction, oNegativeAction, oItem);
 						Log.error("Error creating details buttons");
 					});
@@ -2518,7 +2518,7 @@ sap.ui.define([
 			}
 		},
 
-		addEmailAndCallExtentionHookForButtonOptions: function(aButtonList, oPositiveAction, oNegativeAction, oItem) {
+		addEmailAndCallExtentionHookForButtonOptions: function (aButtonList, oPositiveAction, oNegativeAction, oItem) {
 			var oButtonList = {};
 			oButtonList.oPositiveAction = oPositiveAction;
 			oButtonList.oNegativeAction = oNegativeAction;
@@ -2561,7 +2561,7 @@ sap.ui.define([
 			this.refreshHeaderFooterOptions();
 		},
 
-		startForwardFilter: function(oListItem, sQuery) {
+		startForwardFilter: function (oListItem, sQuery) {
 			sQuery = sQuery.toLowerCase();
 			var sFullName = oListItem.getBindingContext().getProperty("DisplayName").toLowerCase();
 			var sDepartment = oListItem.getBindingContext().getProperty("Department").toLowerCase();
@@ -2570,18 +2570,18 @@ sap.ui.define([
 				(sDepartment.indexOf(sQuery) !== -1);
 		},
 
-		closeForwardPopUp: function(oResult) {
+		closeForwardPopUp: function (oResult) {
 			if (oResult && oResult.bConfirmed) {
 				var oItem = this.oModel2.getData();
 				var sOrigin = oItem.SAP__Origin;
 				var sInstanceID = oItem.InstanceID;
 
 				this.oDataManager.doForward(sOrigin, sInstanceID,
-					oResult.oAgentToBeForwarded.UniqueName, oResult.sNote, function() {
+					oResult.oAgentToBeForwarded.UniqueName, oResult.sNote, function () {
 						var sMessage = this.i18nBundle.getText("dialog.success.forward", oResult.oAgentToBeForwarded.DisplayName);
 						if (this._getStandaloneDetailDeep() && this.getView().getModel().bCheckPassed) {
 							this.getView().getModel().sDetailDeepEmptyMessage = sMessage + ". " + this.i18nBundle.getText("detailDeepEmptyView.closingTabMessage");
-							MessageToast.show(sMessage, {duration: 1000, onClose: this.oRouter.navTo.bind(this.oRouter, "detail_deep_empty", null, false)});
+							MessageToast.show(sMessage, { duration: 1000, onClose: this.oRouter.navTo.bind(this.oRouter, "detail_deep_empty", null, false) });
 						}
 						else {
 							MessageToast.show(sMessage);
@@ -2590,7 +2590,7 @@ sap.ui.define([
 			}
 		},
 
-		onForwardPopUp: function() {
+		onForwardPopUp: function () {
 			var oItem = this.oModel2.getData();
 			var sOrigin = oItem.SAP__Origin;
 			var sInstanceID = oItem.InstanceID;
@@ -2618,7 +2618,7 @@ sap.ui.define([
 			}
 		},
 
-		_getSupportedOpenMode: function(aResponses) {
+		_getSupportedOpenMode: function (aResponses) {
 			// If all responses are "true" this might mean either that all open modes are configured in different catalogs
 			// or none of them is set anywhere. Regardless of this an open mode is supported only if there is exactly ONE open mode set:
 			var supportedModes = [];
@@ -2630,7 +2630,7 @@ sap.ui.define([
 			return (supportedModes.length === 1) ? supportedModes[0] : null;
 		},
 
-		_getParsedParamsForIntent: function(sURL) {
+		_getParsedParamsForIntent: function (sURL) {
 			var oParsedParams = null;
 			this.oURLParsingService = this.oURLParsingService
 				|| sap.ushell
@@ -2644,7 +2644,7 @@ sap.ui.define([
 			return oParsedParams;
 		},
 
-		_getCrossNavigationService: function() {
+		_getCrossNavigationService: function () {
 			if (!this.oCrossNavigationService) {
 				if (sap.ushell && sap.ushell.Container && sap.ushell.Container.getService) {
 					this.oCrossNavigationService = sap.ushell.Container.getService("CrossApplicationNavigation");
@@ -2653,12 +2653,12 @@ sap.ui.define([
 			return this.oCrossNavigationService;
 		},
 
-		_PotentialOwnersSuccess: function(oResult) {
+		_PotentialOwnersSuccess: function (oResult) {
 			Forward.setAgents(oResult.results);
 			Forward.setOrigin(this.oModel2.getData().SAP__Origin);
 		},
 
-		showResubmitPopUp: function() {
+		showResubmitPopUp: function () {
 			Resubmit.open(
 				this.sResubmitUniqueId,
 				this,
@@ -2666,7 +2666,7 @@ sap.ui.define([
 			);
 		},
 
-		handleResubmitPopOverOk: function(oEvent) {
+		handleResubmitPopOverOk: function (oEvent) {
 			var oItem = this.oModel2.getData();
 			var sOrigin = oItem.SAP__Origin;
 			var sInstanceID = oItem.InstanceID;
@@ -2677,11 +2677,11 @@ sap.ui.define([
 				var oFormat = DateFormat.getDateInstance({
 					pattern: "yyyy-MM-ddTHH:mm:ss"
 				});
-				this.oDataManager.doResubmit(sOrigin, sInstanceID, "datetime'" + oFormat.format(oDate) + "'", function() {
+				this.oDataManager.doResubmit(sOrigin, sInstanceID, "datetime'" + oFormat.format(oDate) + "'", function () {
 					var sMessage = this.i18nBundle.getText("dialog.success.resubmit");
 					if (this._getStandaloneDetailDeep() && this.getView().getModel().bCheckPassed) {
 						this.getView().getModel().sDetailDeepEmptyMessage = sMessage + ". " + this.i18nBundle.getText("detailDeepEmptyView.closingTabMessage");
-						MessageToast.show(sMessage, {duration: 1000, onClose: this.oRouter.navTo.bind(this.oRouter, "detail_deep_empty", null, false)});
+						MessageToast.show(sMessage, { duration: 1000, onClose: this.oRouter.navTo.bind(this.oRouter, "detail_deep_empty", null, false) });
 					}
 					else {
 						MessageToast.show(sMessage);
@@ -2691,35 +2691,35 @@ sap.ui.define([
 			}
 		},
 
-		showEmployeeCard: function(sOrigin, sCreatedBy, oSelectedControl) {
+		showEmployeeCard: function (sOrigin, sCreatedBy, oSelectedControl) {
 			this._setBusyIncdicatorOnDetailControls(this.getView(), true);
 			this.oDataManager.readUserInfo(sOrigin, sCreatedBy,
-				function(oResult) {
+				function (oResult) {
 					this._setBusyIncdicatorOnDetailControls(this.getView(), false);
 					EmployeeCard.displayEmployeeCard(oSelectedControl, oResult);
 				}.bind(this),
-				function(oError) {
+				function (oError) {
 					this._setBusyIncdicatorOnDetailControls(this.getView(), false);
 				}.bind(this),
 				true);
 		},
 
-		onEmployeeLaunchTask: function(oEvent) {
+		onEmployeeLaunchTask: function (oEvent) {
 			var oItem = this.oModel2.getData();
 			this.showEmployeeCard(oItem.SAP__Origin, oItem.CreatedBy, Conversions.getSelectedControl(oEvent));
 		},
 
-		onEmployeeLaunchCommentSender: function(sChannel, sEventName, oEvent) {
+		onEmployeeLaunchCommentSender: function (sChannel, sEventName, oEvent) {
 			this.showEmployeeCard(this.oModel2.getData().SAP__Origin,
 				oEvent.getSource().getBindingContext("detail").getProperty("CreatedBy"),
 				Conversions.getSelectedControl(oEvent));
 		},
 
-		handleLogNavigation: function(oEvent) {
-			var oBindingContext =  oEvent.getSource().getBindingContext("detail");
+		handleLogNavigation: function (oEvent) {
+			var oBindingContext = oEvent.getSource().getBindingContext("detail");
 			var sSapOrigin = oBindingContext.getProperty("SAP__Origin");
 			var sReferenceID = oBindingContext.getProperty("ReferenceInstanceID");
-			var sContextPath = "TaskCollection(SAP__Origin='" + sSapOrigin+"',InstanceID='"+sReferenceID+"')";
+			var sContextPath = "TaskCollection(SAP__Origin='" + sSapOrigin + "',InstanceID='" + sReferenceID + "')";
 			this.bNavToFullScreenFromLog = true;
 			var oParameters = {
 				SAP__Origin: sSapOrigin, // eslint-disable-line camelcase
@@ -2737,17 +2737,17 @@ sap.ui.define([
 				var that = this;
 				var oDataManager = that.getOwnerComponent().getDataManager();
 				oDataManager.oDataRead("/TaskCollection(SAP__Origin='" + sSapOrigin +
-						"',InstanceID='" + sReferenceID + "')", null,
-						function(oDetailData) {
-							if (oDetailData !== undefined && !jQuery.isEmptyObject(oDetailData)) {
-								//Perform routing
-								that.oRouter.navTo("detail_deep", oParameters, false);
-							}
-						},
-						function(oError) {
-							Log.error(oError);
-							return;
+					"',InstanceID='" + sReferenceID + "')", null,
+					function (oDetailData) {
+						if (oDetailData !== undefined && !jQuery.isEmptyObject(oDetailData)) {
+							//Perform routing
+							that.oRouter.navTo("detail_deep", oParameters, false);
 						}
+					},
+					function (oError) {
+						Log.error(oError);
+						return;
+					}
 				);
 			}
 			else {
@@ -2756,7 +2756,7 @@ sap.ui.define([
 			}
 		},
 
-		onEmployeeLaunchCommentIcon: function(oEvent) {
+		onEmployeeLaunchCommentIcon: function (oEvent) {
 			// Business card on Notes
 			var sOrigin = oEvent.getSource().getBindingContext().getProperty("SAP__Origin");
 			var sCreatedBy = oEvent.getSource().getBindingContext("detail").getModel().getProperty(oEvent.getSource().getBindingContext("detail").getPath())
@@ -2769,13 +2769,13 @@ sap.ui.define([
 			this.showEmployeeCard(sOrigin, sCreatedBy, Conversions.getSelectedControl(oEvent));
 		},
 
-		onAttachmentShow: function(oEvent) {
+		onAttachmentShow: function (oEvent) {
 			var oContext = oEvent.getSource().getBindingContext("detail");
 			var sMediaSrc = AttachmentFormatters.getRelativeMediaSrc(oContext.getProperty().__metadata.media_src);
 			URLHelper.redirect(sMediaSrc, true);
 		},
 
-		showDecisionDialog: function(sFunctionImportName, oDecision) {
+		showDecisionDialog: function (sFunctionImportName, oDecision) {
 			// Could easily be scaled to downloading multiple things using Promise.all
 			var reasonOptionsLoadedPromise = oDecision && (oDecision.ReasonRequired === "REQUIRED" || oDecision.ReasonRequired === "OPTIONAL") ?
 				this.oConfirmationDialogManager.loadReasonOptions(oDecision, this.oDataManager) : null,
@@ -2783,12 +2783,12 @@ sap.ui.define([
 
 			var decisionDialogSettings = {
 				question: this.i18nBundle.getText("XMSG_DECISION_QUESTION", oDecision.DecisionText),
-				textAreaLabel : this.i18nBundle.getText("XFLD_TextArea_Decision"),
+				textAreaLabel: this.i18nBundle.getText("XFLD_TextArea_Decision"),
 				showNote: bShowNote,
 				title: this.i18nBundle.getText("XTIT_SUBMIT_DECISION"),
 				confirmButtonLabel: this.i18nBundle.getText("XBUT_SUBMIT"),
 				noteMandatory: bShowNote && oDecision.CommentMandatory,
-				confirmActionHandler: function(oDecisionOptions, sNote, sReasonOptionKey) {
+				confirmActionHandler: function (oDecisionOptions, sNote, sReasonOptionKey) {
 					this.sendAction(sFunctionImportName, oDecisionOptions, sNote, sReasonOptionKey);
 				}.bind(this, oDecision)
 			};
@@ -2799,45 +2799,45 @@ sap.ui.define([
 			}
 			else {
 				// reason options will be loaded
-				reasonOptionsLoadedPromise.then(function(reasonOptionsSettings) {
+				reasonOptionsLoadedPromise.then(function (reasonOptionsSettings) {
 					decisionDialogSettings["reasonOptionsSettings"] = reasonOptionsSettings;
 					this.oConfirmationDialogManager.showDecisionDialog(decisionDialogSettings);
 				}.bind(this))
-				.catch(function(oError) {
-					// failed to load the reason options yet open the dialog without them.
-					this.oConfirmationDialogManager.showDecisionDialog(decisionDialogSettings);
-					Log.error("Could not load the reason options properly");
-				}.bind(this));
+					.catch(function (oError) {
+						// failed to load the reason options yet open the dialog without them.
+						this.oConfirmationDialogManager.showDecisionDialog(decisionDialogSettings);
+						Log.error("Could not load the reason options properly");
+					}.bind(this));
 			}
 		},
 
-		fnOnNavBackFromLogDescription: function(oEvent) {
+		fnOnNavBackFromLogDescription: function (oEvent) {
 			this.bNavToFullScreenFromLog = false;
 			this.bShowLogs = true;
 			window.history.back();
 		},
 
-		showConfirmationDialog: function(sFunctionImportName, oItem) {
+		showConfirmationDialog: function (sFunctionImportName, oItem) {
 			this.oConfirmationDialogManager.showDecisionDialog({
 				question: this.i18nBundle.getText("XMSG_CONFIRM_QUESTION"),
 				showNote: false,
 				title: this.i18nBundle.getText("XTIT_SUBMIT_CONFIRM"),
 				confirmButtonLabel: this.i18nBundle.getText("XBUT_CONFIRM"),
-				confirmActionHandler: function(oItem, sNote) {
+				confirmActionHandler: function (oItem, sNote) {
 					this.sendAction(sFunctionImportName, oItem, sNote);
 				}.bind(this, oItem)
 			});
 		},
 
 		// executed when the event CommentAdded is fired from the Comment Component
-		onCommentPost: function(sChannel, sEventName, oEvent) {
+		onCommentPost: function (sChannel, sEventName, oEvent) {
 			var sComment = oEvent.getParameter("value");
 			if (sComment && sComment.length > 0) {
 				this.sendAction("AddComment", null, sComment);
 			}
 		},
 
-		sendAction: function(sFunctionImportName, oDecision, sNote, sReasonOptionCode) {
+		sendAction: function (sFunctionImportName, oDecision, sNote, sReasonOptionCode) {
 			var that = this;
 			var sSuccessMessage;
 
@@ -2864,35 +2864,35 @@ sap.ui.define([
 			switch (sFunctionImportName) {
 				case "AddComment":
 					{
-						this._getIconTabControl("Comments").then(function(oCommentsControl) {
+						this._getIconTabControl("Comments").then(function (oCommentsControl) {
 							var oItem = this.oModel2.getData();
 							this._setBusyIncdicatorOnDetailControls(oCommentsControl, true);
 							this.oDataManager.addComment(oItem.SAP__Origin, oItem.InstanceID, sNote,
-							function(data, response) {
+								function (data, response) {
 
-								// update the comments data and comments count
-								if (oItem.Comments && oItem.Comments.results) {
-									oItem.Comments.results.unshift(data);
-								}
-								else {
-									oItem.Comments = {
-										results: [data]
-									};
-								}
-								oItem.CommentsCount = oItem.Comments.results.length;
-								this._setBusyIncdicatorOnDetailControls(oCommentsControl, false);
-								this._updateDetailModel(oItem);
+									// update the comments data and comments count
+									if (oItem.Comments && oItem.Comments.results) {
+										oItem.Comments.results.unshift(data);
+									}
+									else {
+										oItem.Comments = {
+											results: [data]
+										};
+									}
+									oItem.CommentsCount = oItem.Comments.results.length;
+									this._setBusyIncdicatorOnDetailControls(oCommentsControl, false);
+									this._updateDetailModel(oItem);
 
-								setTimeout(function() {
-									MessageToast.show(that.i18nBundle.getText(sSuccessMessage));
-								}, 500, this);
+									setTimeout(function () {
+										MessageToast.show(that.i18nBundle.getText(sSuccessMessage));
+									}, 500, this);
 
-								// update the counter on history tab
-								//this.fnCountUpdater("ProcessingLogs", oItem.SAP__Origin, oItem.InstanceID);
-							}.bind(this),
-							function(oError) {
-								this._setBusyIncdicatorOnDetailControls(oCommentsControl, false);
-							}.bind(this));
+									// update the counter on history tab
+									//this.fnCountUpdater("ProcessingLogs", oItem.SAP__Origin, oItem.InstanceID);
+								}.bind(this),
+								function (oError) {
+									this._setBusyIncdicatorOnDetailControls(oCommentsControl, false);
+								}.bind(this));
 						}.bind(this));
 						break;
 					}
@@ -2905,11 +2905,11 @@ sap.ui.define([
 									Utils.postMessage("updateTask");
 								}
 
-								setTimeout(function() {
+								setTimeout(function () {
 									var sMessage = that.i18nBundle.getText(sSuccessMessage);
 									if (that._getStandaloneDetailDeep() && that.getView().getModel().bCheckPassed) {
 										that.getView().getModel().sDetailDeepEmptyMessage = sMessage + ". " + that.i18nBundle.getText("detailDeepEmptyView.closingTabMessage");
-										MessageToast.show(sMessage, {duration: 1000, onClose: that.oRouter.navTo.bind(that.oRouter, "detail_deep_empty", null, false)});
+										MessageToast.show(sMessage, { duration: 1000, onClose: that.oRouter.navTo.bind(that.oRouter, "detail_deep_empty", null, false) });
 									}
 									else {
 										MessageToast.show(sMessage);
@@ -2921,7 +2921,7 @@ sap.ui.define([
 			}
 		},
 
-		refreshHeaderFooterOptions: function() {
+		refreshHeaderFooterOptions: function () {
 			if (this.oHeaderFooterOptions && this.oHeaderFooterOptions.buttonList) {
 				this.oHeaderFooterOptions.buttonList.sort(CommonFunctions.compareButtons);
 			}
@@ -2929,25 +2929,25 @@ sap.ui.define([
 			this.setHeaderFooterOptions(this._oHeaderFooterOptions);
 		},
 
-		setHeaderFooterOptions : function(oOptions) {
+		setHeaderFooterOptions: function (oOptions) {
 			this.oAppImp.oDHFHelper.setHeaderFooter(this, oOptions);
 		},
 
-	    /*
+		/*
 		 * override this method if you have not used the standard way to include the page in the view
 		 */
-		getPage : function() {
+		getPage: function () {
 			return CommonHeaderFooterHelper.getPageFromController(this);
 		},
 
 		// nav back button pressed from table view's detail view
-		fnNavBackToTableVw: function() {
+		fnNavBackToTableVw: function () {
 			this.getOwnerComponent().getEventBus().publish("cross.fnd.fiori.inbox", "refreshTask", {
-					"contextPath": this.sCtxPath
-				});
-		//	this.oRouter.navTo("table_view", {}, true);
-		if (window.history.length > 0) {
-			window.history.back();
+				"contextPath": this.sCtxPath
+			});
+			//	this.oRouter.navTo("table_view", {}, true);
+			if (window.history.length > 0) {
+				window.history.back();
 			}
 		},
 
@@ -2956,20 +2956,20 @@ sap.ui.define([
 			Used https://help.sap.com/viewer/825270ffffe74d9f988a0f0066ad59f0/CF/en-US/499b03d3fb8a427da8172fb29e90b11c.html
 			as a reference - function rewritten see CENTRALINBOX-4036
 		*/
-		fnOnNavBackInMobile: function() {
+		fnOnNavBackInMobile: function () {
 			var oHistory = RoutingHistory.getInstance();
 			var sPreviousHash = oHistory.getPreviousHash();
 
 			//The history contains a previous entry
 			if (sPreviousHash !== undefined) {
 				window.history.back();
-			} 
+			}
 			else {
 				this.oRouter.navTo("master", {}, true);
 			}
 		},
 
-		checkStatusAndOpenTaskUI: function() {
+		checkStatusAndOpenTaskUI: function () {
 			var oTaskData = this.oModel2.getData();
 			this.oDataManager.checkStatusAndOpenTask(
 				oTaskData.SAP__Origin, oTaskData.InstanceID, this.openTaskUI.bind(this));
@@ -2980,7 +2980,7 @@ sap.ui.define([
 		 if yes, then open it in the respective mode
 		 if no, open task in the default way
 		 */
-		openTaskUI: function() {
+		openTaskUI: function () {
 			var oTaskData = this.oModel2.getData();
 			var oActionHelper = this._getActionHelper();
 			var sKey = oTaskData.SAP__Origin + "_" + oTaskData.InstanceID;
@@ -2994,7 +2994,7 @@ sap.ui.define([
 			}
 		},
 
-		fnEmbedApplicationInDetailView: function(oParsedParams) {
+		fnEmbedApplicationInDetailView: function (oParsedParams) {
 			var sNavigationIntent = "#" + oParsedParams.semanticObject + "-" + oParsedParams.action;
 			var oIntentModel = new JSONModel({
 				NavigationIntent: sNavigationIntent,
@@ -3032,13 +3032,13 @@ sap.ui.define([
 		},
 
 		//Toggle current breakpoint for Dynamic Side Content - required for mobile
-		updateToggleButtonState: function(oEvent) {
+		updateToggleButtonState: function (oEvent) {
 			this.sCurrentBreakpoint = oEvent.getParameter("currentBreakpoint");
 			this.setShowMainContent();
 		},
 
 		//Event handler for the log btn
-		onLogBtnPress: function(oEvent) {
+		onLogBtnPress: function (oEvent) {
 			this.bShowLogs = !this.bShowLogs;
 			if (this.bShowLogs) {
 				this.oModel2.setProperty("/ShowLogPressed", true);
@@ -3060,7 +3060,7 @@ sap.ui.define([
 		},
 
 		//Event handler for the Details btn
-		onDetailsBtnPress: function(oEvent) {
+		onDetailsBtnPress: function (oEvent) {
 			this.bShowDetails = !this.bShowDetails;
 			if (this.bShowDetails) {
 				this.oModel2.setProperty("/ShowLogPressed", false);
@@ -3082,13 +3082,13 @@ sap.ui.define([
 			this.updateButtonList();
 		},
 
-		hideDetails: function() {
+		hideDetails: function () {
 			this.bShowDetails = false;
 			this.setShowSideContent(false);
 			this.setShowMainContent();
 		},
 
-		updateButtonList: function(){
+		updateButtonList: function () {
 			var aButtonList = this.oHeaderFooterOptions.buttonList;
 			var showLogButtonIndex = -1;
 			var showDetailsButtonIndex = -1;
@@ -3125,49 +3125,49 @@ sap.ui.define([
 		},
 
 		//  Set focus at beginning of Side Content
-		fnSetFocusOnSideContent: function(selectedTab) {
-				var sTaskSupports = this.oModel2.getData().TaskSupports;
-				var that = this;
-				if (that.bShowLogs) {
-					if (sTaskSupports.WorkflowLog) {
-						that.getView().byId("WorkflowLogIconTabFilter").focus();
-					}
-					else if (sTaskSupports.ProcessingLogs) {
-						that.getView().byId("TaskLogIconTabFilter").focus();
-					}
+		fnSetFocusOnSideContent: function (selectedTab) {
+			var sTaskSupports = this.oModel2.getData().TaskSupports;
+			var that = this;
+			if (that.bShowLogs) {
+				if (sTaskSupports.WorkflowLog) {
+					that.getView().byId("WorkflowLogIconTabFilter").focus();
 				}
-				else if (that.bShowDetails) {
-					// no need to check for TaskSupports here, because it is already handled in fnCreateSelectedTab()
-					switch (selectedTab) {
-						case "NOTES":
-							that.getView().byId("DetailsNoteIconTabFilter").focus();
-							break;
-		
-						case "ATTACHMENTS":
-							that.getView().byId("DetailsAttachmentIconTabFilter").focus();
-							break;
-		
-						case "OBJECTLINKS":
-							that.getView().byId("DetailsObjectLinksTabFilter").focus();
-							break;
-						default:
-					}
+				else if (sTaskSupports.ProcessingLogs) {
+					that.getView().byId("TaskLogIconTabFilter").focus();
 				}
+			}
+			else if (that.bShowDetails) {
+				// no need to check for TaskSupports here, because it is already handled in fnCreateSelectedTab()
+				switch (selectedTab) {
+					case "NOTES":
+						that.getView().byId("DetailsNoteIconTabFilter").focus();
+						break;
+
+					case "ATTACHMENTS":
+						that.getView().byId("DetailsAttachmentIconTabFilter").focus();
+						break;
+
+					case "OBJECTLINKS":
+						that.getView().byId("DetailsObjectLinksTabFilter").focus();
+						break;
+					default:
+				}
+			}
 		},
 
 		//Show or hide main content in case of phone
-		setShowMainContent: function() {
+		setShowMainContent: function () {
 			var oDynamicSideContent = this.byId("DynamicSideContent");
 			if (oDynamicSideContent) {
 				if (this.sCurrentBreakpoint === "S" && (this.bShowLogs || this.bShowDetails) && this.oModel2 && this.oModel2.getData()) {
 					var sTaskSupports = this.oModel2.getData().TaskSupports;
 					if (
-							(this.bShowLogs && sTaskSupports
-									&& (sTaskSupports.WorkflowLog || sTaskSupports.ProcessingLogs))
-								||
-							(this.bShowDetails && sTaskSupports && this._getEmbedIntoDetailsNestedRouter()
-									&& (sTaskSupports.Attachments || sTaskSupports.TaskObject || sTaskSupports.Comments))
-						) {
+						(this.bShowLogs && sTaskSupports
+							&& (sTaskSupports.WorkflowLog || sTaskSupports.ProcessingLogs))
+						||
+						(this.bShowDetails && sTaskSupports && this._getEmbedIntoDetailsNestedRouter()
+							&& (sTaskSupports.Attachments || sTaskSupports.TaskObject || sTaskSupports.Comments))
+					) {
 						oDynamicSideContent.setShowMainContent(false);
 					}
 					else {
@@ -3181,7 +3181,7 @@ sap.ui.define([
 		},
 
 		//Show or hide side content
-		setShowSideContent: function(sEnable) {
+		setShowSideContent: function (sEnable) {
 			var oDynamicSideContent = this.byId("DynamicSideContent");
 			if (oDynamicSideContent) {
 				oDynamicSideContent.setShowSideContent(sEnable);
@@ -3194,7 +3194,7 @@ sap.ui.define([
 		 *
 		 * @returns {boolean} side content's current open state
 		 */
-		getShowSideContent: function() {
+		getShowSideContent: function () {
 			var oDynamicSideContent = this.byId("DynamicSideContent");
 			if (oDynamicSideContent) {
 				return oDynamicSideContent.getShowSideContent();
@@ -3204,7 +3204,7 @@ sap.ui.define([
 		},
 
 		//Create the task history / workflow log for the selected task
-		createLogs: function(sKey) {
+		createLogs: function (sKey) {
 			var sLogKey = sKey;
 			var oIconTabBar = this.byId("tabBarLogs");
 			var oItem = this.oModel2.getData();
@@ -3212,7 +3212,7 @@ sap.ui.define([
 			//pass CustomCreatedBy value to fnFetchDataOnLogTabSelect()  functions
 			this.sCustomCreatedByValue = null;
 			if (oItem.CustomAttributeData instanceof Array && oItem.CustomAttributeData.length > 0) {
-				for (var i=0; i<oItem.CustomAttributeData.length; i++) {
+				for (var i = 0; i < oItem.CustomAttributeData.length; i++) {
 					var oCustomAttribute = this.oDataManager.oModel.getProperty("/" + oItem.CustomAttributeData[i]);
 					if (oCustomAttribute && oCustomAttribute.Name.toLowerCase() === this.sCustomCreatedByAttribute.toLowerCase()) {
 						this.sCustomCreatedByValue = oCustomAttribute.Value;
@@ -3249,7 +3249,7 @@ sap.ui.define([
 		},
 
 		//Create timeline entries for Workflow Log
-		createWorkflowLogTimeLine: function() {
+		createWorkflowLogTimeLine: function () {
 			var that = this;
 			var oTimeline = that._getIconTabControl("WorkflowLogs");
 			if (oTimeline) {
@@ -3304,7 +3304,7 @@ sap.ui.define([
 						}],
 						formatter: Conversions.formatterWorkflowLogStatusText
 					},
-					dateTime:"{detail>Timestamp}",
+					dateTime: "{detail>Timestamp}",
 					embeddedControl: new VBox({
 						items: [
 							new ObjectAttribute({
@@ -3322,12 +3322,12 @@ sap.ui.define([
 						]
 					})
 				});
-				oTimelineItemTemplate.attachUserNameClicked(function(oEvent) {
-						var sSapOrigin = oEvent.getSource().getBindingContext("detail").getProperty("SAP__Origin"),
-							sPerformedBy = oEvent.getSource().getBindingContext("detail").getProperty("PerformedBy"),
-							oSelectedControl = (!oEvent.getParameter("uiElement")) ? Conversions.getSelectedControl(oEvent) : oEvent.getParameter("uiElement");
+				oTimelineItemTemplate.attachUserNameClicked(function (oEvent) {
+					var sSapOrigin = oEvent.getSource().getBindingContext("detail").getProperty("SAP__Origin"),
+						sPerformedBy = oEvent.getSource().getBindingContext("detail").getProperty("PerformedBy"),
+						oSelectedControl = (!oEvent.getParameter("uiElement")) ? Conversions.getSelectedControl(oEvent) : oEvent.getParameter("uiElement");
 
-						that.showEmployeeCard(sSapOrigin, sPerformedBy, oSelectedControl);
+					that.showEmployeeCard(sSapOrigin, sPerformedBy, oSelectedControl);
 				});
 				oTimeline.bindAggregation("content", {
 					path: "detail>/WorkflowLogs/results",
@@ -3336,12 +3336,12 @@ sap.ui.define([
 			}
 		},
 
-		onLogTabSelect: function(oControlEvent) {
+		onLogTabSelect: function (oControlEvent) {
 			var sSelectedKey = oControlEvent.getParameters().selectedKey;
 			this.createLogs(sSelectedKey);
 		},
 
-		fnFetchDataOnLogTabSelect: function(sNavProperty) {
+		fnFetchDataOnLogTabSelect: function (sNavProperty) {
 			var oParameters = null;
 			if (sNavProperty === "ProcessingLogs") {
 				oParameters = {
@@ -3353,7 +3353,7 @@ sap.ui.define([
 			this._setBusyIncdicatorOnDetailControls(oTabControl, true);
 
 			// success handler of read data request
-			var fnSuccess = function(data) {
+			var fnSuccess = function (data) {
 				var oModelData = this.oModel2.getData();
 				var bDataPresent = (oModelData[sNavProperty] && oModelData[sNavProperty].results) ? true : false;
 
@@ -3361,7 +3361,7 @@ sap.ui.define([
 				if (this.sCustomCreatedByValue) {
 					var aLogResults = data.results;
 					if (aLogResults && Array.isArray(aLogResults)) {
-						for (var i=0; i<aLogResults.length; i++) {
+						for (var i = 0; i < aLogResults.length; i++) {
 							aLogResults[i].CustomCreatedBy = this.sCustomCreatedByValue;
 						}
 					}
@@ -3389,7 +3389,7 @@ sap.ui.define([
 			};
 
 			// error handler for read request
-			var fnError = function(oError) {
+			var fnError = function (oError) {
 				this._setBusyIncdicatorOnDetailControls(oTabControl, false);
 				this.oDataManager.oDataRequestFailed(oError);
 			};
@@ -3399,12 +3399,12 @@ sap.ui.define([
 
 		},
 
-		onTabSelect: function(oControlEvent) {
+		onTabSelect: function (oControlEvent) {
 			var sSelectedTab = oControlEvent.getParameters().selectedKey;
 			this.fnCreateSelectedTab(sSelectedTab);
 		},
 
-		fnCreateSelectedTab: function(sSelectedTab) {
+		fnCreateSelectedTab: function (sSelectedTab) {
 			var taskSupports;
 			if (this.oModel2 && this.oModel2.getData()) {
 				taskSupports = this.oModel2.getData().TaskSupports;
@@ -3432,7 +3432,7 @@ sap.ui.define([
 							}
 						}
 
-						var additionalStepsCommentsComponent = function() {
+						var additionalStepsCommentsComponent = function () {
 							this.fnFetchDataOnTabSelect("Comments");
 							this.fnSetIconForCommentsFeedInput();
 							this.fnHandleNoTextCreation("Comments");
@@ -3441,7 +3441,7 @@ sap.ui.define([
 
 						// Is a promise when it is created here. Is null if it was created before that so only execute additional setup steps
 						if (commentsComponentPromise) {
-							commentsComponentPromise.then(function() {
+							commentsComponentPromise.then(function () {
 								additionalStepsCommentsComponent();
 							}.bind(this));
 						}
@@ -3469,7 +3469,7 @@ sap.ui.define([
 								break;
 							}
 						}
-						this.fnDelegateAttachmentsCreation().then(function() {
+						this.fnDelegateAttachmentsCreation().then(function () {
 							this.fnFetchDataOnTabSelect("Attachments");
 							if (!this._getEmbedIntoDetailsNestedRouter()) {
 								this.fnHandleAttachmentsCountText("Attachments");
@@ -3513,7 +3513,7 @@ sap.ui.define([
 		 *
 		 * @returns {Promise<sap.ui.core.UIComponent> | null}
 		 */
-		fnDelegateCommentsCreation: function() {
+		fnDelegateCommentsCreation: function () {
 			if (!this._getEmbedIntoDetailsNestedRouter() && this.isGenericComponentRendered) {
 				return null;
 			}
@@ -3528,7 +3528,7 @@ sap.ui.define([
 			return null;
 		},
 
-		fnDelegateAttachmentsCreation: function() {
+		fnDelegateAttachmentsCreation: function () {
 			var oItemData = this.oModel2.getData();
 			var oAttachmentContainer = this._getEmbedIntoDetailsNestedRouter() ?
 				this.byId("attachmentComponentInDetails") :
@@ -3539,7 +3539,7 @@ sap.ui.define([
 				return null;
 			}
 
-			var createAttachmentsComponent = function() {
+			var createAttachmentsComponent = function () {
 				return this.oGenericAttachmentComponentPromise = Component.create({
 					name: "cross.fnd.fiori.inbox.attachment",
 					settings: {
@@ -3549,28 +3549,28 @@ sap.ui.define([
 						attachmentHandle: this.fnCreateAttachmentHandle(this.sCtxPath)
 					}
 				})
-				.then(function(attachmentsComponent) {
-					oAttachmentContainer.setPropagateModel(true);
-					oAttachmentContainer.setComponent(attachmentsComponent);
+					.then(function (attachmentsComponent) {
+						oAttachmentContainer.setPropagateModel(true);
+						oAttachmentContainer.setComponent(attachmentsComponent);
 
-					return attachmentsComponent;
-				}.bind(this))
-				.catch(function(error) {
-					Log.error('Attachments component was not created successfully ' + error.stack);
-				});
+						return attachmentsComponent;
+					}.bind(this))
+					.catch(function (error) {
+						Log.error('Attachments component was not created successfully ' + error.stack);
+					});
 			}.bind(this);
 
 			// Clear attachments component.
 			if (this.oGenericAttachmentComponentPromise) {
 				return this.oGenericAttachmentComponentPromise
-					.then(function(attachmentsComponent) {
+					.then(function (attachmentsComponent) {
 						attachmentsComponent.destroy();
 						delete this.oGenericAttachmentComponentPromise;
-				}.bind(this))
-				.then(function() {
-					this.oGenericAttachmentComponentPromise = createAttachmentsComponent();
-					return this.oGenericAttachmentComponentPromise;
-				}.bind(this));
+					}.bind(this))
+					.then(function () {
+						this.oGenericAttachmentComponentPromise = createAttachmentsComponent();
+						return this.oGenericAttachmentComponentPromise;
+					}.bind(this));
 			}
 			else {
 				this.oGenericAttachmentComponentPromise = createAttachmentsComponent();
@@ -3578,7 +3578,7 @@ sap.ui.define([
 			}
 		},
 
-		createTimeLine: function() {
+		createTimeLine: function () {
 			/*jQuery.sap.require("sap.suite.ui.commons.Timeline");
 			 jQuery.sap.require("sap.suite.ui.commons.TimelineItem");*/
 			var oTimeline = this.byId("timeline");
@@ -3613,9 +3613,9 @@ sap.ui.define([
 		},
 
 		// TODO move this to the comments component
-		fnSetIconForCommentsFeedInput: function() {
+		fnSetIconForCommentsFeedInput: function () {
 			if (this.oGenericCommentsComponentPromise) {
-				this.oGenericCommentsComponentPromise.then(function(commentsComponent) {
+				this.oGenericCommentsComponentPromise.then(function (commentsComponent) {
 					if (commentsComponent.fnIsFeedInputPresent() && commentsComponent.fnGetFeedInputIcon() && sap.ushell.Container != undefined) {
 						var sSapOrigin = this.oModel2.getData().SAP__Origin;
 						var sUserId = sap.ushell.Container.getUser().getId();
@@ -3627,20 +3627,20 @@ sap.ui.define([
 		},
 
 		/* Updates the count in the model */
-		fnCountUpdater: function(sKey, sSapOrigin, sInstanceID, sGroupName) {
+		fnCountUpdater: function (sKey, sSapOrigin, sInstanceID, sGroupName) {
 			var that = this;
 			var oItemData = this.oModel2.getData();
 			switch (sKey) {
 				case "Attachments":
 					if (that.fnFormatterSupportsProperty(oItemData.TaskSupports.Attachments, oItemData.SupportsAttachments)) {
-						this.oDataManager.fnGetCount(sSapOrigin, sInstanceID, function(sNumberOFAttachments) {
+						this.oDataManager.fnGetCount(sSapOrigin, sInstanceID, function (sNumberOFAttachments) {
 							that.oModel2.setProperty("/AttachmentsCount", sNumberOFAttachments);
 						}, "Attachments", sGroupName);
 					}
 					break;
 				case "Comments":
 					if (that.fnFormatterSupportsProperty(oItemData.TaskSupports.Comments, oItemData.SupportsComments)) {
-						this.oDataManager.fnGetCount(sSapOrigin, sInstanceID, function(sNumberOFComments) {
+						this.oDataManager.fnGetCount(sSapOrigin, sInstanceID, function (sNumberOFComments) {
 							that.oModel2.setProperty("/CommentsCount", sNumberOFComments);
 						}, "Comments", sGroupName);
 					}
@@ -3655,7 +3655,7 @@ sap.ui.define([
 					break;*/
 				case "ObjectLinks":
 					if (oItemData.TaskSupports.TaskObject && that.oDataManager.bShowTaskObjects) {
-						this.oDataManager.fnGetCount(sSapOrigin, sInstanceID, function(sNumberOfLinks) {
+						this.oDataManager.fnGetCount(sSapOrigin, sInstanceID, function (sNumberOfLinks) {
 							that.oModel2.setProperty("/ObjectLinksCount", sNumberOfLinks);
 							that.fnHandleNoTextCreation("ObjectLinks");
 						}, "TaskObjects", sGroupName);
@@ -3667,10 +3667,10 @@ sap.ui.define([
 		},
 
 		//Generate attachments message based on the attachments count
-		fnHandleAttachmentsCountText: function(sEntity) {
+		fnHandleAttachmentsCountText: function (sEntity) {
 			var oModelData = this.oModel2.getData();
 
-			this._getUploadCollectionControl().then(function(uploadCollection) {
+			this._getUploadCollectionControl().then(function (uploadCollection) {
 				if (uploadCollection && oModelData.hasOwnProperty("AttachmentsCount")) {
 					var attachmentsCount = oModelData.AttachmentsCount;
 					var attachmentsLimit = this.oModel2.iSizeLimit;
@@ -3682,18 +3682,18 @@ sap.ui.define([
 					uploadCollection.setNumberOfAttachmentsText(numberOfAttachmentsText);
 				}
 			}.bind(this))
-			.catch(function(error) {
-				Log.error("Upload collection was not found!", error);
-			});
+				.catch(function (error) {
+					Log.error("Upload collection was not found!", error);
+				});
 		},
 
-		fnHandleNoTextCreation: function(sEntity) {
+		fnHandleNoTextCreation: function (sEntity) {
 			var oModelData = this.oModel2.getData();
 
 			switch (sEntity) {
 				case "Comments":
 					if (this.oGenericCommentsComponentPromise) {
-						this.oGenericCommentsComponentPromise.then(function(commentsComponent) {
+						this.oGenericCommentsComponentPromise.then(function (commentsComponent) {
 							if (oModelData.hasOwnProperty("CommentsCount") && oModelData.CommentsCount > 0) {
 								commentsComponent.setNoDataText(this.i18nBundle.getText("XMSG_LOADING"));
 							}
@@ -3704,7 +3704,7 @@ sap.ui.define([
 					}
 					break;
 				case "Attachments":
-					this._getUploadCollectionControl().then(function(uploadCollection) {
+					this._getUploadCollectionControl().then(function (uploadCollection) {
 						if (uploadCollection) {
 							if (oModelData.hasOwnProperty("AttachmentsCount") && oModelData.AttachmentsCount > 0) {
 								uploadCollection.setNoDataText(this.i18nBundle.getText("XMSG_LOADING"));
@@ -3743,7 +3743,7 @@ sap.ui.define([
 			}
 		},
 
-		fnClearCachedData: function() {
+		fnClearCachedData: function () {
 			// adding a dash as a placeholder improves user experience, because the brackets do not disappera when switching between tasks
 			var countResetValue = this._getEmbedIntoDetailsNestedRouter() ? "-" : "";
 			this.oModel2.setProperty("/AttachmentsCount", countResetValue);
@@ -3760,7 +3760,7 @@ sap.ui.define([
 		},
 
 		// Fetch data on select of comments, attachments or history tab. On select of these tabs, update the data.
-		fnFetchDataOnTabSelect: function(sNavProperty) {
+		fnFetchDataOnTabSelect: function (sNavProperty) {
 
 			var sPath = this.sCtxPath + "/" + sNavProperty;
 			var oParameters = null;
@@ -3774,19 +3774,19 @@ sap.ui.define([
 			var oTabControl = this._getIconTabControl(sNavProperty);
 
 			// success handler of read data request
-			var fnSuccess = function(data) {
+			var fnSuccess = function (data) {
 				// if data is already present in the model, merge the new response with existing data
 				this.fnUpdateDataAfterFetchComplete(oModelData, bDataPresent, sNavProperty, data);
 				this._setBusyIncdicatorOnDetailControls(oTabControl, false);
 			};
 
 			// error handler for read request
-			var fnError = function(oError) {
+			var fnError = function (oError) {
 				this._setBusyIncdicatorOnDetailControls(oTabControl, false);
 				this.oDataManager.oDataRequestFailed(oError);
 			};
 
-			var onTabCreated = function(tabControl) {
+			var onTabCreated = function (tabControl) {
 				// show busy loader only if loading for the first time and count on tab is not 0
 				if (!bDataPresent && oModelData[this.oMapCountProperty[sNavProperty]] > 0) {
 					this._setBusyIncdicatorOnDetailControls(tabControl, true);
@@ -3798,7 +3798,7 @@ sap.ui.define([
 
 			// Some Tabs are created asynchronously while other synchronously
 			if (oTabControl instanceof Promise) {
-				oTabControl.then(function(tabControl) {
+				oTabControl.then(function (tabControl) {
 					onTabCreated(tabControl);
 				}.bind(this));
 			}
@@ -3807,7 +3807,7 @@ sap.ui.define([
 			}
 		},
 
-		fnUpdateDataAfterFetchComplete: function(oModelData, bDataPresent, sNavProperty, data) {
+		fnUpdateDataAfterFetchComplete: function (oModelData, bDataPresent, sNavProperty, data) {
 			var bAllGone = false;
 			if (bDataPresent && data.results.length > 0) {
 				jQuery.extend(true, oModelData[sNavProperty], data);
@@ -3833,11 +3833,11 @@ sap.ui.define([
 		 * @param {string} sNavProperty - could be Comments, Attachments, TaskObjects, WorkflowLogs, ProcessingLogs
 		 * @returns
 		 */
-		_getIconTabControl: function(sNavProperty) {
+		_getIconTabControl: function (sNavProperty) {
 			switch (sNavProperty) {
 				case "Comments":
 					if (this.oGenericCommentsComponentPromise) {
-						return this.oGenericCommentsComponentPromise.then(function(commentsComponent) {
+						return this.oGenericCommentsComponentPromise.then(function (commentsComponent) {
 							return commentsComponent.getAggregation("rootControl").byId("MIBCommentList");
 						});
 					}
@@ -3854,12 +3854,12 @@ sap.ui.define([
 			}
 		},
 
-		fnFetchObjectLinks: function() {
+		fnFetchObjectLinks: function () {
 			var iObjectLinkNumber = 0;
 			var oTaskObjectsControl = this._getIconTabControl("TaskObjects");
 			this._setBusyIncdicatorOnDetailControls(oTaskObjectsControl, true);
 
-			var fnSuccess = function(data) {
+			var fnSuccess = function (data) {
 				for (var i = 0; i < data.results.length; i++) {
 					if (!data.results[i].Label) {
 						iObjectLinkNumber = iObjectLinkNumber + 1;
@@ -3871,13 +3871,13 @@ sap.ui.define([
 				this.oModel2.setProperty("/ObjectLinksCount", data.results.length);
 			};
 
-			var fnError = function(oError) {
+			var fnError = function (oError) {
 				this._setBusyIncdicatorOnDetailControls(oTaskObjectsControl, false);
 			};
 
 			this.oDataManager.oDataRead(this.sCtxPath + "/" + "TaskObjects", null, fnSuccess.bind(this), fnError.bind(this));
 		},
-		onSupportInfoOpenEvent: function(sChannelId, sEventId, oSupportInfoOpenEvent) {
+		onSupportInfoOpenEvent: function (sChannelId, sEventId, oSupportInfoOpenEvent) {
 			if (oSupportInfoOpenEvent.source === "MAIN") {
 				//To support info
 				var oCustomAttributeDefinition = null;
@@ -3905,7 +3905,7 @@ sap.ui.define([
 		 * @param {function} fnFunction (mandatory) - Handler
 		 * @param {object} oListener (optional) - A Context object to call event handler with
 		*/
-		addActionAPI: function(taskSwitchCount, oAction, fnFunction, oListener) {
+		addActionAPI: function (taskSwitchCount, oAction, fnFunction, oListener) {
 			var bSuccess = false;
 			if (taskSwitchCount !== this._taskSwitchCount) {
 				Log.warning("s3.controller.addActionAPI: task switched while waiting!");
@@ -3924,7 +3924,7 @@ sap.ui.define([
 		 * @param {object} oListener (optional) - A Context object to call event handler with
 		 * @return {boolean}
 		*/
-		addAction: function(oAction, fnFunction, oListener) {
+		addAction: function (oAction, fnFunction, oListener) {
 			if (!oAction) {
 				throw new Error("Provide Action object with action name, label and optionally type (Accept/Reject)");
 			}
@@ -3950,7 +3950,7 @@ sap.ui.define([
 				var id = oAction.action;
 				var btnText = oAction.label;
 				var btnObject = {
-					actionId:id,
+					actionId: id,
 					sBtnTxt: btnText,
 					onBtnPressed: oListener ? fnFunction.bind(oListener) : fnFunction
 				};
@@ -3987,7 +3987,7 @@ sap.ui.define([
 			return bSuccess;
 		},
 
-		removeAction: function(sAction) {
+		removeAction: function (sAction) {
 			var bSuccess = false;
 			var btnList = [];
 			var btnListLength;
@@ -4010,9 +4010,9 @@ sap.ui.define([
 				else {
 					btnList = this.oHeaderFooterOptions.buttonList;
 					btnListLength = btnList.length;
-					for (var i=0; i<btnListLength; i++) {
+					for (var i = 0; i < btnListLength; i++) {
 						if (sAction === btnList[i].actionId) {
-							btnList.splice(i,1);
+							btnList.splice(i, 1);
 							this.oHeaderFooterOptions.buttonList = btnList;
 							this.refreshHeaderFooterOptions();
 							bSuccess = true;
@@ -4030,7 +4030,7 @@ sap.ui.define([
 		 * @param {int} taskSwitchCount - "invisible" parameter - not provided by the caller; see comments for the _taskSwitchCount property
 		 * @param {string} sAction The action which button will be disabled
 		*/
-		disableActionAPI: function(taskSwitchCount, sAction) {
+		disableActionAPI: function (taskSwitchCount, sAction) {
 			var bSuccess = false;
 			if (taskSwitchCount !== this._taskSwitchCount) {
 				Log.warning("s3.controller.disableActionAPI: task switched while waiting!");
@@ -4045,26 +4045,26 @@ sap.ui.define([
 		 *
 		 * @param {string} sAction The action which button will be disabled
 		*/
-		disableAction: function(sAction) {
+		disableAction: function (sAction) {
 			var bSuccess = false;
 			var btnList = [];
 
 			if (this.oHeaderFooterOptions) {
 				if (this.oHeaderFooterOptions.oPositiveAction && this.oHeaderFooterOptions.oPositiveAction.actionId === sAction) {
-					this.oHeaderFooterOptions.oPositiveAction.bDisabled=true;
+					this.oHeaderFooterOptions.oPositiveAction.bDisabled = true;
 					this.refreshHeaderFooterOptions();
 					bSuccess = true;
 				}
 				else if (this.oHeaderFooterOptions.oNegativeAction && this.oHeaderFooterOptions.oNegativeAction.actionId === sAction) {
-					this.oHeaderFooterOptions.oNegativeAction.bDisabled=true;
+					this.oHeaderFooterOptions.oNegativeAction.bDisabled = true;
 					this.refreshHeaderFooterOptions();
 					bSuccess = true;
 				}
 				else {
 					btnList = this.oHeaderFooterOptions.buttonList;
-					for (var i=0; i<btnList.length; i++) {
+					for (var i = 0; i < btnList.length; i++) {
 						if (sAction && sAction === btnList[i].actionId) {
-							btnList[i].bDisabled=true;
+							btnList[i].bDisabled = true;
 							this.oHeaderFooterOptions.buttonList = btnList;
 							this.refreshHeaderFooterOptions();
 							bSuccess = true;
@@ -4080,7 +4080,7 @@ sap.ui.define([
 		 *
 		 * @param {int} taskSwitchCount - "invisible" parameter - not provided by the caller; see comments for the _taskSwitchCount property
 		*/
-		disableAllActionsAPI: function(taskSwitchCount) {
+		disableAllActionsAPI: function (taskSwitchCount) {
 			var bSuccess = false;
 			if (taskSwitchCount !== this._taskSwitchCount) {
 				Log.warning("s3.controller.disableAllActionsAPI: task switched while waiting!");
@@ -4094,23 +4094,23 @@ sap.ui.define([
 		/** The disableAllActions function is used by the inboxAPI to make all buttons related to the item actions inactive
 		 *
 		*/
-		disableAllActions: function() {
+		disableAllActions: function () {
 			var bSuccess = false;
 			var btnList = [];
 
 			if (this.oHeaderFooterOptions) {
 				bSuccess = true;
 				if (this.oHeaderFooterOptions.oPositiveAction && this.oHeaderFooterOptions.oPositiveAction.actionId) {
-					this.oHeaderFooterOptions.oPositiveAction.bDisabled=true;
+					this.oHeaderFooterOptions.oPositiveAction.bDisabled = true;
 				}
 				if (this.oHeaderFooterOptions.oNegativeAction && this.oHeaderFooterOptions.oNegativeAction.actionId) {
-					this.oHeaderFooterOptions.oNegativeAction.bDisabled=true;
+					this.oHeaderFooterOptions.oNegativeAction.bDisabled = true;
 				}
 				btnList = this.oHeaderFooterOptions.buttonList;
 				if (btnList) {
-					for (var i=0; i<btnList.length; i++) {
+					for (var i = 0; i < btnList.length; i++) {
 						if (btnList[i].actionId) {
-							btnList[i].bDisabled=true;
+							btnList[i].bDisabled = true;
 						}
 					}
 					this.oHeaderFooterOptions.buttonList = btnList;
@@ -4123,33 +4123,33 @@ sap.ui.define([
 		/** The enableAction function is used by the inboxAPI to make a button related to an item action active
 		 * params {action} The actions which button will be enabled
 		*/
-		enableAction: function(sAction) {
+		enableAction: function (sAction) {
 
 			var bSuccess = false;
 			var btnList = [];
 
 			if (this.oHeaderFooterOptions) {
 				if (this.oHeaderFooterOptions.oPositiveAction && this.oHeaderFooterOptions.oPositiveAction.actionId === sAction) {
-					this.oHeaderFooterOptions.oPositiveAction.bDisabled=false;
+					this.oHeaderFooterOptions.oPositiveAction.bDisabled = false;
 					this.refreshHeaderFooterOptions();
 					bSuccess = true;
 				}
 				else if (this.oHeaderFooterOptions.oNegativeAction && this.oHeaderFooterOptions.oNegativeAction.actionId === sAction) {
-					this.oHeaderFooterOptions.oNegativeAction.bDisabled=false;
+					this.oHeaderFooterOptions.oNegativeAction.bDisabled = false;
 					this.refreshHeaderFooterOptions();
 					bSuccess = true;
 				}
 				else {
-						btnList = this.oHeaderFooterOptions.buttonList;
-						for (var i=0; i<btnList.length; i++) {
-							if (sAction && sAction === btnList[i].actionId) {
-								btnList[i].bDisabled=false;
-								this.oHeaderFooterOptions.buttonList = btnList;
-								this.refreshHeaderFooterOptions();
-								bSuccess = true;
-								break;
-							}
+					btnList = this.oHeaderFooterOptions.buttonList;
+					for (var i = 0; i < btnList.length; i++) {
+						if (sAction && sAction === btnList[i].actionId) {
+							btnList[i].bDisabled = false;
+							this.oHeaderFooterOptions.buttonList = btnList;
+							this.refreshHeaderFooterOptions();
+							bSuccess = true;
+							break;
 						}
+					}
 				}
 			}
 			return bSuccess;
@@ -4157,7 +4157,7 @@ sap.ui.define([
 
 		/** The enableAllActions function is used by the inboxAPI to make all buttons related to the item actions active
 		*/
-		enableAllActions: function() {
+		enableAllActions: function () {
 
 			var bSuccess = false;
 			var btnList = [];
@@ -4165,16 +4165,16 @@ sap.ui.define([
 			if (this.oHeaderFooterOptions) {
 				bSuccess = true;
 				if (this.oHeaderFooterOptions.oPositiveAction && this.oHeaderFooterOptions.oPositiveAction.actionId) {
-					this.oHeaderFooterOptions.oPositiveAction.bDisabled=false;
+					this.oHeaderFooterOptions.oPositiveAction.bDisabled = false;
 				}
 				if (this.oHeaderFooterOptions.oNegativeAction && this.oHeaderFooterOptions.oNegativeAction.actionId) {
-					this.oHeaderFooterOptions.oNegativeAction.bDisabled=false;
+					this.oHeaderFooterOptions.oNegativeAction.bDisabled = false;
 				}
 				btnList = this.oHeaderFooterOptions.buttonList;
 				if (btnList) {
-					for (var i=0; i<btnList.length; i++) {
+					for (var i = 0; i < btnList.length; i++) {
 						if (btnList[i].actionId) {
-							btnList[i].bDisabled=false;
+							btnList[i].bDisabled = false;
 						}
 					}
 					this.oHeaderFooterOptions.buttonList = btnList;
@@ -4184,7 +4184,7 @@ sap.ui.define([
 			return bSuccess;
 		},
 
-		_createCustomAttributesElements: function(oDetailData, oCustomAttributeDefinition) {
+		_createCustomAttributesElements: function (oDetailData, oCustomAttributeDefinition) {
 			//getting parent element for dynamic child element creation
 			var oCustomAttributesContainer = this.getView().byId("customAttributesContainer");
 			var aCustomAttributeElements = this.aCA;
@@ -4199,10 +4199,10 @@ sap.ui.define([
 
 				// do not show the additional attributes if they are already being displayed in the header
 				if ((sAttributeName.toLowerCase() === this.sCustomTaskTitleAttribute.toLowerCase() ||
-						sAttributeName.toLowerCase() === this.sCustomNumberValueAttribute.toLowerCase() ||
-						sAttributeName.toLowerCase() === this.sCustomNumberUnitValueAttribute.toLowerCase() ||
-						sAttributeName.toLowerCase() === this.sCustomObjectAttributeValue.toLowerCase() ||
-						sAttributeName.toLowerCase() === this.sCustomCreatedByAttribute.toLowerCase())) {
+					sAttributeName.toLowerCase() === this.sCustomNumberValueAttribute.toLowerCase() ||
+					sAttributeName.toLowerCase() === this.sCustomNumberUnitValueAttribute.toLowerCase() ||
+					sAttributeName.toLowerCase() === this.sCustomObjectAttributeValue.toLowerCase() ||
+					sAttributeName.toLowerCase() === this.sCustomCreatedByAttribute.toLowerCase())) {
 					bShowAttribute = false;
 				}
 
@@ -4227,8 +4227,8 @@ sap.ui.define([
 							}
 						*/
 						var aCustomAttributeData = Array.isArray(oDetailData.CustomAttributeData) ?
-												   oDetailData.CustomAttributeData :
-												   oDetailData.CustomAttributeData.results;
+							oDetailData.CustomAttributeData :
+							oDetailData.CustomAttributeData.results;
 
 						for (var j = 0; j < aCustomAttributeData.length; j++) {
 							// Data is in the first format array of strings(see comment above)
@@ -4274,10 +4274,10 @@ sap.ui.define([
 		},
 
 		// create custom attributes contect if Custom Attribiute's definition as well as data is available and not empty
-		_createCustomAttributesOnDataLoaded: function(oCustomAttributeDefinition) {
+		_createCustomAttributesOnDataLoaded: function (oCustomAttributeDefinition) {
 			var customAttributeDataKey = this.oModel2.getData().CustomAttributeData;
 			var hasCustomAttributeData = (customAttributeDataKey && customAttributeDataKey.length) ||
-										(customAttributeDataKey.results && customAttributeDataKey.results.length);
+				(customAttributeDataKey.results && customAttributeDataKey.results.length);
 			var hasCustomAttributeDefinitions = oCustomAttributeDefinition && oCustomAttributeDefinition.length > 0;
 			var hasNoRenderedCustomAttributes = this.aCA.length === 0;
 
@@ -4291,12 +4291,12 @@ sap.ui.define([
 		 *
 		 * @returns {Promise<sap.m.UploadCollection | null} uploadCollection in the attachments ci
 		 */
-		_getUploadCollectionControl: function() {
+		_getUploadCollectionControl: function () {
 			return this.oGenericAttachmentComponentPromise
-				.then(function(attachmentsComponent) {
+				.then(function (attachmentsComponent) {
 					return attachmentsComponent.getRootControl().byId("uploadCollection");
 				})
-				.catch(function(error) {
+				.catch(function (error) {
 					Log.error('uploadCollection was not found');
 				});
 		},
@@ -4306,11 +4306,11 @@ sap.ui.define([
 		 * @param {sapui5Control | Promise<sapui5Control>} oControl
 		 * @param {boolean} bShowBusy
 		 */
-		_setBusyIncdicatorOnDetailControls: function(oControl, bShowBusy) {
+		_setBusyIncdicatorOnDetailControls: function (oControl, bShowBusy) {
 			if (!oControl) {
 				return;
 			}
-			var setBusy = function(control) {
+			var setBusy = function (control) {
 				if (bShowBusy) {
 					control.setBusyIndicatorDelay(1000);
 				}
@@ -4318,7 +4318,7 @@ sap.ui.define([
 			};
 
 			if (oControl instanceof Promise) {
-				oControl.then(function(control) {
+				oControl.then(function (control) {
 					setBusy(control);
 				});
 			}
@@ -4327,7 +4327,7 @@ sap.ui.define([
 			}
 		},
 
-		_processCustomAttributesData: function(oItem) {
+		_processCustomAttributesData: function (oItem) {
 			if (oItem.CustomAttributeData && oItem.CustomAttributeData.__list) {
 				oItem.CustomAttributeData = oItem.CustomAttributeData.__list;
 			}
@@ -4338,21 +4338,21 @@ sap.ui.define([
 			return oItem;
 		},
 
-		_getShowAdditionalAttributes: function() {
+		_getShowAdditionalAttributes: function () {
 			if (this.bShowAdditionalAttributes == null) {
 				this.bShowAdditionalAttributes = this.oDataManager.getShowAdditionalAttributes();
 			}
 			return this.bShowAdditionalAttributes;
 		},
 
-		_getTaskTitleInHeader: function() {
+		_getTaskTitleInHeader: function () {
 			if (this.bTaskTitleInHeader == null) {
 				this.bTaskTitleInHeader = this.oDataManager.getTaskTitleInHeader();
 			}
 			return this.bTaskTitleInHeader;
 		},
 
-		_getStandaloneDetailDeep: function() {
+		_getStandaloneDetailDeep: function () {
 			if (this.bStandaloneDetailDeep == null) {
 				this.bStandaloneDetailDeep = this.oDataManager.getStandaloneDetailDeep();
 			}
@@ -4360,7 +4360,7 @@ sap.ui.define([
 		},
 
 		//Calendar integration
-		createCalendarEvent: function() {
+		createCalendarEvent: function () {
 			var that = this;
 			//get deadline
 			var oData = this.oModel2.getData();
@@ -4385,17 +4385,17 @@ sap.ui.define([
 
 				//link that navigates back to the fiori application - uses default browser
 				var notes = this.getMailBody();
-				var createSuccess = function(message) {
+				var createSuccess = function (message) {
 					MessageToast.show(that.i18nBundle.getText("dialog.success.mq.calendarEventCreated")); //new i18n item in the _en version
 				};
-				var createError = function(message) {
+				var createError = function (message) {
 					var sErrorText = that.i18nBundle.getText("dialog.error.mq.calendarPluginError");
 					MessageBox.error(sErrorText,
 						{ details: CommonFunctions.fnRemoveHtmlTags(message) });
 				};
 
 				//if there is already an event with this information, don't create another one.
-				var findSuccess = function(message) {
+				var findSuccess = function (message) {
 					if (typeof (message) === "string" || message.length === 0) { // message = "No matching event exists" instead of an object when it did not find an event with the information provided on windows 8
 						//create a new event with the obtained information
 						window.plugins.calendar.createEvent(title, null, notes, startDate, endDate, createSuccess, createError);
@@ -4404,7 +4404,7 @@ sap.ui.define([
 						MessageToast.show(that.i18nBundle.getText("dialog.error.mq.calendarThereIsAnEventAlready")); //new i18n item in the _en version
 					}
 				};
-				var findError = function(message) { //on Android and iOS, this part will be invoked if there are no events by the information provided
+				var findError = function (message) { //on Android and iOS, this part will be invoked if there are no events by the information provided
 					//create a new event with the obtained information
 					window.plugins.calendar.createEvent(title, null, notes, startDate, endDate, createSuccess, createError);
 				};
@@ -4417,7 +4417,7 @@ sap.ui.define([
 			}
 		},
 
-		_getActionHelper: function() {
+		_getActionHelper: function () {
 			if (!this._oActionHelper) {
 				this._oActionHelper = new ActionHelper(this, this.getView());
 			}
@@ -4431,48 +4431,48 @@ sap.ui.define([
 		 * @param {string} sLanguageKey key for the empty page text.
 		 * @param {string} [sInfoText=undefined] Instead of passing <code>sLanguageKey</code>, the text can directly be passed.
 		 */
-		showEmptyView : function (sViewTitle, sLanguageKey, sInfoText) {
-			this.getOwnerComponent().oDataManager.oEventBus.publish("cross.fnd.fiori.inbox","clearSelection");
+		showEmptyView: function (sViewTitle, sLanguageKey, sInfoText) {
+			this.getOwnerComponent().oDataManager.oEventBus.publish("cross.fnd.fiori.inbox", "clearSelection");
 
 			XMLView.create({
 				viewName: "cross.fnd.fiori.inbox.view.Empty"
 			})
-			.then(function(oEmptyView) {
-				var oAppImp = Application.getImpl();
+				.then(function (oEmptyView) {
+					var oAppImp = Application.getImpl();
 
-				if (!sViewTitle) {
-					sViewTitle = oAppImp.oConfiguration.getDetailTitleKey();
-				}
-				if (!sInfoText && !sLanguageKey) {
-					sLanguageKey = oAppImp.oConfiguration.getDefaultEmptyMessageKey();
-				}
+					if (!sViewTitle) {
+						sViewTitle = oAppImp.oConfiguration.getDetailTitleKey();
+					}
+					if (!sInfoText && !sLanguageKey) {
+						sLanguageKey = oAppImp.oConfiguration.getDefaultEmptyMessageKey();
+					}
 
-				oEmptyView.getController().setTitleAndMessage(sViewTitle, sLanguageKey, sInfoText);
+					oEmptyView.getController().setTitleAndMessage(sViewTitle, sLanguageKey, sInfoText);
 
-				var oDataManager = this.oDataManager;
-				if (!oDataManager) oDataManager = this.getOwnerComponent().getDataManager();
+					var oDataManager = this.oDataManager;
+					if (!oDataManager) oDataManager = this.getOwnerComponent().getDataManager();
 
-				if (oDataManager.tableView) {
-					var navContainer = this.getView().getParent().getParent().byId("fioriContent");
-					navContainer.addPage(oEmptyView);
-					navContainer.to(oEmptyView.getId(), "show");
-				}
-				else {
-					var splitContainer = this.getView().getParent().getParent();
-					splitContainer.addDetailPage(oEmptyView);
-					splitContainer.to(oEmptyView.getId(), "show");
-				}
-			}.bind(this))
-			.catch(function() {
-				Log.error("Empty view was not created successfully");
-			});
+					if (oDataManager.tableView) {
+						var navContainer = this.getView().getParent().getParent().byId("fioriContent");
+						navContainer.addPage(oEmptyView);
+						navContainer.to(oEmptyView.getId(), "show");
+					}
+					else {
+						var splitContainer = this.getView().getParent().getParent();
+						splitContainer.addDetailPage(oEmptyView);
+						splitContainer.to(oEmptyView.getId(), "show");
+					}
+				}.bind(this))
+				.catch(function () {
+					Log.error("Empty view was not created successfully");
+				});
 		},
-		
-		_getEmbedIntoDetailsNestedRouter : function () {
+
+		_getEmbedIntoDetailsNestedRouter: function () {
 			return this.embedFioriElements;
 		},
-		
-		showHideSideContent : function () {
+
+		showHideSideContent: function () {
 			//Show or hide log based on TaskSupports flags and whether task was navigated from Workflow Log
 			var oItem = this.oModel2.getData();
 			if (this.bNavToFullScreenFromLog) {
@@ -4482,13 +4482,13 @@ sap.ui.define([
 				this.bShowDetails = false;
 			}
 			else if ((oItem.TaskSupports.ProcessingLogs || oItem.TaskSupports.WorkflowLog)
-					&& this.oDataManager.getShowLogEnabled() && this.bShowLogs) {
+				&& this.oDataManager.getShowLogEnabled() && this.bShowLogs) {
 				//Show side content and log data
 				this.createLogs();
 				this.setShowSideContent(true);
 			}
 			else if ((oItem.TaskSupports.Attachments || oItem.TaskSupports.TaskObject || oItem.TaskSupports.Comments)
-					&& this.bShowDetails && this._getEmbedIntoDetailsNestedRouter()) {
+				&& this.bShowDetails && this._getEmbedIntoDetailsNestedRouter()) {
 				//Show side content and details data
 				this.fnCreateSelectedTab(this.byId("tabBarDetails").getSelectedKey());
 				this.setShowSideContent(true);
@@ -4502,25 +4502,25 @@ sap.ui.define([
 
 		// the ObjectLinks List control from thew ObjectLinks.fragment used to have a static ID,
 		// but since it is reused in the Details pane, the ID is not hardcoded anymore and thus this function was added
-		_getObjectLinksList : function () {
+		_getObjectLinksList: function () {
 			var oObjectLinksTabFilter = this.byId("MIBObjectLinksTabFilter");
 			if (oObjectLinksTabFilter
 				&& oObjectLinksTabFilter.getVisible()
 				&& oObjectLinksTabFilter.getContent()
 				&& Array.isArray(oObjectLinksTabFilter.getContent())
 				&& (oObjectLinksTabFilter.getContent().length > 0)) {
-					var oObjectLinksList = oObjectLinksTabFilter.getContent()[0];
-					if (oObjectLinksList
-						&& oObjectLinksList.getMetadata()
-						&& (oObjectLinksList.getMetadata().getName() === "sap.m.List")) {
-						return oObjectLinksList;
-					}
+				var oObjectLinksList = oObjectLinksTabFilter.getContent()[0];
+				if (oObjectLinksList
+					&& oObjectLinksList.getMetadata()
+					&& (oObjectLinksList.getMetadata().getName() === "sap.m.List")) {
+					return oObjectLinksList;
+				}
 			}
 			return undefined;
 		},
 
 		// check if the current task supports any of Comments, Attachments or TaskObject
-		taskSupportsCommAttRelObj : function (oItem) {
+		taskSupportsCommAttRelObj: function (oItem) {
 			var taskSupports;
 			if (oItem) {
 				taskSupports = oItem.TaskSupports;
@@ -4533,9 +4533,9 @@ sap.ui.define([
 			}
 			return taskSupports.Comments || taskSupports.Attachments || taskSupports.TaskObject;
 		},
-		
+
 		// Provides the API for embedded apps to access My Inbox
-		getInboxAPI : function() {
+		getInboxAPI: function () {
 			return {
 				// some functions are wrapped in order to use the  taskSwitchCount parameter, not necessary for the rest
 				addAction: this.addActionAPI.bind(this, this._taskSwitchCount),
@@ -4562,12 +4562,12 @@ sap.ui.define([
 
 		 * @returns {WorkflowLogCollection}
 		 */
-		disableActiveWorkflowItemLinks: function(workflowLogItems, taskData) {
+		disableActiveWorkflowItemLinks: function (workflowLogItems, taskData) {
 			if (!workflowLogItems || !Array.isArray(workflowLogItems)) {
 				return workflowLogItems;
 			}
 
-			workflowLogItems.forEach(function(workflowLogItem) {
+			workflowLogItems.forEach(function (workflowLogItem) {
 				var isTheSameTask = workflowLogItem.ReferenceInstanceID === taskData.InstanceID &&
 					workflowLogItem.SAP__Origin === taskData.SAP__Origin;
 

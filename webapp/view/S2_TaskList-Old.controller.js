@@ -39,7 +39,7 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 	"sap/ui/core/format/DateFormat",
 	"sap/ui/thirdparty/jquery"
-], function( UIComponent, XMLView, Sorter, Filter, FilterOperator, JSONModel, Column, MessageToast, MessageBox,
+], function (UIComponent, XMLView, Sorter, Filter, FilterOperator, JSONModel, Column, MessageToast, MessageBox,
 	TablePersoController, GroupHeaderListItem, TableOperations, TaskListGroupingHelper, TaskListSortingHelper,
 	TaskListCustomAttributeHelper, DataManager, BaseController, PositiveAction, NegativeAction, Button, BaseLog, ConfirmationDialogManager,
 	ForwardPopUp, ResubmitPopUp, MultiSelectDialog, ActionHelper, CommonFunctions, ForwardSimplePopUp, Conversions, syncStyleClass,
@@ -59,7 +59,7 @@ sap.ui.define([
 		//	It is called when the tasks are selected in the table view
 		extHookChangeFooterButtonsForExpertMode: null,
 
-		onInit: function() {
+		onInit: function () {
 			this.mainViewModel = new JSONModel({
 				busy: true,
 				delay: 0
@@ -74,9 +74,9 @@ sap.ui.define([
 
 			this._oResourceBundle = this.getResourceBundle();
 			var oViewModel = new JSONModel({
-				personalizationActive:false,
+				personalizationActive: false,
 				taskListTitle: this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME"),
-				noDataText:this._oResourceBundle.getText("XMSG_LOADING")
+				noDataText: this._oResourceBundle.getText("XMSG_LOADING")
 			});
 			this.getView().setModel(oViewModel, "taskListView");
 			this._oTable = this.byId("taskListTable");
@@ -86,17 +86,17 @@ sap.ui.define([
 			this.getView().setModel(oComponent.getModel());
 			this._oDataModel = this.getView().getModel();
 			this._initPersonalization();
-			this._aTaskPropertiesForSelect = ["SAP__Origin","InstanceID","TaskDefinitionID","TaskDefinitionName","TaskTitle","Priority","PriorityNumber","Status","StatusText",
-												"CreatedBy","CreatedByName","CreatedOn","CompletionDeadLine","HasAttachments","TaskSupports","SupportsComments","SupportsAttachments","CustomAttributeData",
-													"SupportsClaim", "SupportsRelease", "SupportsForward"];
-													
+			this._aTaskPropertiesForSelect = ["SAP__Origin", "InstanceID", "TaskDefinitionID", "TaskDefinitionName", "TaskTitle", "Priority", "PriorityNumber", "Status", "StatusText",
+				"CreatedBy", "CreatedByName", "CreatedOn", "CompletionDeadLine", "HasAttachments", "TaskSupports", "SupportsComments", "SupportsAttachments", "CustomAttributeData",
+				"SupportsClaim", "SupportsRelease", "SupportsForward"];
+
 			this.fnAddAditionalSelectPropertiesAndInitBinding();
 
-			this._oTableOperations = new TableOperations(this._oTable,this.getView(), ["TaskTitle", "Priority", "Status","CreatedByName","CompletionDeadLine","CreatedOn"]);
+			this._oTableOperations = new TableOperations(this._oTable, this.getView(), ["TaskTitle", "Priority", "Status", "CreatedByName", "CompletionDeadLine", "CreatedOn"]);
 
 			this._oGrouping = new TaskListGroupingHelper(this._oTableOperations, this.getView());
-			this._oSorting =  new TaskListSortingHelper(this._oTableOperations, this.getView());
-			this._tableHelper = new TaskListCustomAttributeHelper(this, this.getView(), this._oTable,this._oGrouping,this._oSorting,this._oTableOperations);
+			this._oSorting = new TaskListSortingHelper(this._oTableOperations, this.getView());
+			this._tableHelper = new TaskListCustomAttributeHelper(this, this.getView(), this._oTable, this._oGrouping, this._oSorting, this._oTableOperations);
 			this._actionHelper = new ActionHelper(this, this.getView());
 
 			this._oConfirmationDialogManager = ConfirmationDialogManager;
@@ -105,17 +105,17 @@ sap.ui.define([
 			this.sResubmitUniqueId = this.createId() + "DLG_RESUBMIT";
 
 			//Handling busy indicator while querying tasks.
-			this._oDataModel.attachRequestSent(function() {
+			this._oDataModel.attachRequestSent(function () {
 				this._oTable.setShowNoData(false);
 				this._oTable.setBusy(true);
 			}.bind(this));
 
-			this._oDataModel.attachRequestCompleted(function() {
+			this._oDataModel.attachRequestCompleted(function () {
 				this._oTable.setBusy(false);
 				this._oTable.setShowNoData(true);
 			}.bind(this));
 
-			this._oDataModel.attachRequestFailed(function() {
+			this._oDataModel.attachRequestFailed(function () {
 				//To hide busy initial load busy indicator
 				this.mainViewModel.setProperty("/busy", false);
 				this._oTable.setShowNoData(true);
@@ -124,7 +124,7 @@ sap.ui.define([
 			// load initial app data once the metadata is loaded
 			if (!this.oDataManager.oModel.getServiceMetadata()) {
 				//Execution can only continue - e.g.: metadata fetch success
-				this.oDataManager.oModel.attachMetadataLoaded(function() {
+				this.oDataManager.oModel.attachMetadataLoaded(function () {
 					this._loadInitialAppData();
 				}.bind(this));
 			}
@@ -136,7 +136,7 @@ sap.ui.define([
 			this._loadCustomAttributesDeferredForTasks = jQuery.Deferred();
 			this._loadCustomAttributesDeferredForTaskDefs = jQuery.Deferred();
 
-			this._initFBSubView().then(function(fbSubView) {
+			this._initFBSubView().then(function (fbSubView) {
 				this.byId("taskListPage").insertContent(fbSubView, 0);
 			}.bind(this));
 
@@ -146,17 +146,17 @@ sap.ui.define([
 			}
 		},
 
-		onExit: function() {
+		onExit: function () {
 			this._tableHelper.destroy();
 		},
 
 		//Read Scenario Collection
-		_loadInitialAppData: function() {
+		_loadInitialAppData: function () {
 			//Use jQuery deferred object to delay the filterbar search event.
 			this._loadScenrioDeferred = jQuery.Deferred();
 
 			if (this.oDataManager.sScenarioId || this.oDataManager.sClientScenario) {
-				this.oDataManager.loadInitialAppData(function(oScenario) {
+				this.oDataManager.loadInitialAppData(function (oScenario) {
 					if (!oScenario) {
 						return;
 					}
@@ -184,14 +184,14 @@ sap.ui.define([
 			//Create Json Model for Tasks to enable local filtering of custom attributes.
 			//TODO us this instead
 			//this.oDataManager.fetchTaskDefinitionsandCustomAttributeDefinitions(this.initTaskDefnandCustomAttrDefnnModel);
-			jQuery.when(this._loadScenrioDeferred).then(function() {
+			jQuery.when(this._loadScenrioDeferred).then(function () {
 				//Set default sorter
 				this._oTableOperations.addSorter(this._getDefaultSorter());
 				this._initTaskDefintionModel();
 				// make sure the promise to load metadata is resolved as $select properties need to be chosen by checking the metadata
 				this.oDataManager.oModel.getMetaModel().loaded().then(function () {
 					this._setOnBehalfOfColumnVisibility();
-					this._setConfidenceLevelColumnVisibility();					
+					this._setConfidenceLevelColumnVisibility();
 					this._storeMetaModel();
 					this._initTaskModel();
 				}.bind(this));
@@ -200,9 +200,9 @@ sap.ui.define([
 		},
 
 		//Initialize Task Defintions and Custom attribute Definitions
-		_initTaskDefintionModel:function() {
+		_initTaskDefintionModel: function () {
 			//Process the task query response and create Json model
-			var _handleTaskDefintionQueryResponse = function(oData, response) {
+			var _handleTaskDefintionQueryResponse = function (oData, response) {
 				if (response.statusCode === "200") {
 					//TODO Create an interface and provide two implmentations
 					//1. for Scenario based custom attribute columns (Merge custom attrbutes from Task defs in a scenario)
@@ -210,14 +210,14 @@ sap.ui.define([
 					this.oDataManager.storeTaskDefinitionModel(oData.results); //save task definition model for further use
 					var columns = this._identifyColumnsTobeAdded(oData.results);
 					var jsonModel = new JSONModel({
-						TaskDefinitionCollection:oData.results,
-						Columns:columns
+						TaskDefinitionCollection: oData.results,
+						Columns: columns
 					});
 					this.getView().setModel(jsonModel, "taskDefinitions");
 					this._loadCustomAttributesDeferredForTaskDefs.resolve();
 				}
 				else {
-					MessageToast.show(response.statusText+":"+response.body);
+					MessageToast.show(response.statusText + ":" + response.body);
 				}
 			};
 			var taskDefArray = this._getTaskDefinitionFilters();
@@ -225,25 +225,26 @@ sap.ui.define([
 				taskDefArray = [taskDefArray];
 			}
 			var params = {
-					filters:taskDefArray,
-					success:_handleTaskDefintionQueryResponse.bind(this),
-					urlParameters: {$select: "SAP__Origin,TaskDefinitionID,TaskName,CustomAttributeDefinitionData",
-									$expand:"CustomAttributeDefinitionData"
-									}
-					};
+				filters: taskDefArray,
+				success: _handleTaskDefintionQueryResponse.bind(this),
+				urlParameters: {
+					$select: "SAP__Origin,TaskDefinitionID,TaskName,CustomAttributeDefinitionData",
+					$expand: "CustomAttributeDefinitionData"
+				}
+			};
 			this._oDataModel.read("/TaskDefinitionCollection", params);
 		},
 
 		//Initialise TaskCollection Model
-		_initTaskModel:function() {
+		_initTaskModel: function () {
 			//Process the task query response and create Json model
-			var _handleTaskQueryResponse = function(oData, response) {
+			var _handleTaskQueryResponse = function (oData, response) {
 				if (response.statusCode === "200") {
 					var tasks = oData.results;
 					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
 						tasks = this._dataMassage(oData.results);
 					}
-					var jsonModel = new JSONModel({TaskCollection:tasks});
+					var jsonModel = new JSONModel({ TaskCollection: tasks });
 					this.getView().setModel(jsonModel, "taskList");
 					//Calling resolve on deferred object to create filter bar
 					this._loadCustomAttributesDeferredForTasks.resolve();
@@ -252,7 +253,7 @@ sap.ui.define([
 					}
 				}
 				else {
-					MessageToast.show(response.statusText+":"+response.body);
+					MessageToast.show(response.statusText + ":" + response.body);
 				}
 			};
 			var filterArray = [this._getinitialStatusFilters()];
@@ -263,29 +264,31 @@ sap.ui.define([
 			var params;
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
 				params = {
-					filters:[new Filter({
-						filters:filterArray,
-						and:true})
+					filters: [new Filter({
+						filters: filterArray,
+						and: true
+					})
 					],
-					sorters:[this._getCurrentSorter()],
-					success:_handleTaskQueryResponse.bind(this),
+					sorters: [this._getCurrentSorter()],
+					success: _handleTaskQueryResponse.bind(this),
 					urlParameters: {
-						$top:this.oDataManager.getListSize(),
+						$top: this.oDataManager.getListSize(),
 						$select: this._getTaskPropertiesToFetch().join(","),
-						$expand:"CustomAttributeData"
+						$expand: "CustomAttributeData"
 					}
 				};
 			}
 			else {
 				params = {
-					filters:[new Filter({
-						filters:filterArray,
-						and:true})
+					filters: [new Filter({
+						filters: filterArray,
+						and: true
+					})
 					],
-					sorters:[this._getCurrentSorter()],
-					success:_handleTaskQueryResponse.bind(this),
+					sorters: [this._getCurrentSorter()],
+					success: _handleTaskQueryResponse.bind(this),
 					urlParameters: {
-						$top:this.oDataManager.getListSize(),
+						$top: this.oDataManager.getListSize(),
 						$select: this._getTaskPropertiesToFetch().join(",")
 					}
 				};
@@ -293,8 +296,8 @@ sap.ui.define([
 			this._oDataModel.read("/TaskCollection", params);
 		},
 
-		_refreshTask: function(channelId, eventId, data) {
-			var _handleTaskQueryResponse = function(oData, response) {
+		_refreshTask: function (channelId, eventId, data) {
+			var _handleTaskQueryResponse = function (oData, response) {
 				if (response.statusCode === "200") {
 					var tasks = [oData];
 					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
@@ -309,26 +312,26 @@ sap.ui.define([
 			var params;
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
 				params = {
-						success:_handleTaskQueryResponse.bind(this),
-						urlParameters:{$expand:"CustomAttributeData"}
-						};
+					success: _handleTaskQueryResponse.bind(this),
+					urlParameters: { $expand: "CustomAttributeData" }
+				};
 			}
 			else {
 				params = {
-						success:_handleTaskQueryResponse.bind(this)
-						};
+					success: _handleTaskQueryResponse.bind(this)
+				};
 			}
 			this._oDataModel.read(data.contextPath, params);
 		},
 
 		// store the MetamModel in DataManager if not already stored
-		_storeMetaModel: function() {
+		_storeMetaModel: function () {
 			if (!this.oDataManager.oServiceMetaModel) {
 				this.oDataManager.oServiceMetaModel = this.oDataManager.oModel.getMetaModel();
 			}
 		},
 
-		_getTaskPropertiesToFetch: function() {
+		_getTaskPropertiesToFetch: function () {
 			var aPropertiesToSelect = this._aTaskPropertiesForSelect.concat(); //creating a copy of _aTaskPropertiesForSelect
 			if (!aPropertiesToSelect.indexOf(this.GUILinkProperty) >= 0) {
 				aPropertiesToSelect.push(this.GUILinkProperty);
@@ -341,40 +344,40 @@ sap.ui.define([
 			return aPropertiesToSelect;
 		},
 
-		_getinitialStatusFilters:function() {
+		_getinitialStatusFilters: function () {
 			var filterArray = [];
-			filterArray.push(new Filter({path:"Status", operator:FilterOperator.EQ, value1:"READY"}));
-			filterArray.push(new Filter({path:"Status", operator:FilterOperator.EQ, value1:"RESERVED"}));
-			filterArray.push(new Filter({path:"Status", operator:FilterOperator.EQ, value1:"IN_PROGRESS"}));
-			filterArray.push(new Filter({path:"Status", operator:FilterOperator.EQ, value1:"EXECUTED"}));
-			return new Filter({filters:filterArray,and:false});
+			filterArray.push(new Filter({ path: "Status", operator: FilterOperator.EQ, value1: "READY" }));
+			filterArray.push(new Filter({ path: "Status", operator: FilterOperator.EQ, value1: "RESERVED" }));
+			filterArray.push(new Filter({ path: "Status", operator: FilterOperator.EQ, value1: "IN_PROGRESS" }));
+			filterArray.push(new Filter({ path: "Status", operator: FilterOperator.EQ, value1: "EXECUTED" }));
+			return new Filter({ filters: filterArray, and: false });
 		},
 
 		//If based on Scenario
-		_getTaskDefinitionFilters:function() {
+		_getTaskDefinitionFilters: function () {
 			if (this._scenarioServiceInfos) {
 				var taskDefFilters = [];
 				for (var j = 0; j < this._scenarioServiceInfos.length; j++) {
 					for (var k = 0; k < this._scenarioServiceInfos[j].TaskDefinitionIDs.length; k++) {
-						taskDefFilters.push(new Filter({path:"TaskDefinitionID", operator:FilterOperator.EQ, value1:this._scenarioServiceInfos[j].TaskDefinitionIDs[k]}));
+						taskDefFilters.push(new Filter({ path: "TaskDefinitionID", operator: FilterOperator.EQ, value1: this._scenarioServiceInfos[j].TaskDefinitionIDs[k] }));
 						//this._scenarioServiceInfos[j].Origin - if this is ever added, should take care of client scenario definitions, not to pass SAP__Origin filter.
 					}
 				}
 				return new Filter({
-					filters:taskDefFilters,
-					and:false
+					filters: taskDefFilters,
+					and: false
 				});
 			}
 		},
 
 		//If based on Scenario
 		//match the received definitions with the ones from the scenario response including sub-definitions
-		_getTaskDefinitionFiltersForFilterBar: function() {
+		_getTaskDefinitionFiltersForFilterBar: function () {
 			if (this._scenarioServiceInfos) {
 				var taskDefFilters = [];
 				var ResultFilter = new Filter({
-					filters:taskDefFilters,
-					and:false
+					filters: taskDefFilters,
+					and: false
 				});
 				if (this.getView().getModel("taskDefinitions")) {
 					var taskDefCollection = this.getView().getModel("taskDefinitions").getData().TaskDefinitionCollection;
@@ -383,9 +386,9 @@ sap.ui.define([
 							for (var l = 0; l < taskDefCollection.length; l++) {
 								if (taskDefCollection[l].TaskDefinitionID.toUpperCase().indexOf(this._scenarioServiceInfos[j].TaskDefinitionIDs[k].toUpperCase()) === 0) {
 									taskDefFilters.push(new Filter({
-										path:"TaskDefinitionID",
-										operator:FilterOperator.EQ,
-										value1:taskDefCollection[l].TaskDefinitionID
+										path: "TaskDefinitionID",
+										operator: FilterOperator.EQ,
+										value1: taskDefCollection[l].TaskDefinitionID
 									}));
 								}
 							}
@@ -399,7 +402,7 @@ sap.ui.define([
 			}
 		},
 
-		_getDefaultSorter: function() {
+		_getDefaultSorter: function () {
 			var descending = false;
 			var sortKey = this._defaultSortKey;
 			if (sortKey === "CreatedOn") {
@@ -414,9 +417,9 @@ sap.ui.define([
 			return new Sorter(sortKey, descending);
 		},
 
-		_getCurrentSorter: function() {
+		_getCurrentSorter: function () {
 			var currentSort = this._oTableOperations.getSorter()[0];
-			if (["TaskTitle","Status","PriorityNumber","CreatedOn","CompletionDeadLine","CreatedByName"].indexOf(currentSort.sPath) !== -1) {
+			if (["TaskTitle", "Status", "PriorityNumber", "CreatedOn", "CompletionDeadLine", "CreatedByName"].indexOf(currentSort.sPath) !== -1) {
 				return currentSort;
 			}
 			else {
@@ -425,7 +428,7 @@ sap.ui.define([
 		},
 
 		//If based on Scenario
-		_getTaskDefinitions:function() {
+		_getTaskDefinitions: function () {
 			var mergedTaskDefs = [];
 			if (this._scenarioServiceInfos) {
 				for (var j = 0; j < this._scenarioServiceInfos.length; j++) {
@@ -440,7 +443,7 @@ sap.ui.define([
 
 		//If based on Scenario
 		//match the received definitions with the ones from the scenario response including sub-definitions
-		_getTaskDefinitionsForFilterBar: function() {
+		_getTaskDefinitionsForFilterBar: function () {
 			var mergedTaskDefs = [];
 			if (this.getView().getModel("taskDefinitions")) {
 				var taskDefCollection = this.getView().getModel("taskDefinitions").getData().TaskDefinitionCollection;
@@ -451,7 +454,7 @@ sap.ui.define([
 								if (taskDefCollection[l].TaskDefinitionID.toUpperCase().indexOf(this._scenarioServiceInfos[j].TaskDefinitionIDs[k].toUpperCase()) == 0) {
 									mergedTaskDefs = mergedTaskDefs.concat(taskDefCollection[l].TaskDefinitionID);
 								}
-							//this._scenarioServiceInfos[j].Origin - if this is ever added, take care of client scenarios no to pass SAP__Origin filter
+								//this._scenarioServiceInfos[j].Origin - if this is ever added, take care of client scenarios no to pass SAP__Origin filter
 							}
 						}
 					}
@@ -463,17 +466,17 @@ sap.ui.define([
 			return mergedTaskDefs;
 		},
 
-		_getScenrio: function() {
-			return this._oScenario?this._oScenario.DisplayName:this._oResourceBundle.getText("ALL_ITEMS_SCENARIO_DISPLAY_NAME");
+		_getScenrio: function () {
+			return this._oScenario ? this._oScenario.DisplayName : this._oResourceBundle.getText("ALL_ITEMS_SCENARIO_DISPLAY_NAME");
 		},
 
-		_getScenrioId: function() {
+		_getScenrioId: function () {
 			var id = "";
 			if (this.oDataManager.sScenarioId) {
 				id = this.oDataManager.sScenarioId;
 			}
 			else if (this.oDataManager.sClientScenario) {
-				id= "clntScenario";
+				id = "clntScenario";
 			}
 			else {
 				id = "allItems";
@@ -481,9 +484,9 @@ sap.ui.define([
 			return id;
 		},
 
-		_identifyColumnsTobeAdded:function(taskDefinitions) {
+		_identifyColumnsTobeAdded: function (taskDefinitions) {
 			var columns = {};
-			for (var i=0; i<taskDefinitions.length; i++) {
+			for (var i = 0; i < taskDefinitions.length; i++) {
 				taskDefinitions[i].TaskDefinitionID = taskDefinitions[i].TaskDefinitionID.toUpperCase();
 				columns[taskDefinitions[i].TaskDefinitionID] = taskDefinitions[i].CustomAttributeDefinitionData.results;
 			}
@@ -491,13 +494,13 @@ sap.ui.define([
 		},
 
 		//Massaging task result to denormalize the custom attributes
-		_dataMassage:function(tasks) {
+		_dataMassage: function (tasks) {
 			var oTask;
-			for (var i=0; i<tasks.length; i++) {
+			for (var i = 0; i < tasks.length; i++) {
 				oTask = tasks[i];
 				if (oTask.CustomAttributeData && oTask.CustomAttributeData.results) {
-					for (var j=0; j<oTask.CustomAttributeData.results.length; j++) {
-						 oTask[encodeURIComponent(oTask.CustomAttributeData.results[j].Name)] = oTask.CustomAttributeData.results[j].Value;
+					for (var j = 0; j < oTask.CustomAttributeData.results.length; j++) {
+						oTask[encodeURIComponent(oTask.CustomAttributeData.results[j].Name)] = oTask.CustomAttributeData.results[j].Value;
 					}
 					tasks[i] = oTask;
 				}
@@ -506,33 +509,33 @@ sap.ui.define([
 		},
 
 		// Creates and initializes the subview containing the FilterBar, which is located above the Task table.
-		_initFBSubView: function() {
+		_initFBSubView: function () {
 			return XMLView.create({
 				viewName: "cross.fnd.fiori.inbox.view.S2_FilterBar",
 				viewData: {
 					oTable: this._oTable,
 					oTableOperations: this._oTableOperations,
-					oTableHelper:this._tableHelper,
+					oTableHelper: this._tableHelper,
 					parentController: this
 				}
 			})
-			.catch(function() {
-				BaseLog.error("Filterbar subview was not created successfully");
-			});
+				.catch(function () {
+					BaseLog.error("Filterbar subview was not created successfully");
+				});
 		},
 
-		_initPersonalization: function() {
+		_initPersonalization: function () {
 			if (sap.ushell.Container) {
 				var oPersonalizationService = sap.ushell.Container.getService("Personalization");
 				var oPersonalizer = oPersonalizationService.getPersonalizer({
-					container: "cross.fnd.fiori.inbox.table."+this._getScenrioId(), // This key must be globally unique (use a key to
+					container: "cross.fnd.fiori.inbox.table." + this._getScenrioId(), // This key must be globally unique (use a key to
 					// identify the app) Note that only 40 characters are allowed
 					item: "taskListTable" // Maximum of 40 characters applies to this key as well
 				});
 				this._oTablePersoController = new TablePersoController({
 					table: this._oTable,
 					componentName: "table",
-					showResetAll:false,
+					showResetAll: false,
 					persoService: oPersonalizer
 				}).activate();
 			}
@@ -540,12 +543,12 @@ sap.ui.define([
 		},
 
 		//On task selcttion navigate to detail page.
-		onTaskSelected: function(oEvent) {
+		onTaskSelected: function (oEvent) {
 			var oParameters = {
 				// eslint-disable-next-line camelcase
 				SAP__Origin: oEvent.getSource().getBindingContext("taskList").getProperty("SAP__Origin"),
 				InstanceID: oEvent.getSource().getBindingContext("taskList").getProperty("InstanceID"),
-				contextPath: "TaskCollection(SAP__Origin='"+oEvent.getSource().getBindingContext("taskList").getProperty("SAP__Origin")+"',InstanceID='"+oEvent.getSource().getBindingContext("taskList").getProperty("InstanceID")+"')"
+				contextPath: "TaskCollection(SAP__Origin='" + oEvent.getSource().getBindingContext("taskList").getProperty("SAP__Origin") + "',InstanceID='" + oEvent.getSource().getBindingContext("taskList").getProperty("InstanceID") + "')"
 			};
 			this.selectedTaskPath = oEvent.getSource().getBindingContext("taskList").getPath();
 			this.oRouter.navTo("detail_deep", oParameters, false);
@@ -553,7 +556,7 @@ sap.ui.define([
 		},
 
 		//On the task title press open the task UI in a new browser window.
-		onTaskTitlePressed: function(oEvent) {
+		onTaskTitlePressed: function (oEvent) {
 			var oPressedItem = oEvent.getSource().getBindingContext("taskList").getProperty();
 			this.oDataManager.fetchUIExecutionLink(
 				oPressedItem,
@@ -564,7 +567,7 @@ sap.ui.define([
 		// The list title displays the number of list items. Therefore the number has to be updated each
 		// time the list changes. Note: the list binding returns the number of items matching the current filter criteria
 		// even if the growing list does not yet show all of them. This method is also used by the filter bar subview.
-		onUpdateFinished: function(oEvent) {
+		onUpdateFinished: function (oEvent) {
 			this.mainViewModel.setProperty("/busy", false);
 			// on phones the list title is not shown -> nothing needs to be done
 			if (Device.system.phone) {
@@ -573,28 +576,28 @@ sap.ui.define([
 			var iItemCount = oEvent.getParameter("total");
 			this.getView().getModel("taskListView").setProperty("/taskListTitle",
 				iItemCount ?
-				this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME_COUNT", [iItemCount]) :
-				this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME"));
-			this.getView().getModel("taskListView").setProperty("/noDataText",this._oResourceBundle.getText("view.Workflow.noDataTasks"));
+					this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME_COUNT", [iItemCount]) :
+					this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME"));
+			this.getView().getModel("taskListView").setProperty("/noDataText", this._oResourceBundle.getText("view.Workflow.noDataTasks"));
 		},
 
 		// --- Personalization
-		onPersonalizationPressed: function() {
+		onPersonalizationPressed: function () {
 			this._oTablePersoController.openDialog();
 		},
 
-		createGroupHeader: function(oGroup) {
+		createGroupHeader: function (oGroup) {
 			return new GroupHeaderListItem({
 				title: oGroup.text,
 				upperCase: false
 			});
 		},
 
-		onGroupPressed: function() {
+		onGroupPressed: function () {
 			this._oGrouping.openGroupingDialog();
 		},
 
-		onSortPressed: function() {
+		onSortPressed: function () {
 			this._oSorting.openSortingDialog();
 		},
 
@@ -604,13 +607,13 @@ sap.ui.define([
 		 * @param {sap.ui.core.Control} oControl the control to be attached
 		 * @public
 		 */
-		attachControl: function(oControl) {
+		attachControl: function (oControl) {
 			var sCompactCozyClass = this.getOwnerComponent().getContentDensityClass();
 			syncStyleClass(sCompactCozyClass, this.getView(), oControl);
 			this.getView().addDependent(oControl);
 		},
 
-		onMessagesButtonPress: function(oEvent) {
+		onMessagesButtonPress: function (oEvent) {
 			if (!this._oMessagePopover) {
 				// Create Message Popover for Error Handling
 				this._oMessagePopover = new MessagePopover({
@@ -630,22 +633,22 @@ sap.ui.define([
 			this._oMessagePopover.openBy(oEvent.getSource());
 		},
 
-		setFilterBar: function(filterBar) {
+		setFilterBar: function (filterBar) {
 			this._oFilterBar = filterBar;
 		},
 
-		onRefreshPressed: function(oEvent) {
+		onRefreshPressed: function (oEvent) {
 			this.selectedTaskPath = undefined; //selectedTaskPath is cleared when refreshing
 			this._filterDeferred = jQuery.Deferred();
 			this._initTaskDefintionModel(); //fetching of TaskDefinitions added
 			this._initTaskModel();
-			jQuery.when(this._filterDeferred).then(function() {
+			jQuery.when(this._filterDeferred).then(function () {
 				this._oFilterBar.fireSearch();
 			}.bind(this));
 			this._oFullScreenPage.setShowFooter(false);
 		},
 
-		onNavBack: function(oEvent) {
+		onNavBack: function (oEvent) {
 			window.history.go(-1);
 		/*
 			var oHistory = sap.ui.core.routing.History.getInstance(),
@@ -662,13 +665,13 @@ sap.ui.define([
 			}
 		*/},
 
-		handleSelectionChange: function(oEvent) {
+		handleSelectionChange: function (oEvent) {
 			this.clearFooterButtons();
 			var aSelectedContexts = this._oTable.getSelectedContexts();
 			this.findCommonButtonsForSelectedTasks(aSelectedContexts);
 		},
 
-		clearFooterButtons: function() {
+		clearFooterButtons: function () {
 			this._oFullScreenPage.setPositiveAction(null);
 			this._oFullScreenPage.setNegativeAction(null);
 			this._oFullScreenPage.removeAllCustomFooterContent();
@@ -677,7 +680,7 @@ sap.ui.define([
 			this.oNegativeButton = null;
 		},
 
-		findCommonButtonsForSelectedTasks: function(aSelectedContexts) {
+		findCommonButtonsForSelectedTasks: function (aSelectedContexts) {
 
 			if (aSelectedContexts.length === 0) {
 				this._oFullScreenPage.setShowFooter(false);
@@ -692,7 +695,7 @@ sap.ui.define([
 			// 1. if there's a selected executable item
 			// 2. in case of all items where tasks are selected of different task types
 			if (this.oSelectedTasksDetails.bContainsConfirmableItem
-					|| (this.oDataManager.getScenarioConfig().AllItems && this.oSelectedTasksDetails.aSelectedTaskTypes.length > 1)) {
+				|| (this.oDataManager.getScenarioConfig().AllItems && this.oSelectedTasksDetails.aSelectedTaskTypes.length > 1)) {
 				this.createFooterButtonsForSelectedTasks([]);
 			}
 
@@ -713,11 +716,11 @@ sap.ui.define([
 			}
 		},
 
-		createFooterButtonsWithScenario: function(aAllDecisionOptions) {
+		createFooterButtonsWithScenario: function (aAllDecisionOptions) {
 			this.createFooterButtonsForSelectedTasks(this._actionHelper.getCommonDecisionsForMultipleTasks(aAllDecisionOptions));
 		},
 
-		createFooterButtonsForSelectedTasks: function(aDecisionsAvailable) {
+		createFooterButtonsForSelectedTasks: function (aDecisionsAvailable) {
 
 			var iDisplayOrderPriorityTemp = 1;
 			var iDisplayOrderPriorityValue = 0;
@@ -851,7 +854,7 @@ sap.ui.define([
 					}
 					if (oButtonList.aFooterButtons) {
 						var iButtonsLength = oButtonList.aFooterButtons.length;
-						for (var j =0; j< iButtonsLength; j++) {
+						for (var j = 0; j < iButtonsLength; j++) {
 							this._oFullScreenPage.addCustomFooterContent(oButtonList.aFooterButtons[j]);
 						}
 					}
@@ -865,13 +868,13 @@ sap.ui.define([
 					MessageBox.warning(this._oResourceBundle.getText("NO_COMMON_ACTIONS"));
 					this._oFullScreenPage.setShowFooter(false);
 				}
-				for (var k=0; k<tempFooter.length; k++) {
+				for (var k = 0; k < tempFooter.length; k++) {
 					this._oFullScreenPage.addCustomFooterContent(tempFooter[k]);
 				}
 			}
 		},
 
-		getPositiveButton: function(oDecision) {
+		getPositiveButton: function (oDecision) {
 			if (!this.oPositiveButton) {
 				this.oPositiveButton = new PositiveAction();
 			}
@@ -890,7 +893,7 @@ sap.ui.define([
 			return this.oPositiveButton;
 		},
 
-		getNegativeButton: function(oDecision) {
+		getNegativeButton: function (oDecision) {
 			if (!this.oNegativeButton) {
 				this.oNegativeButton = new NegativeAction();
 			}
@@ -901,7 +904,7 @@ sap.ui.define([
 			return this.oNegativeButton;
 		},
 
-		getClaimButton: function() {
+		getClaimButton: function () {
 			if (!this.oClaimButton) {
 				this.oClaimButton = new Button({
 					text: this._oResourceBundle.getText("XBUT_CLAIM"),
@@ -911,7 +914,7 @@ sap.ui.define([
 			return this.oClaimButton;
 		},
 
-		getReleaseButton: function() {
+		getReleaseButton: function () {
 			if (!this.oReleaseButton) {
 				this.oReleaseButton = new Button({
 					text: this._oResourceBundle.getText("XBUT_RELEASE"),
@@ -921,7 +924,7 @@ sap.ui.define([
 			return this.oReleaseButton;
 		},
 
-		getForwardButton: function() {
+		getForwardButton: function () {
 			if (!this.oForwardButton) {
 				this.oForwardButton = new Button({
 					text: this._oResourceBundle.getText("XBUT_FORWARD"),
@@ -931,7 +934,7 @@ sap.ui.define([
 			return this.oForwardButton;
 		},
 
-		getResubmitButton: function() {
+		getResubmitButton: function () {
 			if (!this.oResubmitButton) {
 				this.oResubmitButton = new Button({
 					text: this._oResourceBundle.getText("XBUT_RESUBMIT"),
@@ -942,37 +945,37 @@ sap.ui.define([
 		},
 
 		// display confirmation dialog on click on confirm button (for executable tasks)
-		showConfirmDialog: function() {
+		showConfirmDialog: function () {
 			this._oConfirmationDialogManager.showDecisionDialog({
 				question: this._oResourceBundle.getText(this.oSelectedTasksDetails.aItems.length > 1 ? "XMSG_CONFIRM_QUESTION_PLURAL" : "XMSG_CONFIRM_QUESTION",
 					[this.oSelectedTasksDetails.aItems.length]),
 				showNote: false,
 				title: this._oResourceBundle.getText("XTIT_SUBMIT_CONFIRM"),
 				confirmButtonLabel: this._oResourceBundle.getText("XBUT_CONFIRM"),
-				confirmActionHandler: function() {
-						this.sendActionForSelectedTasks(this.ConfirmFunctionImport);
+				confirmActionHandler: function () {
+					this.sendActionForSelectedTasks(this.ConfirmFunctionImport);
 				}.bind(this)
 			});
 		},
 
 		// display confirmation dialog on click of decision buttons
-		showDecisionDialog: function(oDecisionOption) {
+		showDecisionDialog: function (oDecisionOption) {
 			this._oConfirmationDialogManager.showDecisionDialog({
 				question: this._oResourceBundle.getText(this.oSelectedTasksDetails.aItems.length > 1 ? "XMSG_MULTI_DECISION_QUESTION_PLURAL" : "XMSG_MULTI_DECISION_QUESTION", [
 					oDecisionOption.DecisionText, this.oSelectedTasksDetails.aItems.length
 				]),
-				textAreaLabel : this._oResourceBundle.getText("XFLD_TextArea_Decision"),
+				textAreaLabel: this._oResourceBundle.getText("XFLD_TextArea_Decision"),
 				showNote: true,
 				title: this._oResourceBundle.getText("XTIT_SUBMIT_DECISION"),
 				confirmButtonLabel: this._oResourceBundle.getText("XBUT_SUBMIT"),
 				noteMandatory: oDecisionOption.CommentMandatory,
-				confirmActionHandler: function(oDeciOption, sNote) {
+				confirmActionHandler: function (oDeciOption, sNote) {
 					this.sendActionForSelectedTasks(this.DecisionFunctionImport, oDeciOption, sNote);
 				}.bind(this, oDecisionOption)
 			});
 		},
 
-		sendActionForSelectedTasks: function(sFunctionImportName, oDecisionOption, sComment) {
+		sendActionForSelectedTasks: function (sFunctionImportName, oDecisionOption, sComment) {
 			this.oDataManager.sendMultiAction(sFunctionImportName,
 				this.oSelectedTasksDetails.aItems,
 				oDecisionOption,
@@ -982,7 +985,7 @@ sap.ui.define([
 				null);
 		},
 
-		onForwardPopUp: function() {
+		onForwardPopUp: function () {
 			var oFirstSelectedItemContext = this.oSelectedTasksDetails.aItems[0];
 			var sOrigin = oFirstSelectedItemContext.SAP__Origin;
 			var sInstanceID = oFirstSelectedItemContext.InstanceID;
@@ -1006,12 +1009,12 @@ sap.ui.define([
 			}
 		},
 
-		_PotentialOwnersSuccess: function(oResult) {
+		_PotentialOwnersSuccess: function (oResult) {
 			ForwardPopUp.setAgents(oResult.results);
 			ForwardPopUp.setOrigin(this.oSelectedTasksDetails.aItems[0].SAP__Origin);
 		},
 
-		startForwardFilter: function(oListItem, sQuery) {
+		startForwardFilter: function (oListItem, sQuery) {
 			sQuery = sQuery.toLowerCase();
 			var sFullName = oListItem.getBindingContext().getProperty("DisplayName").toLowerCase();
 			var sDepartment = oListItem.getBindingContext().getProperty("Department").toLowerCase();
@@ -1020,7 +1023,7 @@ sap.ui.define([
 				(sDepartment.indexOf(sQuery) !== -1);
 		},
 
-		closeForwardPopUp: function(oResult) {
+		closeForwardPopUp: function (oResult) {
 			if (oResult && oResult.bConfirmed) {
 				var aSelectedListItems = this.oSelectedTasksDetails.aItems;
 				var aItems = [];
@@ -1044,11 +1047,11 @@ sap.ui.define([
 			}
 		},
 
-		sendMultiSelectForwardSuccess: function(bAllItemsSelected, aSuccessList, aErrorList, oAgent) {
-		// Display success or error messages.
+		sendMultiSelectForwardSuccess: function (bAllItemsSelected, aSuccessList, aErrorList, oAgent) {
+			// Display success or error messages.
 			if (aErrorList.length == 0) {
 				var i18nBundle = this.getView().getModel("i18n").getResourceBundle();
-				setTimeout(function() {
+				setTimeout(function () {
 					MessageToast.show(i18nBundle.getText(aSuccessList.length > 1 ? "dialog.success.multi_forward_complete_plural" :
 						"dialog.success.multi_forward_complete", [aSuccessList.length, oAgent.DisplayName]));
 				}.bind(this), 500);
@@ -1060,11 +1063,11 @@ sap.ui.define([
 			}
 		},
 
-		refreshTaskListAfterActionExecution: function() {
-				this.onRefreshPressed();
+		refreshTaskListAfterActionExecution: function () {
+			this.onRefreshPressed();
 		},
 
-		showResubmitPopUp: function() {
+		showResubmitPopUp: function () {
 			ResubmitPopUp.open(
 				this.sResubmitUniqueId,
 				this,
@@ -1072,7 +1075,7 @@ sap.ui.define([
 			);
 		},
 
-		handleResubmitPopOverOk: function() {
+		handleResubmitPopOverOk: function () {
 			var oCalendar = Fragment.byId(this.sResubmitUniqueId, "DATE_RESUBMIT");
 			var aSelectedDates = oCalendar.getSelectedDates();
 			var oDate = aSelectedDates[0].getStartDate();
@@ -1086,11 +1089,11 @@ sap.ui.define([
 			ResubmitPopUp.close();
 		},
 
-		handleActionPerformed: function(aSuccessList, aErrorList, aChangedItems) {
+		handleActionPerformed: function (aSuccessList, aErrorList, aChangedItems) {
 			if (aErrorList.length === 0) {
 				// TODO show messages according to the type of the action ?
 				// for now, showing a generic message.
-				setTimeout(function() {
+				setTimeout(function () {
 					MessageToast.show(this._oResourceBundle.getText(aSuccessList.length > 1 ? "dialog.success.multi_complete_plural" :
 						"dialog.success.multi_complete", aSuccessList.length));
 				}.bind(this), 500);
@@ -1102,7 +1105,7 @@ sap.ui.define([
 			}
 		},
 
-		updateTableOnActionComplete: function(aChangedItems) {
+		updateTableOnActionComplete: function (aChangedItems) {
 			// update the table model
 			if (aChangedItems && aChangedItems.length > 0) {
 				var oTableModel = this.getView().getModel("taskList"), oChangedItem;
@@ -1134,11 +1137,11 @@ sap.ui.define([
 		/**
 		 * Used to add those select properties in TaskCollection call that need to be checked in metadata first (i.e. "SubstitutedUser", "SubstitutedUserName")
 		 */
-		fnAddAditionalSelectPropertiesAndInitBinding: function() {
+		fnAddAditionalSelectPropertiesAndInitBinding: function () {
 			var that = this;
 			var oDataManager = that.oDataManager;
 
-			oDataManager.oModel.getMetaModel().loaded().then(function() {
+			oDataManager.oModel.getMetaModel().loaded().then(function () {
 				oDataManager.oServiceMetaModel = oDataManager.oModel.getMetaModel();
 
 				if (oDataManager.checkPropertyExistsInMetadata("SubstitutedUser")) {
@@ -1158,7 +1161,7 @@ sap.ui.define([
 		/**
 		 * Hides the "On Behalf Of" column if substitution is not enabled.
 		 */
-		_setOnBehalfOfColumnVisibility: function() {
+		_setOnBehalfOfColumnVisibility: function () {
 			if (!this.oDataManager.areSubstitutionsAvailable()) {
 				this.byId("taskListTable").removeColumn(this.byId("onBehalfOfColumn"));
 				this.byId("columnListItem").removeCell(this.byId("onBehalfOfTxt"));
@@ -1167,13 +1170,13 @@ sap.ui.define([
 
 		/**
 		 * Hides the "Confidence Level" column if the functionality is not enabled.
-		 */		
+		 */
 
-		_setConfidenceLevelColumnVisibility: function() {
+		_setConfidenceLevelColumnVisibility: function () {
 			if (!this.oDataManager.isConfidenceLevelAvailable()) {
 				this.byId("taskListTable").removeColumn(this.byId("confidenceLevelColumn"));
 				this.byId("columnListItem").removeCell(this.byId("confidenceLevelTxt"));
 			}
-		}		
+		}
 	});
 });

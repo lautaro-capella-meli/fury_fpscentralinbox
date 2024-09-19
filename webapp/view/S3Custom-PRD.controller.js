@@ -238,7 +238,7 @@ sap.ui.define([
 
 			let oTblListItem = this.getView().byId('TB_ListItemAriba');
 
-			if(oTblListItem){
+			if (oTblListItem) {
 				oTblListItem.setVisible(false);
 			}
 
@@ -863,7 +863,7 @@ sap.ui.define([
 			 */
 			var fnSuccess = function (oDetailData, oCustomAttributeDefinition) {
 
-				if(!that.extHookOnDataLoaded)
+				if (!that.extHookOnDataLoaded)
 					that.extHookOnDataLoaded = that.fnGets3DetailCustom;
 
 				if (that.extHookOnDataLoaded) {
@@ -1287,7 +1287,7 @@ sap.ui.define([
 				else {
 					MessageToast.show(sMessage);
 				}
-				
+
 				that.fnNavBackToTableVw();
 				/*
 				if (that.bIsTableViewActive) {
@@ -1527,8 +1527,8 @@ sap.ui.define([
 			var navigationService = sap.ushell.Container.getService('CrossApplicationNavigation');
 			// Step 2: Navigate using your semantic object
 			var hash = navigationService.hrefForExternal({
-			  target: {semanticObject : oParsedParams.semanticObject, action: oParsedParams.action},
-			  params:  oParsedParams.params
+				target: { semanticObject: oParsedParams.semanticObject, action: oParsedParams.action },
+				params: oParsedParams.params
 			});
 			var url = window.location.href.split('#')[0] + hash;
 			sap.m.URLHelper.redirect(url, true);
@@ -2083,7 +2083,7 @@ sap.ui.define([
 					}
 
 					this.fnNavBackToTableVw();
-					
+
 					/*
 					if (bIsTableViewActive) {
 						this.fnNavBackToTableVw();
@@ -2391,14 +2391,14 @@ sap.ui.define([
 
 				if (this.oKPIManager.shouldTaskShowKPIsTab(oItem)) {
 					iDisplayOrderPriorityValue = 1500 + iDisplayOrderPriorityTemp;
-                    iDisplayOrderPriorityTemp++;
-                    aButtonList.push({
-                        iDisplayOrderPriority: iDisplayOrderPriorityValue,
-                        sI18nBtnTxt: "XBUT_OPEN",
-                        onBtnPressed: function (oEvent) {
-                            that.checkStatusAndOpenTaskUI();
-                        }
-                    });
+					iDisplayOrderPriorityTemp++;
+					aButtonList.push({
+						iDisplayOrderPriority: iDisplayOrderPriorityValue,
+						sI18nBtnTxt: "XBUT_OPEN",
+						onBtnPressed: function (oEvent) {
+							that.checkStatusAndOpenTaskUI();
+						}
+					});
 				}
 
 
@@ -2972,22 +2972,22 @@ sap.ui.define([
 				if (this.oKPIManager.shouldTaskShowKPIsTab(oTaskData)) {
 					try {
 						let oPO_Number = sap.ui.getCore().byId('inb_VFMyMDAwMDE2NkxPQ0FMX1RHVw---templateView').getBindingContext().getProperty('PurchaseOrder');
-						if(oPO_Number){
+						if (oPO_Number) {
 							this.openFrioriAppME23N(oPO_Number);
 						}
 					}
-					catch(err) {
+					catch (err) {
 						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.NoConfigure"));
 					}
 
 					return;
 				}
 
-				if(oTaskData.CustomAttributeData.length){
+				if (oTaskData.CustomAttributeData.length) {
 					try {
 
 						let oContractNumber = oTaskData.CustomAttributeData.find(({ Name }) => Name === "CONTRACT_NUMBER");
-						if(oContractNumber){
+						if (oContractNumber) {
 							this.openFrioriAppME33K(oContractNumber.Value);
 							return;
 						}
@@ -2999,24 +2999,24 @@ sap.ui.define([
 
 						oIntentParamsF0717.semanticObject = 'AccountingDocument';
 						oIntentParamsF0717.action = 'manage';
-						
-						oIntentParamsF0717.params =  {
-														'CompanyCode': oCompanyCode.Value,
-														'AccountingDocument': oDocNumber.Value,
-														'FiscalYear': oFiscalYear.Value
-													};
-													
+
+						oIntentParamsF0717.params = {
+							'CompanyCode': oCompanyCode.Value,
+							'AccountingDocument': oDocNumber.Value,
+							'FiscalYear': oFiscalYear.Value
+						};
+
 						oIntentParamsF0717.appSpecificRoute = '';
 						this.fnNavigateToAppCustom(oIntentParamsF0717);
 					}
-					catch(err) {
+					catch (err) {
 						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.NoConfigure"));
 					}
-				}else{
+				} else {
 					MessageToast.show(this.i18nBundle.getText("custom.meli.msj.NoCustomAttributeData"));
 				}
 				return;
-				
+
 				var oDataManager = this.getOwnerComponent().getDataManager();
 				oActionHelper.fnValidateOpenTaskURLAndRedirect(this.oModel2.getData().GUI_Link || this.oModel2.getData().UIExecutionLink.GUI_Link, oDataManager.isForwardUserSettings());
 			}
@@ -4438,17 +4438,17 @@ sap.ui.define([
 			};
 		},
 
-		fnGets3DetailCustom:function(oDetailData, pItemTask){
+		fnGets3DetailCustom: function (oDetailData, pItemTask) {
 			let oTblListItemAriba = this.getView().byId('TB_ListItemAriba');
 			let oTblListItemShipment = this.getView().byId('TB_ListItemShipment');
 			let oTblListItemContract = this.getView().byId('TB_ListItemContract');
 			let oTblListItemConcur = this.getView().byId('TB_ListItemConcur');
-			
 
-			if(!oTblListItemAriba){
+
+			if (!oTblListItemAriba) {
 				return;
 			}
-			
+
 			oTblListItemAriba.setVisible(false);
 			oTblListItemShipment.setVisible(false);
 			oTblListItemContract.setVisible(false);
@@ -4457,7 +4457,7 @@ sap.ui.define([
 			switch (pItemTask.SAP__Origin) {
 				case 'ARIBA_TGW':
 					this.getOwnerComponent().setModel(new JSONModel({
-						visibleRowCount:  0,
+						visibleRowCount: 0,
 						TableItemBusy: false
 					}), "DatHeaderAriba");
 
@@ -4466,10 +4466,10 @@ sap.ui.define([
 						return;
 					});
 					break;
-				
+
 				case 'LOCAL_FIGR_TGW':
 					this.getOwnerComponent().setModel(new JSONModel({
-						visibleRowCount:  0,
+						visibleRowCount: 0,
 						TableItemBusy: false
 					}), "DatHeaderShipment");
 
@@ -4480,10 +4480,10 @@ sap.ui.define([
 					break;
 				case 'LOCAL_TGW':
 					let ContractNumber = oDetailData.CustomAttributeData.results.find(({ Name }) => Name === "CONTRACT_NUMBER");
-					if(ContractNumber){
+					if (ContractNumber) {
 
 						this.getOwnerComponent().setModel(new JSONModel({
-							visibleRowCount:  0,
+							visibleRowCount: 0,
 							TableItemBusy: false
 						}), "DatHeaderContract");
 						let oModelContract = this.getModel("modelContract");
@@ -4494,7 +4494,7 @@ sap.ui.define([
 					break;
 				case 'CONCUR_TGW':
 					this.getOwnerComponent().setModel(new JSONModel({
-						visibleRowCount:  0,
+						visibleRowCount: 0,
 						TableItemBusy: false
 					}), "DatHeaderConcur");
 
@@ -4508,7 +4508,7 @@ sap.ui.define([
 			}
 		},
 
-		fnReadDataAriba: function (pModel, oDetailData, pItemTask,  callback) {
+		fnReadDataAriba: function (pModel, oDetailData, pItemTask, callback) {
 
 			if (!this.getOwnerComponent().getModel("LineItemModel"))
 				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
@@ -4518,10 +4518,10 @@ sap.ui.define([
 
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderAriba');
 			pModel.read("/PurchaseRequisitionSet('" + pItemTask.InstanceID + "')", {
-				urlParameters: {"$expand": "LineItemSet,LineItemSet/AccountingSet"},
+				urlParameters: { "$expand": "LineItemSet,LineItemSet/AccountingSet" },
 				//filters: filters,
 				success: function (oData) {
-					if(oData.LineItemSet.results.length > 0){
+					if (oData.LineItemSet.results.length > 0) {
 						this.getView().byId('TB_ListItemAriba').setVisible(true);
 						this.setPropertyModel(this, "/visibleRowCount", oData.LineItemSet.results.length, 'DatHeaderAriba');
 						oListModel.setData(oData.LineItemSet.results);
@@ -4543,7 +4543,7 @@ sap.ui.define([
 			})
 		},
 
-		fnReadDataShipment: function (pModel, oDetailData, pItemTask,  callback) {
+		fnReadDataShipment: function (pModel, oDetailData, pItemTask, callback) {
 
 			if (!this.getOwnerComponent().getModel("LineItemModel"))
 				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
@@ -4553,10 +4553,10 @@ sap.ui.define([
 
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderShipment');
 			pModel.read("/ShipmentGroup('" + pItemTask.InstanceID + "')", {
-				urlParameters: {"$expand": "WorkItemSet"},
+				urlParameters: { "$expand": "WorkItemSet" },
 				//filters: filters,
 				success: function (oData) {
-					if(oData.WorkItemSet.results.length > 0){
+					if (oData.WorkItemSet.results.length > 0) {
 						this.getView().byId('TB_ListItemShipment').setVisible(true);
 						this.setPropertyModel(this, "/visibleRowCount", oData.WorkItemSet.results.length, 'DatHeaderShipment');
 						oListModel.setData(oData.WorkItemSet.results);
@@ -4578,7 +4578,7 @@ sap.ui.define([
 			})
 		},
 
-		fnReadDataContract: function (pModel, ContractNumber,  callback) {
+		fnReadDataContract: function (pModel, ContractNumber, callback) {
 
 			if (!this.getOwnerComponent().getModel("LineItemModel"))
 				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
@@ -4591,7 +4591,7 @@ sap.ui.define([
 				//urlParameters: {"$expand": "WorkItemSet"},
 				//filters: filters,
 				success: function (oData) {
-					if(oData.results.length > 0){
+					if (oData.results.length > 0) {
 						this.getView().byId('TB_ListItemContract').setVisible(true);
 						this.setPropertyModel(this, "/visibleRowCount", oData.results.length, 'DatHeaderContract');
 						oListModel.setData(oData.results);
@@ -4617,7 +4617,7 @@ sap.ui.define([
 			controller.getOwnerComponent().getModel(Model).setProperty(property, value);
 		},
 
-		handleSAPDocumentPress: function(oEvent){
+		handleSAPDocumentPress: function (oEvent) {
 			let oSource = oEvent.getSource();
 			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
 
@@ -4629,90 +4629,90 @@ sap.ui.define([
 
 				oIntentParamsF0717.semanticObject = 'AccountingDocument';
 				oIntentParamsF0717.action = 'manage';
-				
-				oIntentParamsF0717.params =  {
-												'CompanyCode': CompanyCode,
-												'AccountingDocument': DocNumber,
-												'FiscalYear': FiscalYear
-											};
-											
+
+				oIntentParamsF0717.params = {
+					'CompanyCode': CompanyCode,
+					'AccountingDocument': DocNumber,
+					'FiscalYear': FiscalYear
+				};
+
 				oIntentParamsF0717.appSpecificRoute = '';
 				this.fnNavigateToAppCustom(oIntentParamsF0717);
 			}
-			catch(err) {
+			catch (err) {
 				MessageToast.show(err.message);
 			}
 		},
 
-		ClearTableLineItemCustom: function(){
+		ClearTableLineItemCustom: function () {
 			let oTblListItemAriba = this.getView().byId('TB_ListItemAriba');
 			let oTblListItemShipment = this.getView().byId('TB_ListItemShipment');
 			let oTblListItemContract = this.getView().byId('TB_ListItemContract');
 
-			if(!oTblListItemAriba){
+			if (!oTblListItemAriba) {
 				return;
 			}
-			
+
 			oTblListItemAriba.setVisible(false);
 			oTblListItemShipment.setVisible(false);
 			oTblListItemContract.setVisible(false);
 		},
 
-		openFrioriAppME33K: function(pContractNumber){
+		openFrioriAppME33K: function (pContractNumber) {
 			try {
 				let oIntentParamsME33K = {};
 
 				oIntentParamsME33K.semanticObject = 'PurchaseContract';
 				oIntentParamsME33K.action = 'display';
-				
-				oIntentParamsME33K.params =  {
-												'PurchaseContract': pContractNumber
-											};
-											
+
+				oIntentParamsME33K.params = {
+					'PurchaseContract': pContractNumber
+				};
+
 				oIntentParamsME33K.appSpecificRoute = '';
 				this.fnNavigateToAppCustom(oIntentParamsME33K);
 			}
-			catch(err) {
+			catch (err) {
 				MessageToast.show(err.message);
 			}
 		},
 
-		openFrioriAppME23N: function(pPO_Number){
+		openFrioriAppME23N: function (pPO_Number) {
 			try {
 				let oIntentParamsME23N = {};
 
 				oIntentParamsME23N.semanticObject = 'PurchaseOrder';
 				oIntentParamsME23N.action = 'display';
-				
-				oIntentParamsME23N.params =  {
-												'PurchaseOrder': pPO_Number,
-												'uitype': 'advanced'
-											};
-											
+
+				oIntentParamsME23N.params = {
+					'PurchaseOrder': pPO_Number,
+					'uitype': 'advanced'
+				};
+
 				oIntentParamsME23N.appSpecificRoute = '';
 				this.fnNavigateToAppCustom(oIntentParamsME23N);
 			}
-			catch(err) {
+			catch (err) {
 				MessageToast.show(err.message);
 			}
 		},
 
-		getTextStatusContract: function(pStatus){
+		getTextStatusContract: function (pStatus) {
 			let sTextStatus;
-			switch(pStatus) {
+			switch (pStatus) {
 				case 'L':
 					sTextStatus = this.i18nBundle.getText("custom.meli.S3_ItemContract.MarkedDeletion");
-				  break;
+					break;
 				case 'S':
 					sTextStatus = this.i18nBundle.getText("custom.meli.S3_ItemContract.Locked");
-				  break;
+					break;
 				default:
 					sTextStatus = "";
-			  }
+			}
 			return sTextStatus;
 		},
 
-		fnReadDataConcur: function (pModel, oDetailData, pItemTask,  callback) {
+		fnReadDataConcur: function (pModel, oDetailData, pItemTask, callback) {
 
 			if (!this.getOwnerComponent().getModel("LineItemModel"))
 				this.getOwnerComponent().setModel(new JSONModel({}), "LineItemModel");
@@ -4722,10 +4722,10 @@ sap.ui.define([
 
 			this.setPropertyModel(this, "/TableItemBusy", true, 'DatHeaderConcur');
 			pModel.read("/Report('" + pItemTask.InstanceID + "')", {
-				urlParameters: {"$expand": "ExpenseSet,ExpenseSet/CommentSet,ExpenseSet/ExceptionSet"},
+				urlParameters: { "$expand": "ExpenseSet,ExpenseSet/CommentSet,ExpenseSet/ExceptionSet" },
 				//filters: filters,
 				success: function (oData) {
-					if(oData.ExpenseSet.results.length > 0){
+					if (oData.ExpenseSet.results.length > 0) {
 						this.getView().byId('TB_ListItemConcur').setVisible(true);
 						this.setPropertyModel(this, "/visibleRowCount", oData.ExpenseSet.results.length, 'DatHeaderConcur');
 						oListModel.setData(oData.ExpenseSet.results);
@@ -4747,7 +4747,7 @@ sap.ui.define([
 			})
 		},
 
-		onPressComment: function(oEvent){
+		onPressComment: function (oEvent) {
 			let oSource = oEvent.getSource();
 			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
 
@@ -4756,11 +4756,11 @@ sap.ui.define([
 
 			const oListModel = this.getOwnerComponent().getModel("ListComments");
 			oListModel.setData({});
-			if(oItemList.CommentSet.results.length > 0){
+			if (oItemList.CommentSet.results.length > 0) {
 				oListModel.setData(oItemList.CommentSet.results);
 				this.openDialogComments();
-			}else{
-				
+			} else {
+
 			}
 		},
 
@@ -4781,7 +4781,7 @@ sap.ui.define([
 			} else {
 				return "";
 			}
-		},	
+		},
 
 		openDialogComments: function () {
 
@@ -4806,7 +4806,7 @@ sap.ui.define([
 			this.byId("CommentsConcurDialog").close();
 		},
 
-		onPressExceptions: function(oEvent){
+		onPressExceptions: function (oEvent) {
 			let oSource = oEvent.getSource();
 			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
 
@@ -4815,11 +4815,11 @@ sap.ui.define([
 
 			const oListModel = this.getOwnerComponent().getModel("ListExceptions");
 			oListModel.setData({});
-			if(oItemList.ExceptionSet.results.length > 0){
+			if (oItemList.ExceptionSet.results.length > 0) {
 				oListModel.setData(oItemList.ExceptionSet.results);
 				this.openDialogExceptions();
-			}else{
-				
+			} else {
+
 			}
 		},
 
@@ -4846,7 +4846,7 @@ sap.ui.define([
 			this.byId("ExceptionsConcurDialog").close();
 		},
 
-		onPressAttachment: function(oEvent){
+		onPressAttachment: function (oEvent) {
 			let oSource = oEvent.getSource();
 			let oItemList = oSource.getBindingContext("LineItemModel").getObject();
 
@@ -4855,11 +4855,11 @@ sap.ui.define([
 
 			const oListModel = this.getOwnerComponent().getModel("ListAttachment");
 			oListModel.setData({});
-			if(oItemList.AttachmentSet.results.length > 0){
+			if (oItemList.AttachmentSet.results.length > 0) {
 				oListModel.setData(oItemList.AttachmentSet.results);
 				this.openDialogAttachment();
-			}else{
-				
+			} else {
+
 			}
 		},
 

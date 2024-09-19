@@ -144,11 +144,13 @@ sap.ui.define([
 				.attachSelect(this.onSelectMainIconTabBar.bind(this));
 
 			// Init taskList model
-			const aTaskListModel = new JSONModel({ TaskCollection: [],
-												   TaskCollectionAll: [] });
+			const aTaskListModel = new JSONModel({
+				TaskCollection: [],
+				TaskCollectionAll: []
+			});
 			this.getView().setModel(aTaskListModel, "taskList");
 
-			this.getProviderSystem(function(ProviderSystemModel){
+			this.getProviderSystem(function (ProviderSystemModel) {
 				// set up Request configuration
 				this.fnAddAditionalSelectPropertiesAndInitBinding()
 					.then(function () {
@@ -166,7 +168,7 @@ sap.ui.define([
 						let oCurrentSorter = this._getCurrentSorter();
 						let oSelect = this._getTaskPropertiesToFetch().join(",");
 
-						if(vGetData){
+						if (vGetData) {
 							vGetData = false;
 							ProviderSystemModel.forEach((ProviderSystem) => {
 								let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
@@ -175,7 +177,7 @@ sap.ui.define([
 								let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
 									useBatch: false
 								});
-							
+
 								const oRequestConfiguration = {
 									filters: [oFilter],
 									sorters: ProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
@@ -191,8 +193,8 @@ sap.ui.define([
 								oModel.read("/TaskCollection/$count", {
 									filters: [oFilter],
 									success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
-									error: function (oError) { 
-										return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message  + " " + oError.responseText);
+									error: function (oError) {
+										return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
 									},
 								});
 							});
@@ -225,8 +227,8 @@ sap.ui.define([
 					pDataModel.read("/TaskCollection", {
 						...oRequestConfiguration,
 						success: function (oData, oResponse) { return resolve([oData, oResponse]) },
-						error: function (oError) { 
-							return reject(oError) 
+						error: function (oError) {
+							return reject(oError)
 						},
 						groupId: sGroupId,
 						urlParameters: {
@@ -241,15 +243,15 @@ sap.ui.define([
 				}.bind(this));
 
 				// call partial OData read handler
-				pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this), function(oError){
-					return MessageToast.show(ProviderSystem + ": " + oError.message  + " " + oError.responseText);
+				pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this), function (oError) {
+					return MessageToast.show(ProviderSystem + ": " + oError.message + " " + oError.responseText);
 				});
 				// collect Promises
 				_aODataModelReadPromises.push(pDataModelRead);
 
-				if(_aODataModelReadPromises.length === 5){
+				if (_aODataModelReadPromises.length === 5) {
 					Promise.all(_aODataModelReadPromises)
-					.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
+						.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
 					_aODataModelReadPromises = [];
 				}
 
@@ -257,7 +259,7 @@ sap.ui.define([
 			} while (iTaskCount > 0);
 
 			// set final OData read handler
-			if(_aODataModelReadPromises.length > 0){
+			if (_aODataModelReadPromises.length > 0) {
 				Promise.all(_aODataModelReadPromises)
 					.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
 			}
@@ -302,7 +304,7 @@ sap.ui.define([
 			this._filterDeferred?.resolve();
 
 			const aTasks = this.getView().getModel("taskList").getProperty("/TaskCollection");
-			
+
 			const oTaskListData = this._processTaskListData(aTasks);
 			this._initTabBars();
 			this._createTabFilters(oTaskListData);
@@ -578,10 +580,10 @@ sap.ui.define([
 			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinition__"))
 				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
 			this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
-	
 
-			let ColumItemsPosition = this._oTablePersoController._oPersonalizations.aColumns.find(({ id}) => id=== "table-taskListTable-TS20000166ITEMOVERVIEWColumn");
-			if(ColumItemsPosition){
+
+			let ColumItemsPosition = this._oTablePersoController._oPersonalizations.aColumns.find(({ id }) => id === "table-taskListTable-TS20000166ITEMOVERVIEWColumn");
+			if (ColumItemsPosition) {
 				ColumItemsPosition.visible = false;
 				this._oTablePersoController.getPersoService().setPersData(this._oTablePersoController._oPersonalizations)
 			}
@@ -640,19 +642,19 @@ sap.ui.define([
 			oTaskListViewModel.setProperty("/noDataText", this._oResourceBundle.getText("view.Workflow.noDataTasks"));
 		},
 
-		_refreshTask: function(channelId, eventId, data) {
+		_refreshTask: function (channelId, eventId, data) {
 
 			const oListModel = this.getOwnerComponent().getModel("LineItemModel");
-			if(oListModel){
+			if (oListModel) {
 				oListModel.setData({});
 			}
 
-			if(this.getOwnerComponent().oDataManager.isActionS3Custom){
+			if (this.getOwnerComponent().oDataManager.isActionS3Custom) {
 				this.getOwnerComponent().oDataManager.isActionS3Custom = false;
 				this.onRefreshPressed();
 				return;
 			}
-			var _handleTaskQueryResponse = function(oData, response) {
+			var _handleTaskQueryResponse = function (oData, response) {
 				if (response.statusCode === "200") {
 					var tasks = [oData];
 					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
@@ -667,23 +669,23 @@ sap.ui.define([
 			var params;
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData")) {
 				params = {
-						success:_handleTaskQueryResponse.bind(this),
-						urlParameters:{$expand:"CustomAttributeData"}
-						};
+					success: _handleTaskQueryResponse.bind(this),
+					urlParameters: { $expand: "CustomAttributeData" }
+				};
 			}
 			else {
 				params = {
-						success:_handleTaskQueryResponse.bind(this)
-						};
+					success: _handleTaskQueryResponse.bind(this)
+				};
 			}
 			this._oDataModel.read(data.contextPath, params);
 		},
 
-		handleActionPerformed: function(aSuccessList, aErrorList, aChangedItems) {
+		handleActionPerformed: function (aSuccessList, aErrorList, aChangedItems) {
 			if (aErrorList.length === 0) {
 				// TODO show messages according to the type of the action ?
 				// for now, showing a generic message.
-				setTimeout(function() {
+				setTimeout(function () {
 					MessageToast.show(this._oResourceBundle.getText(aSuccessList.length > 1 ? "dialog.success.multi_complete_plural" :
 						"dialog.success.multi_complete", aSuccessList.length));
 				}.bind(this), 500);
@@ -698,7 +700,7 @@ sap.ui.define([
 		},
 
 
-		createFooterButtonsForSelectedTasks: function(aDecisionsAvailable) {
+		createFooterButtonsForSelectedTasks: function (aDecisionsAvailable) {
 
 			var iDisplayOrderPriorityTemp = 1;
 			var iDisplayOrderPriorityValue = 0;
@@ -838,7 +840,7 @@ sap.ui.define([
 					}
 					if (oButtonList.aFooterButtons) {
 						var iButtonsLength = oButtonList.aFooterButtons.length;
-						for (var j =0; j< iButtonsLength; j++) {
+						for (var j = 0; j < iButtonsLength; j++) {
 							this._oFullScreenPage.addCustomFooterContent(oButtonList.aFooterButtons[j]);
 						}
 					}
@@ -852,13 +854,13 @@ sap.ui.define([
 					MessageBox.warning(this._oResourceBundle.getText("NO_COMMON_ACTIONS"));
 					this._oFullScreenPage.setShowFooter(false);
 				}
-				for (var k=0; k<tempFooter.length; k++) {
+				for (var k = 0; k < tempFooter.length; k++) {
 					this._oFullScreenPage.addCustomFooterContent(tempFooter[k]);
 				}
 			}
 		},
 
-		getProviderSystemOld: function(){
+		getProviderSystemOld: function () {
 			const ProviderSystem = new JSONModel();
 			let sRootPath = jQuery.sap.getModulePath("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2");
 			let JSONProviderSystem = "/model/ProviderSystem.JSON";
@@ -866,13 +868,13 @@ sap.ui.define([
 			return ProviderSystem.getData().System;
 		},
 
-		getProviderSystem: function(callback) {
+		getProviderSystem: function (callback) {
 			let oModel = this.getOwnerComponent().getModel();
 
-			if (this.getOwnerComponent().getModel("ProviderSystem")){
+			if (this.getOwnerComponent().getModel("ProviderSystem")) {
 				callback(this.getOwnerComponent().getModel("ProviderSystem").getData());
 			}
-			
+
 			this.getOwnerComponent().setModel(new JSONModel({}), "ProviderSystem");
 
 			const SystemModel = this.getOwnerComponent().getModel("ProviderSystem");
@@ -880,7 +882,7 @@ sap.ui.define([
 
 			oModel.read("/SystemInfoCollection", {
 				success: function (oData) {
-					if(oData.results.length > 0){
+					if (oData.results.length > 0) {
 						SystemModel.setData(oData.results);
 					}
 					callback(SystemModel.getData());

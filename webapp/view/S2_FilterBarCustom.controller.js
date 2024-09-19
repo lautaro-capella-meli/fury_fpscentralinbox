@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2022 SAP SE or an SAP affiliate company. All rights reserved.
+ * Copyright (C) 2009-2023 SAP SE or an SAP affiliate company. All rights reserved.
  */
 sap.ui.define([
 	"sap/ui/model/Filter",
@@ -8,27 +8,33 @@ sap.ui.define([
 	"sap/m/Token",
 	"sap/base/Log",
 	"cross/fnd/fiori/inbox/util/EmployeeCard",
+	"cross/fnd/fiori/inbox/util/tools/Application",
 	"cross/fnd/fiori/inbox/util/Conversions",
 	"sap/ui/core/Item",
 	"sap/m/SearchField",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/Fragment",
+	"sap/ui/core/mvc/Controller",
 	"sap/ui/Device",
 	"sap/ui/comp/library",
 	"sap/ui/comp/valuehelpdialog/ValueHelpDialog",
-	"sap/ui/thirdparty/jquery"
-], function(Filter, FilterOperator, Sorter, Token, BaseLog, EmployeeCard, Conversions, Item, SearchField, JSONModel, Fragment, Device,
-	UICompLibrary, ValueHelpDialog, jQuery) {
+	"sap/ui/thirdparty/jquery",
+	"cross/fnd/fiori/inbox/util/CommonFunctions"
+], function(Filter, FilterOperator, Sorter, Token, BaseLog, EmployeeCard, Application, 
+	Conversions, Item, SearchField, JSONModel, Fragment, Controller, Device,
+	UICompLibrary, ValueHelpDialog, jQuery, CommonFunctions) {
 	"use strict";
 
 	var ValueHelpRangeOperation = UICompLibrary.valuehelpdialog.ValueHelpRangeOperation;
 
-	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom", {
+	return Controller.extend("cross.fnd.fiori.inbox.view.S2_FilterBar", {
 		_oDialogPromise: null,
 
+		Conversions: Conversions,
+
 		onInit: function() {
-			this.oDataManager = cross.fnd.fiori.inbox.util.tools.Application.getImpl().getComponent().getDataManager();
-			this.getView().setModel(cross.fnd.fiori.inbox.util.tools.Application.getImpl().AppI18nModel, "i18n");
+			this.oDataManager = Application.getImpl().getComponent().getDataManager();
+			this.getView().setModel(Application.getImpl().AppI18nModel, "i18n");
 			this._oTaskListController = this.getView().getViewData().parentController;
 			this._oTableOperations = this.getView().getViewData().oTableOperations;
 			this._tableHelper = this.getView().getViewData().oTableHelper;
@@ -85,11 +91,6 @@ sap.ui.define([
 				this._oFilterBar.setStandardItemText(this._oTaskListController._getScenrio());
 				this._oFilterBar.setPersistencyKey(this._oTaskListController._getScenrioId());
 				this._oFilterBar._initPersonalizationService();
-
-				// Set the tooltip of the variant management button
-				var oVariantPopoverButton = this._oFilterBar._oVariantManagement.oVariantPopoverTrigger;
-				var oVariantPopoverButtonText = this._oResourceBundle.getText("filter.variantManagement.trigger");
-				oVariantPopoverButton.setTooltip(oVariantPopoverButtonText);
 
 				this._applyData.call(this._oFilterBar, {filter:[{name:"taskdefinition",selectedKeys: this._oTaskListController._getTaskDefinitionsForFilterBar()}]});
 				this._oFilterBar.fireSearch();
@@ -151,13 +152,16 @@ sap.ui.define([
 		_manageOnBehalfOfFilterItem: function() {
 			if (this.oDataManager.areSubstitutionsAvailable?.()) {
 				this.oDataManager.readSubstitutedUserList(function (oData) {
-					var aSubstitutedUserNameCollection = oData.results.map(function (oTask) {
-						return { DisplayName: oTask.DisplayName, UniqueName: oTask.UniqueName };
-					});
-
-					aSubstitutedUserNameCollection.sort(function (firstEl, secondEl) {
-						return firstEl.DisplayName.localeCompare(secondEl.DisplayName);
-					});
+					var distinctByUniqueName = function(substitute) {
+						return substitute.UniqueName;
+					};
+					var aSubstitutedUserNameCollection = CommonFunctions.arrayDistinctBy(oData.results, distinctByUniqueName)
+						.sort(function (firstSub, secondSub) {
+							return firstSub.DisplayName.localeCompare(secondSub.DisplayName);
+						})
+						.map(function (substitute) {
+							return {DisplayName: substitute.DisplayName, UniqueName: substitute.UniqueName};
+						});
 
 					var bundle = this.getView().getModel("i18n").getResourceBundle();
 					var myTasksText = bundle.getText("filter.substitutingUserList.myTasks");

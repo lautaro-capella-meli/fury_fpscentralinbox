@@ -40,20 +40,22 @@ sap.ui.define([
 	"sap/ui/thirdparty/jquery",
 	"cross/fnd/fiori/inbox/util/Constants",
 	"sap/base/util/Version",
-	"cross/fnd/fiori/inbox/util/MultiSelect",
 	"cross/fnd/fiori/inbox/CA_FIORI_INBOXExtension2/util/CustomFormatters",
 ], function (UIComponent, XMLView, Sorter, Filter, FilterOperator, JSONModel, Column, MessageToast,
 	MessageBox, TablePersoController, GroupHeaderListItem, TableOperations, TaskListGroupingHelper,
 	TaskListSortingHelper, TaskListCustomAttributeHelper, DataManager, BaseController, Application, Main, PositiveAction,
-	NegativeAction, Button, Log, ConfirmationDialogManager, Forward, Resubmit, MultiSelect, ActionHelper,
+	NegativeAction, Button, Log, ConfirmationDialogManager, ForwardPopUp, ResubmitPopUp, MultiSelectDialog, ActionHelper,
 	CommonFunctions, ForwardSimple, Conversions, syncStyleClass, Device, MessagePopoverItem, library,
-	MessagePopover, Fragment, DateFormat, jquery, Constants, Version, MultiSelectDialog, CustomFormatters) {
+	MessagePopover, Fragment, DateFormat, jquery, Constants, Version, CustomFormatters) {
 	"use strict";
 	let ButtonType = library.ButtonType;
 	const I18N_CUSTOM_PREFIX = "custom.meli.";
 	const C_ARIBA = 'ARIBA_TGW';
 
 	BaseController.extend("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
+		
+		Conversions: Conversions,
+		Resubmit: ResubmitPopUp,
 
 		_getI18nCustomText(sText, ...args) {
 			return this._oResourceBundle.hasText(I18N_CUSTOM_PREFIX + sText, ...args) ?

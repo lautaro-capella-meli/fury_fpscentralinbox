@@ -16,6 +16,8 @@ sap.ui.define([
 	"cross/fnd/fiori/inbox/util/TaskListCustomAttributeHelper",
 	"cross/fnd/fiori/inbox/util/DataManager",
 	"cross/fnd/fiori/inbox/controller/BaseController",
+	"cross/fnd/fiori/inbox/util/tools/Application",
+	"cross/fnd/fiori/inbox/Main.controller", // Workaround to force Main.onInit before S2.onInit
 	"sap/m/semantic/PositiveAction",
 	"sap/m/semantic/NegativeAction",
 	"sap/m/Button",
@@ -36,20 +38,22 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 	"sap/ui/core/format/DateFormat",
 	"sap/ui/thirdparty/jquery",
+	"cross/fnd/fiori/inbox/util/Constants",
+	"sap/base/util/Version",
 	"cross/fnd/fiori/inbox/util/MultiSelect",
 	"cross/fnd/fiori/inbox/CA_FIORI_INBOXExtension2/util/CustomFormatters",
 ], function (UIComponent, XMLView, Sorter, Filter, FilterOperator, JSONModel, Column, MessageToast,
 	MessageBox, TablePersoController, GroupHeaderListItem, TableOperations, TaskListGroupingHelper,
-	TaskListSortingHelper, TaskListCustomAttributeHelper, DataManager, BaseController, PositiveAction,
+	TaskListSortingHelper, TaskListCustomAttributeHelper, DataManager, BaseController, Application, Main, PositiveAction,
 	NegativeAction, Button, Log, ConfirmationDialogManager, Forward, Resubmit, MultiSelect, ActionHelper,
 	CommonFunctions, ForwardSimple, Conversions, syncStyleClass, Device, MessagePopoverItem, library,
-	MessagePopover, Fragment, DateFormat, jquery, MultiSelectDialog, CustomFormatters) {
+	MessagePopover, Fragment, DateFormat, jquery, Constants, Version, MultiSelectDialog, CustomFormatters) {
 	"use strict";
 	let ButtonType = library.ButtonType;
 	const I18N_CUSTOM_PREFIX = "custom.meli.";
 	const C_ARIBA = 'ARIBA_TGW';
 
-	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
+	BaseController.extend("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
 		_getI18nCustomText(sText, ...args) {
 			return this._oResourceBundle.hasText(I18N_CUSTOM_PREFIX + sText, ...args) ?

@@ -11,37 +11,37 @@
 			sideContentVisibility="ShowAboveS" showSideContent="false" breakpointChanged="updateToggleButtonState">
 			<layout:mainContent>
 				<core:ComponentContainer id="genericComponentContainer" height="100%" visible="{= ${detail>/showGenericComponent}}"
-					propagateModel="{path: 'detail>/showGenericComponent', formatter: 'cross.fnd.fiori.inbox.Conversions.formatterPropagateModel'}"/>
+					propagateModel="{path: 'detail>/showGenericComponent', formatter: '.Conversions.formatterPropagateModel'}"/>
 				<layout:FixFlex id="fioriElementsContainer" visible="{= ${detail>/embedFioriElements}}"/>
 				<!-- Extends the header section -->
 				<core:ExtensionPoint name="CustomerExtensionForObjectHeader">
 					<ObjectHeader
-						backgroundDesign="{path: 'detail>/SapUiTheme', formatter:'cross.fnd.fiori.inbox.Conversions.formatterThemeBasedBackgroundColor'}"
-						title="{parts: [{path: 'detail>/TaskTitle'}, {path: 'detail>/CustomAttributeData'}], formatter: 'cross.fnd.fiori.inbox.Conversions.formatterTaskTitle'}"
-						titleLevel="H3" number="{path: 'detail>/CustomAttributeData', formatter:'cross.fnd.fiori.inbox.Conversions.formatterCustomNumberValue'}"
-						numberUnit="{path: 'detail>/CustomAttributeData', formatter:'cross.fnd.fiori.inbox.Conversions.formatterCustomNumberUnitValue'}"
+						backgroundDesign="{path: 'detail>/SapUiTheme', formatter:'.Conversions.formatterThemeBasedBackgroundColor'}"
+						title="{parts: [{path: 'detail>/TaskTitle'}, {path: 'detail>/CustomAttributeData'}], formatter: '.Conversions.formatterTaskTitle'}"
+						titleLevel="H3" number="{path: 'detail>/CustomAttributeData', formatter:'.Conversions.formatterCustomNumberValue'}"
+						numberUnit="{path: 'detail>/CustomAttributeData', formatter:'.Conversions.formatterCustomNumberUnitValue'}"
 						visible="{= ${detail>/showDefaultView}}">
 						<attributes>
 							<ObjectAttribute id="ARuserName"
-								text="{parts: [{path: 'CreatedByName'}, {path: 'CustomAttributeData'}], formatter: 'cross.fnd.fiori.inbox.Conversions.formatterCreatedBy'}"
-								active="{path: 'CustomAttributeData', formatter: 'cross.fnd.fiori.inbox.Conversions.formatterCreatedByLink'}" press="onEmployeeLaunchTask"/>
-							<ObjectAttribute text="{path: 'detail>/CompletionDeadLine', formatter:'cross.fnd.fiori.inbox.Conversions.formatterDueDate'}"/>
-							<ObjectAttribute text="{path: 'detail>/CreatedOn', formatter:'cross.fnd.fiori.inbox.Conversions.formatterCreatedDate'}"/>
+								text="{parts: [{path: 'CreatedByName'}, {path: 'CustomAttributeData'}], formatter: '.Conversions.formatterCreatedBy'}"
+								active="{path: 'CustomAttributeData', formatter: '.Conversions.formatterCreatedByLink'}" press="onEmployeeLaunchTask"/>
+							<ObjectAttribute text="{path: 'detail>/CompletionDeadLine', formatter:'.Conversions.formatterDueDate'}"/>
+							<ObjectAttribute text="{path: 'detail>/CreatedOn', formatter:'.Conversions.formatterCreatedDate'}"/>
 							<ObjectAttribute
-								text="{parts: [{path: 'detail>/CompletedOn'}, {path: 'detail>/Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterCompletedDate'}"/>
+								text="{parts: [{path: 'detail>/CompletedOn'}, {path: 'detail>/Status'}], formatter:'.Conversions.formatterCompletedDate'}"/>
 							<ObjectAttribute
-								text="{parts: [{path: 'detail>/ResumeOn'}, {path: 'detail>/Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterResumeOnText'}"/>
+								text="{parts: [{path: 'detail>/ResumeOn'}, {path: 'detail>/Status'}], formatter:'.Conversions.formatterResumeOnText'}"/>
 							<ObjectAttribute
-								text="{parts: [{path: 'detail>/CustomAttributeData'}, {path: 'detail>/CustomAttributeDefinitionData'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterDetailCustomObjectAttributeValue'}"/>
+								text="{parts: [{path: 'detail>/CustomAttributeData'}, {path: 'detail>/CustomAttributeDefinitionData'}], formatter:'.Conversions.formatterDetailCustomObjectAttributeValue'}"/>
 						</attributes>
 						<firstStatus>
 							<ObjectStatus title="{i18n>STATUS_LABEL}"
-								text="{parts: [{path: 'detail>/SAP__Origin'}, {path: 'detail>/Status'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterStatus'}"></ObjectStatus>
+								text="{parts: [{path: 'detail>/SAP__Origin'}, {path: 'detail>/Status'}], formatter:'.Conversions.formatterStatus'}"></ObjectStatus>
 						</firstStatus>
 						<secondStatus>
 							<ObjectStatus title="{i18n>PRIORITY_LABEL}"
-								text="{parts: [{path: 'detail>/SAP__Origin'}, {path: 'detail>/Priority'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriority'}"
-								state="{path: 'detail>/Priority', formatter:'cross.fnd.fiori.inbox.Conversions.formatterPriorityState'}"></ObjectStatus>
+								text="{parts: [{path: 'detail>/SAP__Origin'}, {path: 'detail>/Priority'}], formatter:'.Conversions.formatterPriority'}"
+								state="{path: 'detail>/Priority', formatter:'.Conversions.formatterPriorityState'}"></ObjectStatus>
 						</secondStatus>
 					</ObjectHeader>
 				</core:ExtensionPoint>
@@ -52,7 +52,7 @@
 							<core:ExtensionPoint name="CustomerExtensionForInfoTabContent">
 								<layout:VerticalLayout id="infoTabContent" class="crossFndFioriInboxDescription">
 									<layout:content>
-										<core:HTML content="{path: 'detail>/Description', formatter: 'cross.fnd.fiori.inbox.Conversions.formatterHtml'}" sanitizeContent="true"/>
+										<core:HTML content="{path: 'detail>/Description', formatter: '.Conversions.formatterHtml'}" sanitizeContent="true"/>
 									</layout:content>
 								</layout:VerticalLayout>
 								<!-- Form for custom attributes -->
@@ -67,7 +67,7 @@
 							</core:ExtensionPoint>
 						</IconTabFilter>
 						<IconTabFilter id="MIBNoteIconTabFilter" icon="sap-icon://notes" tooltip="{i18n>notes.tooltip}" count="{detail>/CommentsCount}"
-							visible="{parts: [{path: 'detail>/TaskSupports/Comments'}, {path: 'detail>/SupportsComments'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterSupportsProperty'}"
+							visible="{parts: [{path: 'detail>/TaskSupports/Comments'}, {path: 'detail>/SupportsComments'}], formatter:'.Conversions.formatterSupportsProperty'}"
 							key="NOTES">
 							<!-- Extends the note tab content -->
 							<core:ExtensionPoint name="CustomerExtensionForNoteTabContent">
@@ -76,7 +76,7 @@
 						</IconTabFilter>
 						<IconTabFilter id="MIBAttachmentIconTabFilter" icon="sap-icon://attachment" tooltip="{i18n>attachments.tooltip}"
 							count="{detail>/AttachmentsCount}"
-							visible="{parts: [{path: 'detail>/TaskSupports/Attachments'}, {path: 'detail>/SupportsAttachments'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterSupportsProperty'}"
+							visible="{parts: [{path: 'detail>/TaskSupports/Attachments'}, {path: 'detail>/SupportsAttachments'}], formatter:'.Conversions.formatterSupportsProperty'}"
 							key="ATTACHMENTS">
 							<!-- Extends the attachments tab content -->
 							<core:ExtensionPoint name="CustomerExtensionForAttachmentTabContent">
@@ -85,7 +85,7 @@
 						</IconTabFilter>
 						<IconTabFilter id="MIBObjectLinksTabFilter" icon="sap-icon://chain-link" tooltip="{i18n>relatedObjects.tooltip}"
 							count="{detail>/ObjectLinksCount}"
-							visible="{ path: 'detail>/TaskSupports/TaskObject', formatter: 'cross.fnd.fiori.inbox.Conversions.formatterVisibilityOfObjectIconTab' }"
+							visible="{ path: 'detail>/TaskSupports/TaskObject', formatter: '.Conversions.formatterVisibilityOfObjectIconTab' }"
 							key="OBJECTLINKS">
 							<core:ExtensionPoint name="CustomerExtensionForObjectLinkTabContent">
 								<core:Fragment fragmentName="cross.fnd.fiori.inbox.frag.ObjectLinks" type="XML"/>
@@ -110,14 +110,14 @@
 				<IconTabBar id="tabBarLogs" select="onLogTabSelect" visible="{= ${detail>/ShowLogPressed}}">
 					<items>
 						<IconTabFilter id="WorkflowLogIconTabFilter" text="{i18n>XBUT_WORKFLOW_LOG}" tooltip="{i18n>workflowlog.tooltip}"
-							visible="{path: 'detail>/TaskSupports/WorkflowLog', formatter: 'cross.fnd.fiori.inbox.Conversions.formatterLogTaskSupportsProperty'}"
+							visible="{path: 'detail>/TaskSupports/WorkflowLog', formatter: '.Conversions.formatterLogTaskSupportsProperty'}"
 							key="WORKFLOWLOG">
 							<content>
 								<suite:Timeline id="timelineWorkflowLog" showHeaderBar="false" enableScroll="false" growing="true"/>
 							</content>
 						</IconTabFilter>
 						<IconTabFilter id="TaskLogIconTabFilter" text="{i18n>XBUT_TASK_LOG}" tooltip="{i18n>tasklog.tooltip}"
-							visible="{path: 'detail>/TaskSupports/ProcessingLogs', formatter: 'cross.fnd.fiori.inbox.Conversions.formatterLogTaskSupportsProperty'}"
+							visible="{path: 'detail>/TaskSupports/ProcessingLogs', formatter: '.Conversions.formatterLogTaskSupportsProperty'}"
 							key="TASKLOG">
 							<content>
 								<core:ExtensionPoint name="CustomerExtensionForHistoryTabContent">
@@ -130,19 +130,19 @@
 				<IconTabBar id="tabBarDetails" expandable="false" headerMode="Inline" select="onTabSelect" visible="{= !${detail>/ShowLogPressed}}">
 					<items>
 						<IconTabFilter id="DetailsNoteIconTabFilter" text="{i18n>CommentsLabel}" tooltip="{i18n>notes.tooltip}" count="{detail>/CommentsCount}"
-							visible="{parts: [{path: 'detail>/TaskSupports/Comments'}, {path: 'detail>/SupportsComments'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterSupportsProperty'}"
+							visible="{parts: [{path: 'detail>/TaskSupports/Comments'}, {path: 'detail>/SupportsComments'}], formatter:'.Conversions.formatterSupportsProperty'}"
 							key="NOTES">
 							<core:ComponentContainer id="commentsContainerInDetails" propagateModel="true"/>
 						</IconTabFilter>
 						<IconTabFilter id="DetailsAttachmentIconTabFilter" text="{i18n>AttachmentsLabel}" tooltip="{i18n>attachments.tooltip}"
 							count="{detail>/AttachmentsCount}"
-							visible="{parts: [{path: 'detail>/TaskSupports/Attachments'}, {path: 'detail>/SupportsAttachments'}], formatter:'cross.fnd.fiori.inbox.Conversions.formatterSupportsProperty'}"
+							visible="{parts: [{path: 'detail>/TaskSupports/Attachments'}, {path: 'detail>/SupportsAttachments'}], formatter:'.Conversions.formatterSupportsProperty'}"
 							key="ATTACHMENTS">
 							<core:ComponentContainer id="attachmentComponentInDetails"/>
 						</IconTabFilter>
 						<IconTabFilter id="DetailsObjectLinksTabFilter" text="{i18n>RelatedObjectsLabel}" tooltip="{i18n>relatedObjects.tooltip}"
 							count="{detail>/ObjectLinksCount}"
-							visible="{ path: 'detail>/TaskSupports/TaskObject', formatter: 'cross.fnd.fiori.inbox.Conversions.formatterVisibilityOfObjectIconTab' }"
+							visible="{ path: 'detail>/TaskSupports/TaskObject', formatter: '.Conversions.formatterVisibilityOfObjectIconTab' }"
 							key="OBJECTLINKS">
 							<core:Fragment fragmentName="cross.fnd.fiori.inbox.frag.ObjectLinks" type="XML"/>
 						</IconTabFilter>

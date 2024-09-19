@@ -1,30 +1,28 @@
 /*
- * Copyright (C) 2009-2022 SAP SE or an SAP affiliate company. All rights reserved.
+ * Copyright (C) 2009-2023 SAP SE or an SAP affiliate company. All rights reserved.
  */
 sap.ui.define([
 	"cross/fnd/fiori/inbox/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/Device",
-	"cross/fnd/fiori/inbox/util/DataManager",
-	"cross/fnd/fiori/inbox/util/StartupParameters"
-], function (BaseController, JSONModel, Device, DataManager, StartupParameters) {
+	"cross/fnd/fiori/inbox/util/StartupParameters",
+	"sap/f/FlexibleColumnLayoutSemanticHelper",
+	"sap/f/library"
+], function (BaseController, JSONModel, Device, StartupParameters, FlexibleColumnLayoutSemanticHelper, library) {
 	"use strict";
 
 	return sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.controller.AppCustom", {
 
 		onInit: function () {
 
-			var oModel = new JSONModel();
+			var oModel = new JSONModel({
+				"oldLayout": "OneColumn"
+			});
 			this.setModel(oModel, "fcl");
 
 			// use the model for modifying and reading custom parameters
 			var oModel2 = new JSONModel();
 			this.setModel(oModel2, "parametersModel");
-
-			var oOwnerComponent = this.getOwnerComponent();
-			//Initialization of DataManager for My Inbox start up parameters and routing
-			var oDataManager = new DataManager(this);
-			oOwnerComponent.setDataManager(oDataManager);
 
 			this.oStartupParameters = StartupParameters.getInstance();
 
@@ -92,23 +90,27 @@ sap.ui.define([
 				&& typeof oMasterView.getController().iIndex === "number"
 				&& oEvent.getParameter("beginColumn")) {
 				var oTable = oMasterView.byId("table");
+
 				// eslint-disable-next-line no-unused-expressions
 				oTable.$().is(":visible") && oTable.scrollToIndex(oMasterView.getController().iIndex);
 			}
 		},
 		onBeforeRouteMatched: function (oEvent) {
-			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
 			var oModel = this.getModel("fcl");
 			var sLayout = oEvent.getParameters().arguments.layout;
 
 			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
 			if (!sLayout || !this.oStartupParameters.isFlexibleColumnLayout()) {
-				var oNextUIState = this.getOwnerComponent().getFCLHelper().getNextUIState(0);
+				var oNextUIState = this.getFCLHelper().getNextUIState(0);
 				sLayout = oNextUIState.layout;
 			}
 
 			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
+				//Store the previous layout
+				oModel.setProperty("/oldLayout", oModel.getProperty("/layout"));
+
+				//Store the new Layout
 				oModel.setProperty("/layout", sLayout);
 			}
 		},
@@ -181,7 +183,11 @@ sap.ui.define([
 		_updateUIElements: function () {
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
 			var oModel = this.getModel("fcl");
-			var oUIState = this.getOwnerComponent().getFCLHelper().getCurrentUIState();
+			var oUIState = this.getFCLHelper().getCurrentUIState();
+
+			//Store the oldLayout
+			oUIState.oldLayout = oModel.getProperty("/oldLayout");
+
 			oModel.setData(oUIState);
 		},
 
@@ -189,6 +195,23 @@ sap.ui.define([
 			this.oRouter.detachRouteMatched(this.onRouteMatched, this);
 			this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
 			this.oStartupParameters.destroy();
+		},
+
+		/**
+		 * Returns an instance of the semantic helper. With this helper control buttons and layout of flexible column layout.
+		 *
+		 * @returns {sap.f.FlexibleColumnLayoutSemanticHelper} An instance of the semantic helper
+		 */
+		getFCLHelper: function () {
+			var oFCL = this.byId("fcl"),
+				//oParams = new UriParameters(window.location.href),
+				oSettings = {
+					defaultTwoColumnLayoutType: library.LayoutType.TwoColumnsMidExpanded,
+					defaultThreeColumnLayoutType: library.LayoutType.ThreeColumnsMidExpanded
+					//initialColumnsCount: oParams.get("initial") can be used for initial opening of 2 columns for master detail view
+				};
+
+			return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
 		}
 	});
 

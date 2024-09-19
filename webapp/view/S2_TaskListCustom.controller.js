@@ -52,7 +52,7 @@ sap.ui.define([
 	const I18N_CUSTOM_PREFIX = "custom.meli.";
 	const C_ARIBA = 'ARIBA_TGW';
 
-	BaseController.extend("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
+	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 		
 		Conversions: Conversions,
 		Resubmit: ResubmitPopUp,

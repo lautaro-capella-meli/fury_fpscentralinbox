@@ -1,49 +1,76 @@
+/*
+ * Copyright (C) 2009-2022 SAP SE or an SAP affiliate company. All rights reserved.
+ */
 sap.ui.define([
 	"cross/fnd/fiori/inbox/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/Device",
 	"cross/fnd/fiori/inbox/util/DataManager",
 	"cross/fnd/fiori/inbox/util/StartupParameters"
-], function (BaseController /* B */, JSONModel /* J */, Device /* D */, DataManager /* a */,
-	StartupParameters /* S */) {
+], function (BaseController, JSONModel, Device, DataManager, StartupParameters) {
 	"use strict";
+
 	return sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.controller.AppCustom", {
+
 		onInit: function () {
-			var oFclModel = new JSONModel();
-			this.setModel(oFclModel, "fcl");
-			var oParametersModel = new JSONModel();
-			this.setModel(oParametersModel, "parametersModel");
-			var oComponent = this.getOwnerComponent();
+
+			var oModel = new JSONModel();
+			this.setModel(oModel, "fcl");
+
+			// use the model for modifying and reading custom parameters
+			var oModel2 = new JSONModel();
+			this.setModel(oModel2, "parametersModel");
+
+			var oOwnerComponent = this.getOwnerComponent();
+			//Initialization of DataManager for My Inbox start up parameters and routing
 			var oDataManager = new DataManager(this);
-			console.log("#### App DataManager", oDataManager);
-			console.log("#### App StartupParameters", StartupParameters);
-			oComponent.setDataManager(oDataManager);
+			oOwnerComponent.setDataManager(oDataManager);
+
 			this.oStartupParameters = StartupParameters.getInstance();
 
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
 
 			if (this.oStartupParameters.isModeActive()) {
-				var oAppViewModel;
-				var iDelay = this.getView().getBusyIndicatorDelay();
-				oAppViewModel = new JSONModel({
+				var oViewModel,
+					iOriginalBusyDelay = this.getView().getBusyIndicatorDelay();
+
+				oViewModel = new JSONModel({
 					busy: true,
-					delay: iDelay
+					delay: iOriginalBusyDelay
 				});
-				this.setModel(oAppViewModel, "appView");
+				this.setModel(oViewModel, "appView");
+
 				var oErrorHandler = this.getOwnerComponent().getErrorHandler();
-				var fHandleMetadataLoad = function (bErrorOnMetadataLoad) {
-					oErrorHandler.setIsMetadataLoadedFailed(bErrorOnMetadataLoad);
-					oAppViewModel.setProperty("/busy", false);
-					oAppViewModel.setProperty("/delay", iDelay);
+
+				// handle busy App state when model metadata is returned
+				// extending functionality to set loaded state of the APP
+				var fnSetAppNotBusy = function (bIsFailed) {
+					oErrorHandler.setIsMetadataLoadedFailed(bIsFailed);
+
+					oViewModel.setProperty("/busy", false);
+					oViewModel.setProperty("/delay", iOriginalBusyDelay);
 				};
-				this.getOwnerComponent().getModel().metadataLoaded().then(fHandleMetadataLoad.bind(this, false));
-				this.getOwnerComponent().getModel().attachMetadataFailed(fHandleMetadataLoad.bind(this, true));
-				var bIsMetadataLoadedFailed = oErrorHandler.getIsMetadataLoadedFailed();
-				if (bIsMetadataLoadedFailed) {
-					fHandleMetadataLoad(bIsMetadataLoadedFailed);
+
+				// disable busy indication when the metadata is loaded and in case of errors
+				this.getOwnerComponent()
+					.getModel()
+					.metadataLoaded()
+					.then(fnSetAppNotBusy.bind(this, false));
+
+				// this callback will be called only when the app work synchronously
+				this.getOwnerComponent()
+					.getModel()
+					.attachMetadataFailed(fnSetAppNotBusy.bind(this, true));
+
+				// this check is only valid only when the app work asynchronously
+				// bIsMetadataFailed will be null in async execution
+				var bIsMetadataFailed = oErrorHandler.getIsMetadataLoadedFailed();
+				if (bIsMetadataFailed) {
+					fnSetAppNotBusy(bIsMetadataFailed);
 				}
 			}
-			console.log("#### App getContentDensityClass", this.getOwnerComponent().getContentDensityClass());
+
+			// apply content density mode to root view
 			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -53,61 +80,91 @@ sap.ui.define([
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
 		},
 
-		onAfterRendering: function (e) {
+		onAfterRendering: function (oEvent) {
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
 		},
-
-		onColumnResize: function (e) {
+		onColumnResize: function (oEvent) {
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
-			var oBeginColumnPage = e.getSource().getBeginColumnPages()[0];
-			if (oBeginColumnPage
-				&& typeof oBeginColumnPage.getController().iIndex === "number"
-				&& e.getParameter("beginColumn")) {
-				var oTable = oBeginColumnPage.byId("table");
-				oTable.$().is(":visible") && oTable.scrollToIndex(oBeginColumnPage.getController().iIndex);
+			// This event is ideal to call scrollToIndex function of the Table
+			var oMasterView = oEvent.getSource().getBeginColumnPages()[0];
+
+			if (oMasterView
+				&& typeof oMasterView.getController().iIndex === "number"
+				&& oEvent.getParameter("beginColumn")) {
+				var oTable = oMasterView.byId("table");
+				// eslint-disable-next-line no-unused-expressions
+				oTable.$().is(":visible") && oTable.scrollToIndex(oMasterView.getController().iIndex);
 			}
 		},
-
-		onBeforeRouteMatched: function (e) {
+		onBeforeRouteMatched: function (oEvent) {
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
-			var oFclModel = this.getModel("fcl");
-			var sLayout = e.getParameters().arguments.layout;
+			var oModel = this.getModel("fcl");
+			var sLayout = oEvent.getParameters().arguments.layout;
+
+			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
 			if (!sLayout || !this.oStartupParameters.isFlexibleColumnLayout()) {
-				var oNextUiState = this.getOwnerComponent().getFCLHelper().getNextUIState(0);
-				sLayout = oNextUiState.layout;
+				var oNextUIState = this.getOwnerComponent().getFCLHelper().getNextUIState(0);
+				sLayout = oNextUIState.layout;
 			}
+
+			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
-				oFclModel.setProperty("/layout", sLayout);
+				oModel.setProperty("/layout", sLayout);
 			}
 		},
 
-		onRouteMatched: function (e) {
+		/**
+		 * Stores properties neeeded for further actions and update UIs.
+		 *
+		 * @param {sap.ui.base.Event} oEvent router attachPatternMatched event
+		 */
+		onRouteMatched: function (oEvent) {
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
-			var sName = e.getParameter("name");
-			var oArgs = e.getParameter("arguments");
+			var sRouteName = oEvent.getParameter("name");
+			var oArguments = oEvent.getParameter("arguments");
+
 			this._updateUIElements();
-			this.currentRouteName = sName;
-			this.SAP__Origin = decodeURIComponent(oArgs.SAP__Origin);
-			this.InstanceID = decodeURIComponent(oArgs.InstanceID);
+
+			// Save the current route name
+			this.currentRouteName = sRouteName;
+			// eslint-disable-next-line camelcase
+			this.SAP__Origin = decodeURIComponent(oArguments.SAP__Origin);
+			this.InstanceID = decodeURIComponent(oArguments.InstanceID);
 		},
 
-		onStateChanged: function (e) {
+		/**
+		 * Function to control buttons when using arrows for resizing the columns or browser window resizing.
+		 *
+		 * @param {sap.ui.base.Event} oEvent Event from flexible column layout, when state is changed
+		 */
+		onStateChanged: function (oEvent) {
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
-			var bIsNavigationArrow = e.getParameter("isNavigationArrow");
-			var sLayout = e.getParameter("layout");
-			var bIsNotPhone = !Device.system.phone;
+			var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow");
+			var sLayout = oEvent.getParameter("layout");
+			var bReplaceHistory = !Device.system.phone;
+
 			this._updateUIElements();
+
+			// Replace the URL with the new layout if a navigation arrow was used
 			if (bIsNavigationArrow) {
+				//unpress Show Log and Show Details buttons, when latest column is hidden
 				if (sLayout === "ThreeColumnsMidExpandedEndHidden") {
 					this.getModel("parametersModel").setProperty("/showLogButtonPressed", false);
 					this.getModel("parametersModel").setProperty("/showDetailsButtonPressed", false);
 				}
+				//method navTo results in the right hash, whenever there is "oComponentTargetInfo" that is other than an empty object
+				//it works with empty string or dummyObject with dummy data
+
+				// eslint-disable-next-line camelcase
 				this.oRouter.navTo(this.currentRouteName, {
 					SAP__Origin: encodeURIComponent(this.SAP__Origin),
 					InstanceID: encodeURIComponent(this.InstanceID),
 					layout: sLayout
-				}, { dummyProperty: "dummyValue" }, bIsNotPhone);
+				},
+					{ dummyProperty: "dummyValue" }, bReplaceHistory);
+
 			}
+			//Show Log button or Show Details should be pressed(visual representation is with blue background) when third columns is opened
 			if (sLayout === "ThreeColumnsMidExpanded") {
 				if (this.currentRouteName === "myTasksDetailDetail") {
 					this.getModel("parametersModel").setProperty("/showLogButtonPressed", true);
@@ -118,11 +175,14 @@ sap.ui.define([
 			}
 		},
 
+		/**
+		 * Update the close/fullscreen buttons visibility.
+		 */
 		_updateUIElements: function () {
 			sap.ushell.services.AppConfiguration.setApplicationFullWidth(true);
-			var oFclModel = this.getModel("fcl");
-			var oCurrentUIState = this.getOwnerComponent().getFCLHelper().getCurrentUIState();
-			oFclModel.setData(oCurrentUIState);
+			var oModel = this.getModel("fcl");
+			var oUIState = this.getOwnerComponent().getFCLHelper().getCurrentUIState();
+			oModel.setData(oUIState);
 		},
 
 		onExit: function () {
@@ -131,4 +191,6 @@ sap.ui.define([
 			this.oStartupParameters.destroy();
 		}
 	});
-});
+
+}
+);

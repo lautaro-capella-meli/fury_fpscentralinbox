@@ -53,7 +53,7 @@ sap.ui.define([
 	const C_ARIBA = 'ARIBA_TGW';
 
 	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
-		
+
 		Conversions: Conversions,
 		Resubmit: ResubmitPopUp,
 
@@ -166,11 +166,6 @@ sap.ui.define([
 						if (oTaskDefinitionFilter)
 							aFilters.push(oTaskDefinitionFilter);
 
-						const oFilter = new Filter({
-							filters: aFilters,
-							and: true
-						});
-
 						let oCurrentSorter = this._getCurrentSorter();
 						let oSelect = this._getTaskPropertiesToFetch().join(",");
 
@@ -179,6 +174,16 @@ sap.ui.define([
 							ProviderSystemModel.forEach((ProviderSystem) => {
 								let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
 								let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
+
+								const oSAPOriginFilter = this._getSAPOriginFilters(ProviderSystem.SAP__Origin);
+
+								if (oSAPOriginFilter)
+									aFilters.push(oSAPOriginFilter);
+
+								const oFilter = new Filter({
+									filters: aFilters,
+									and: true
+								});
 
 								let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
 									useBatch: false
@@ -209,6 +214,10 @@ sap.ui.define([
 
 					}.bind(this));
 			}.bind(this));
+		},
+
+		_getSAPOriginFilters: function (sSAPOrigin) {
+			return new Filter("SAP__Origin", FilterOperator.EQ, sSAPOrigin);
 		},
 
 		_retrieveTasksByChunks: function (oRequestConfiguration, pDataModel, ProviderSystem, iTaskCount) {

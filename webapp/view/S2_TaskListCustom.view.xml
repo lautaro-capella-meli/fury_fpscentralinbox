@@ -157,7 +157,7 @@
 													<HBox class="sapUiTinyMarginTop">
 														<ObjectStatus id="statusTxtInline" class="sapUiTinyMarginEnd"
 															text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Status'}], formatter:'.Conversions.formatterStatus'}"
-															state="Information"
+															state="None"
 															inverted="true"/>
 														<ObjectStatus id="PriorityTxtInline" class="sapUiTinyMarginEnd"
 															text="{parts: [{path: 'taskList>SAP__Origin'}, {path: 'taskList>Priority'}], formatter:'.Conversions.formatterPriority'}"

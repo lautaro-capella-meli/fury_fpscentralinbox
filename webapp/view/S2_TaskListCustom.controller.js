@@ -177,11 +177,8 @@ sap.ui.define([
 
 								const oSAPOriginFilter = this._getSAPOriginFilters(ProviderSystem.SAP__Origin);
 
-								if (oSAPOriginFilter)
-									aFilters.push(oSAPOriginFilter);
-
 								const oFilter = new Filter({
-									filters: aFilters,
+									filters: [...aFilters, oSAPOriginFilter],
 									and: true
 								});
 

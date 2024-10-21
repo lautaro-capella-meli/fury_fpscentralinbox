@@ -51,6 +51,8 @@ sap.ui.define([
 	let ButtonType = library.ButtonType;
 	const I18N_CUSTOM_PREFIX = "custom.meli.";
 	const C_ARIBA = 'ARIBA_TGW';
+	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
+	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 
 	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
@@ -277,7 +279,8 @@ sap.ui.define([
 			}
 		},
 
-		onSuccessTaskCollectionRequest: function ([oData, oResponse]) {
+		onSuccessTaskCollectionRequest: async function ([oData, oResponse]) {
+			var validFirstAprovName;
 			if (oResponse.statusCode != 200)
 				return MessageToast.show(oResponse.statusText + ":" + oResponse.body);
 
@@ -287,6 +290,18 @@ sap.ui.define([
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 				aTasks = this._dataMassage(oData.results);
 
+				// To remove PR above with firstAprovalName 'Buyer Procurement Desk Agent'
+				for (let i = aTasks.length - 1; i >= 0; i--) {
+					
+					if(aTasks[i].SAP__Origin === C_ARIBA){
+						validFirstAprovName = await this._validFirtsApproverName(aTasks[i]);
+
+						if(validFirstAprovName){
+							aTasks.splice(i,1);
+						}
+					}
+					
+				}
 
 			// Add tasks to taskList model
 			let aTaskListModel = this.getView().getModel("taskList");
@@ -377,6 +392,15 @@ sap.ui.define([
 			oTaskListData.allTasks.tasks = [...aTasks];
 
 			return oTaskListData;
+		},
+
+		_validFirtsApproverName: function(oTask){
+			var oValid = false;
+			var aTask = oTask.CustomAttributeData.results.filter((task) => task.Name === C_FIRST_APROV_NAME);
+			if(aTask[0].Value === C_FIRST_APROV_NAME_VALUE) {
+				oValid = true;
+			}
+			return oValid;
 		},
 
 		_createTabFilters: function (oTaskListData) {

@@ -74,6 +74,12 @@
 				hAlign="Begin">
 				<m:Text text="{i18n>custom.meli.S3_ListItem.generalLeger}" />
 			</m:Column>
+			<m:Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Begin">
+				<m:Text text="{i18n>custom.meli.S3_ListItem.PaymentTerm}" />
+			</m:Column>
 		</m:columns>
 		<m:items>
 			<m:ColumnListItem vAlign="Middle">
@@ -120,6 +126,8 @@
 						text="{= ${LineItemModel>AccountingSet}.results.length > 0  ? ${LineItemModel>AccountingSet}.results[0].costCenter.concat(' - ', ${LineItemModel>AccountingSet}.results[0].costCenterDescription) : '' }" />
 					<m:Text
 						text="{= ${LineItemModel>AccountingSet}.results.length > 0  ? ${LineItemModel>AccountingSet}.results[0].generalLedger.concat(' - ', ${LineItemModel>AccountingSet}.results[0].generalLedgerDescription) : '' }" />
+					<m:Text
+						text="{LineItemModel>PaymentTerms}" />
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

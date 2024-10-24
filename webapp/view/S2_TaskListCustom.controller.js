@@ -405,27 +405,28 @@ sap.ui.define([
 
 		_createTabFilters: function (oTaskListData) {
 
+			// Se define que no quieren ICON TAB de totales (ALL)
 			/// MAIN > ALL TASKS ///
-			const oAllTasksIconTabFilter = new sap.m.IconTabFilter({
-				key: "ALL",
-				text: this._getI18nCustomText("All"),
-				showAll: true,
-				count: oTaskListData.allTasks.count
-			});
-			this._oMainIconTabBar.addItem(oAllTasksIconTabFilter);
-			this._oGroupsMap.set(oAllTasksIconTabFilter, oTaskListData.allTasks);
+			// const oAllTasksIconTabFilter = new sap.m.IconTabFilter({
+			// 	key: "ALL",
+			// 	text: this._getI18nCustomText("All"),
+			// 	showAll: true,
+			// 	count: oTaskListData.allTasks.count
+			// });
+			// this._oMainIconTabBar.addItem(oAllTasksIconTabFilter);
+			// this._oGroupsMap.set(oAllTasksIconTabFilter, oTaskListData.allTasks);
 
-			/// SUB > ALL TASKS ///
-			const oAllSubIconTabFilter = new sap.m.IconTabFilter({
-				key: "ALL",
-				text: this._getI18nCustomText("All")
-			});
-			this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
-			this._oGroupsMap.set(oAllSubIconTabFilter, oTaskListData.allTasks);
+			// /// SUB > ALL TASKS ///
+			// const oAllSubIconTabFilter = new sap.m.IconTabFilter({
+			// 	key: "ALL",
+			// 	text: this._getI18nCustomText("All")
+			// });
+			// this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
+			// this._oGroupsMap.set(oAllSubIconTabFilter, oTaskListData.allTasks);
 
 			if (Object.keys(oTaskListData.bySource).length) {
 				/// MAIN > |SEPARATOR| ///
-				this._oMainIconTabBar.addItem(new sap.m.IconTabSeparator);
+				// this._oMainIconTabBar.addItem(new sap.m.IconTabSeparator);
 
 				for (const sSource in oTaskListData.bySource) {
 					const oTaskGroupBySource = oTaskListData.bySource[sSource];
@@ -461,6 +462,8 @@ sap.ui.define([
 						this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinition);
 					}
 				}
+				this.getView().getModel("taskList").setProperty("/TaskCollection", {});
+				this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks);
 			}
 
 			/* //Definieron que no querían estos Iconos 25/04/2024

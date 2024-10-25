@@ -66,14 +66,6 @@
 								</form:Form>
 							</core:ExtensionPoint>
 						</IconTabFilter>
-						<IconTabFilter id="MIBNoteIconTabFilter" icon="sap-icon://notes" tooltip="{i18n>notes.tooltip}" count="{detail>/CommentsCount}"
-							visible="{parts: [{path: 'detail>/TaskSupports/Comments'}, {path: 'detail>/SupportsComments'}], formatter:'.Conversions.formatterSupportsProperty'}"
-							key="NOTES">
-							<!-- Extends the note tab content -->
-							<core:ExtensionPoint name="CustomerExtensionForNoteTabContent">
-								<core:ComponentContainer id="commentsContainer" propagateModel="true"/>
-							</core:ExtensionPoint>
-						</IconTabFilter>
 						<IconTabFilter id="MIBAttachmentIconTabFilter" icon="sap-icon://attachment" tooltip="{i18n>attachments.tooltip}"
 							count="{detail>/AttachmentsCount}"
 							visible="{parts: [{path: 'detail>/TaskSupports/Attachments'}, {path: 'detail>/SupportsAttachments'}], formatter:'.Conversions.formatterSupportsProperty'}"
@@ -81,6 +73,14 @@
 							<!-- Extends the attachments tab content -->
 							<core:ExtensionPoint name="CustomerExtensionForAttachmentTabContent">
 								<core:ComponentContainer id="attachmentComponent"/>
+							</core:ExtensionPoint>
+						</IconTabFilter>
+						<IconTabFilter id="MIBNoteIconTabFilter" icon="sap-icon://notes" tooltip="{i18n>notes.tooltip}" count="{detail>/CommentsCount}"
+							visible="{parts: [{path: 'detail>/TaskSupports/Comments'}, {path: 'detail>/SupportsComments'}], formatter:'.Conversions.formatterSupportsProperty'}"
+							key="NOTES">
+							<!-- Extends the note tab content -->
+							<core:ExtensionPoint name="CustomerExtensionForNoteTabContent">
+								<core:ComponentContainer id="commentsContainer" propagateModel="true"/>
 							</core:ExtensionPoint>
 						</IconTabFilter>
 						<IconTabFilter id="MIBObjectLinksTabFilter" icon="sap-icon://chain-link" tooltip="{i18n>relatedObjects.tooltip}"

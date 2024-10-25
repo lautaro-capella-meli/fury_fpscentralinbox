@@ -279,7 +279,7 @@ sap.ui.define([
 			}
 		},
 
-		onSuccessTaskCollectionRequest: async function ([oData, oResponse]) {
+		onSuccessTaskCollectionRequest: function ([oData, oResponse]) {
 			var validFirstAprovName;
 			if (oResponse.statusCode != 200)
 				return MessageToast.show(oResponse.statusText + ":" + oResponse.body);
@@ -294,7 +294,7 @@ sap.ui.define([
 				for (let i = aTasks.length - 1; i >= 0; i--) {
 					
 					if(aTasks[i].SAP__Origin === C_ARIBA){
-						validFirstAprovName = await this._validFirtsApproverName(aTasks[i]);
+						validFirstAprovName = this._validFirtsApproverName(aTasks[i]);
 
 						if(validFirstAprovName){
 							aTasks.splice(i,1);

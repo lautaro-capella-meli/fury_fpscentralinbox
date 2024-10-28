@@ -51,6 +51,9 @@ sap.ui.define([
 	let ButtonType = library.ButtonType;
 	const I18N_CUSTOM_PREFIX = "custom.meli.";
 	const C_ARIBA = 'ARIBA_TGW';
+	const C_MENDEL = "MENDEL_TGW";
+	const C_CONCUR = "CONCUR_TGW";
+	const C_CONCUR_MENDEL = "CONCUR_MENDEL_TGW";
 	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 
@@ -424,12 +427,14 @@ sap.ui.define([
 			// this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
 			// this._oGroupsMap.set(oAllSubIconTabFilter, oTaskListData.allTasks);
 
-			if (Object.keys(oTaskListData.bySource).length) {
+			var oNewTaskListData = this._oCreateNewTaskListData(oTaskListData);
+
+			if (Object.keys(oNewTaskListData.bySource).length) {
 				/// MAIN > |SEPARATOR| ///
 				// this._oMainIconTabBar.addItem(new sap.m.IconTabSeparator);
 
-				for (const sSource in oTaskListData.bySource) {
-					const oTaskGroupBySource = oTaskListData.bySource[sSource];
+				for (const sSource in oNewTaskListData.bySource) {
+					const oTaskGroupBySource = oNewTaskListData.bySource[sSource];
 					/// MAIN > (EACH) SOURCE ///
 					const oBySourceIconTabFilter = new sap.m.IconTabFilter({
 						key: "bySource__" + sSource,
@@ -465,6 +470,7 @@ sap.ui.define([
 				this.getView().getModel("taskList").setProperty("/TaskCollection", {});
 				this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks);
 			}
+			this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks);
 
 			/* //Definieron que no querían estos Iconos 25/04/2024
 			/// MAIN > |SEPARATOR| ///
@@ -542,6 +548,51 @@ sap.ui.define([
 			this._oMainIconTabBar.addItem(oNewMainIconTabFilter);
 			this._oGroupsMap.set(oNewMainIconTabFilter, oTaskListData.withCompletionDeadLine);
 			*/
+		},
+
+		_oCreateNewTaskListData: function(oTasklistData) {
+			var oNewBySource = {};
+          
+			var oCombinedTaskConcurMendelData = {
+				count: 0,
+				tasks: [],
+				byTaskDefinition: {},
+			};
+
+			var oNewTaskListData = {
+				allTask: {},
+				bySource: {}
+			}
+
+			if(Object.keys(oTasklistData.bySource).length > 0){
+
+				for (const [oSourceKey, oSourceData] of Object.entries(oTasklistData.bySource)) {
+					if(oSourceKey === C_MENDEL || oSourceKey === C_CONCUR) {
+						oCombinedTaskConcurMendelData.count += oSourceData.count;
+						oCombinedTaskConcurMendelData.tasks = oCombinedTaskConcurMendelData.tasks.concat(oSourceData.tasks);
+
+						for (const [oDefKey, oDefData] of Object.entries(oSourceData.byTaskDefinition)) {
+							if(!oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey]){
+								oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey] = { ...oDefData };
+							} else {
+								oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey].count += oDefData.count;
+								oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey].tasks = oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey].tasks.concat(oDefData.tasks);
+							};
+						}
+					} else {
+						oNewBySource[oSourceKey] = oSourceData;
+					};
+				}
+
+				oNewBySource[C_CONCUR_MENDEL] = oCombinedTaskConcurMendelData;
+
+				oNewTaskListData = {
+					...oTasklistData,
+					bySource: oNewBySource
+				};
+			};
+
+			return oNewTaskListData;
 		},
 
 		_initTabBars: function () {

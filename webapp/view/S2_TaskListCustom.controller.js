@@ -584,8 +584,10 @@ sap.ui.define([
 					};
 				}
 
-				oNewBySource[C_CONCUR_MENDEL] = oCombinedTaskConcurMendelData;
-
+				if(oCombinedTaskConcurMendelData.count > 0) {
+					oNewBySource[C_CONCUR_MENDEL] = oCombinedTaskConcurMendelData;
+				};
+				
 				oNewTaskListData = {
 					...oTasklistData,
 					bySource: oNewBySource

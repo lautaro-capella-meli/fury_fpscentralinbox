@@ -427,14 +427,14 @@ sap.ui.define([
 			// this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
 			// this._oGroupsMap.set(oAllSubIconTabFilter, oTaskListData.allTasks);
 
-			var oNewTaskListData = this._oCreateNewTaskListData(oTaskListData);
+			// var oNewTaskListData = this._oCreateNewTaskListData(oTaskListData);
 
-			if (Object.keys(oNewTaskListData.bySource).length) {
+			if (Object.keys(oTaskListData.bySource).length) {
 				/// MAIN > |SEPARATOR| ///
 				// this._oMainIconTabBar.addItem(new sap.m.IconTabSeparator);
 
-				for (const sSource in oNewTaskListData.bySource) {
-					const oTaskGroupBySource = oNewTaskListData.bySource[sSource];
+				for (const sSource in oTaskListData.bySource) {
+					const oTaskGroupBySource = oTaskListData.bySource[sSource];
 					/// MAIN > (EACH) SOURCE ///
 					const oBySourceIconTabFilter = new sap.m.IconTabFilter({
 						key: "bySource__" + sSource,

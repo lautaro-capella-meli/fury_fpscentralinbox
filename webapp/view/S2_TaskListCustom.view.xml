@@ -90,6 +90,12 @@
 												<Label id="priorityLbl" text="{i18n>group.priority}"/>
 											</header>
 										</Column>
+										<!-- USD_CURRENCY -->
+										<!-- <Column hAlign="End" id="currencyUsdColumn" minScreenWidth="30rem" demandPopin="true" popinDisplay="Inline">
+											<header>
+												<Label id="currencyUsdLbl" text="{i18n>custom.meli.Labels.UsdCurrency}"/>
+											</header>
+										</Column> -->
 										<!-- Created By -->
 										<Column hAlign="Begin" id="createdByColumn" minScreenWidth="40rem" demandPopin="true" popinDisplay="Inline">
 											<header>
@@ -186,6 +192,9 @@
 												<!-- Confidence Level -->
 												<!-- <Text class="sapMTableContentMargin" id="confidenceLevelTxt" maxLines="2" textAlign="Right"
 													text="{parts: [{path: 'taskList>ConfidenceLevel'},{value: 'percentFormat'}], formatter:'.Conversions.confidenceLevelFormatter'}"/> -->
+												<!-- currency USD -->
+												<!-- <Text class="sapMTableContentMargin" id="CurrencyUsdTxt" maxLines="2"
+													text="{path: 'taskList>USD_CURRENCY'}"/> -->
 												<!-- Created On -->
 												<Text class="sapMTableContentMargin" id="CreatedOnTxt" maxLines="2" textAlign="Right"
 													text="{path: 'taskList>CreatedOn', formatter:'.Conversions.formatterDate'}"/>

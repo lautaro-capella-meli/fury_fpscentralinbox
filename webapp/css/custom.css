@@ -9,3 +9,9 @@
 .meliCustomRemoveIconTabBarMarginTop {
     margin-top: -0.25rem;
 }
+.sapMListTblSubCntRowInline {
+	display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

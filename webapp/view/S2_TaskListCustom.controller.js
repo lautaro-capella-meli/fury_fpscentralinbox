@@ -442,6 +442,7 @@ sap.ui.define([
 						icon: this._getI18nCustomText(`Source.${sSource}.Icon`),
 						count: oTaskGroupBySource.count
 					});
+					oBySourceIconTabFilter.setTooltip(this._getI18nCustomText(`Source.${sSource}`));
 					this._oMainIconTabBar.addItem(oBySourceIconTabFilter);
 					this._oGroupsMap.set(oBySourceIconTabFilter, oTaskGroupBySource);
 
@@ -733,6 +734,14 @@ sap.ui.define([
 				this._oResourceBundle.getText("ITEMS_SCENARIO_DISPLAY_NAME"));
 
 			oTaskListViewModel.setProperty("/noDataText", this._oResourceBundle.getText("view.Workflow.noDataTasks"));
+
+			// const spans = Array.from(document.querySelectorAll("span")).filter((span) => span.id.includes("USD_CURRENCYTxt-__clone"));
+
+			// if(spans){
+			// 	spans.forEach((span) => {
+			// 		span.parentNode.style["text-align"] = "end"
+			// 	});
+			// };
 		},
 
 		_refreshTask: function (channelId, eventId, data) {

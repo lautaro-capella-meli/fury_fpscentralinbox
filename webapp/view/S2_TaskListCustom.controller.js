@@ -735,13 +735,30 @@ sap.ui.define([
 
 			oTaskListViewModel.setProperty("/noDataText", this._oResourceBundle.getText("view.Workflow.noDataTasks"));
 
-			// const spans = Array.from(document.querySelectorAll("span")).filter((span) => span.id.includes("USD_CURRENCYTxt-__clone"));
+			const oColumns = this.getView().byId("taskListTable").getColumns();
+			if(oColumns){
+				const UsdCurrencyAlign = oColumns.filter((field) => field.sId.includes("USD_CURRENCY"));
+				if(UsdCurrencyAlign.length > 0) {
+					UsdCurrencyAlign.forEach((column) => {
+						column.setHAlign("Right");
+					})
+				}
 
-			// if(spans){
-			// 	spans.forEach((span) => {
-			// 		span.parentNode.style["text-align"] = "end"
-			// 	});
-			// };
+				const priceAlign = oColumns.filter((field) => field.sId.includes("PRICE"));
+				if(priceAlign.length > 0) {
+					priceAlign.forEach((column) => {
+						column.setHAlign("Right");
+					})
+				}
+
+				const totalValueAlign = oColumns.filter((field) => field.sId.includes("MENDEL_EXPTOTAL"));
+				if(totalValueAlign.length > 0) {
+					totalValueAlign.forEach((column) => {
+						column.setHAlign("Right");
+					})
+				}
+
+			}
 		},
 
 		_refreshTask: function (channelId, eventId, data) {

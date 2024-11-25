@@ -138,7 +138,7 @@ sap.ui.define([
 
 
 
-		_initTaskModel: function () {
+		_initTaskModel: async function () {
 			let vGetData = true;
 
 			// Get Task count
@@ -161,61 +161,61 @@ sap.ui.define([
 			});
 			this.getView().setModel(aTaskListModel, "taskList");
 
-			this.getProviderSystem(function (ProviderSystemModel) {
-				// set up Request configuration
+			const [ProviderSystemData, _dummy] = await Promise.all([
+				this.getProviderSystem(),
 				this.fnAddAditionalSelectPropertiesAndInitBinding()
-					.then(function () {
-						const aFilters = [this._getinitialStatusFilters()];
-						const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
+			]);
 
-						if (oTaskDefinitionFilter)
-							aFilters.push(oTaskDefinitionFilter);
+			// set up Request configuration
 
-						let oCurrentSorter = this._getCurrentSorter();
-						let oSelect = this._getTaskPropertiesToFetch().join(",");
+			const aFilters = [this._getinitialStatusFilters()];
+			const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
 
-						if (vGetData) {
-							vGetData = false;
-							ProviderSystemModel.forEach((ProviderSystem) => {
-								let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
-								let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
+			if (oTaskDefinitionFilter)
+				aFilters.push(oTaskDefinitionFilter);
 
-								const oSAPOriginFilter = this._getSAPOriginFilters(ProviderSystem.SAP__Origin);
+			let oCurrentSorter = this._getCurrentSorter();
+			let oSelect = this._getTaskPropertiesToFetch().join(",");
 
-								const oFilter = new Filter({
-									filters: [...aFilters, oSAPOriginFilter],
-									and: true
-								});
+			if (vGetData) {
+				vGetData = false;
+				ProviderSystemData.forEach((ProviderSystem) => {
+					let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+					let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
 
-								let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
-									useBatch: false
-								});
+					const oSAPOriginFilter = this._getSAPOriginFilters(ProviderSystem.SAP__Origin);
 
-								const oRequestConfiguration = {
-									filters: [oFilter],
-									sorters: ProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
-									success: this.onSuccessTaskCollectionRequest.bind(this),
-									urlParameters: {
-										$select: oSelect
-									}
-								};
+					const oFilter = new Filter({
+						filters: [...aFilters, oSAPOriginFilter],
+						and: true
+					});
 
-								if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
-									oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
+					let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
+						useBatch: false
+					});
 
-								oModel.read("/TaskCollection/$count", {
-									filters: [oFilter],
-									success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
-									error: function (oError) {
-										return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
-									},
-								});
-							});
+					const oRequestConfiguration = {
+						filters: [oFilter],
+						sorters: ProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
+						success: this.onSuccessTaskCollectionRequest.bind(this),
+						urlParameters: {
+							$select: oSelect
 						}
+					};
 
+					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
+						oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
 
-					}.bind(this));
-			}.bind(this));
+					oModel.read("/TaskCollection/$count", {
+						filters: [oFilter],
+						success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
+						error: function (oError) {
+							return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
+						},
+					});
+				});
+			}
+
 		},
 
 		_getSAPOriginFilters: function (sSAPOrigin) {
@@ -293,18 +293,18 @@ sap.ui.define([
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 				aTasks = this._dataMassage(oData.results);
 
-				// To remove PR above with firstAprovalName 'Buyer Procurement Desk Agent'
-				for (let i = aTasks.length - 1; i >= 0; i--) {
-					
-					if(aTasks[i].SAP__Origin === C_ARIBA){
-						validFirstAprovName = this._validFirtsApproverName(aTasks[i]);
+			// To remove PR above with firstAprovalName 'Buyer Procurement Desk Agent'
+			for (let i = aTasks.length - 1; i >= 0; i--) {
 
-						if(validFirstAprovName){
-							aTasks.splice(i,1);
-						}
+				if (aTasks[i].SAP__Origin === C_ARIBA) {
+					validFirstAprovName = this._validFirtsApproverName(aTasks[i]);
+
+					if (validFirstAprovName) {
+						aTasks.splice(i, 1);
 					}
-					
 				}
+
+			}
 
 			// Add tasks to taskList model
 			let aTaskListModel = this.getView().getModel("taskList");
@@ -397,10 +397,10 @@ sap.ui.define([
 			return oTaskListData;
 		},
 
-		_validFirtsApproverName: function(oTask){
+		_validFirtsApproverName: function (oTask) {
 			var oValid = false;
 			var aTask = oTask.CustomAttributeData.results.filter((task) => task.Name === C_FIRST_APROV_NAME);
-			if(aTask[0].Value === C_FIRST_APROV_NAME_VALUE) {
+			if (aTask[0].Value === C_FIRST_APROV_NAME_VALUE) {
 				oValid = true;
 			}
 			return oValid;
@@ -551,9 +551,9 @@ sap.ui.define([
 			*/
 		},
 
-		_oCreateNewTaskListData: function(oTasklistData) {
+		_oCreateNewTaskListData: function (oTasklistData) {
 			var oNewBySource = {};
-          
+
 			var oCombinedTaskConcurMendelData = {
 				count: 0,
 				tasks: [],
@@ -565,15 +565,15 @@ sap.ui.define([
 				bySource: {}
 			}
 
-			if(Object.keys(oTasklistData.bySource).length > 0){
+			if (Object.keys(oTasklistData.bySource).length > 0) {
 
 				for (const [oSourceKey, oSourceData] of Object.entries(oTasklistData.bySource)) {
-					if(oSourceKey === C_MENDEL || oSourceKey === C_CONCUR) {
+					if (oSourceKey === C_MENDEL || oSourceKey === C_CONCUR) {
 						oCombinedTaskConcurMendelData.count += oSourceData.count;
 						oCombinedTaskConcurMendelData.tasks = oCombinedTaskConcurMendelData.tasks.concat(oSourceData.tasks);
 
 						for (const [oDefKey, oDefData] of Object.entries(oSourceData.byTaskDefinition)) {
-							if(!oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey]){
+							if (!oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey]) {
 								oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey] = { ...oDefData };
 							} else {
 								oCombinedTaskConcurMendelData.byTaskDefinition[oDefKey].count += oDefData.count;
@@ -585,10 +585,10 @@ sap.ui.define([
 					};
 				}
 
-				if(oCombinedTaskConcurMendelData.count > 0) {
+				if (oCombinedTaskConcurMendelData.count > 0) {
 					oNewBySource[C_CONCUR_MENDEL] = oCombinedTaskConcurMendelData;
 				};
-				
+
 				oNewTaskListData = {
 					...oTasklistData,
 					bySource: oNewBySource
@@ -674,7 +674,7 @@ sap.ui.define([
 				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
 			this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
 
-			if(this._oTablePersoController._oPersonalizations !== null){
+			if (this._oTablePersoController._oPersonalizations !== null) {
 				let ColumItemsPosition = this._oTablePersoController._oPersonalizations.aColumns.find(({ id }) => id === "table-taskListTable-TS20000166ITEMOVERVIEWColumn");
 				if (ColumItemsPosition) {
 					ColumItemsPosition.visible = false;
@@ -736,23 +736,23 @@ sap.ui.define([
 			oTaskListViewModel.setProperty("/noDataText", this._oResourceBundle.getText("view.Workflow.noDataTasks"));
 
 			const oColumns = this.getView().byId("taskListTable").getColumns();
-			if(oColumns){
+			if (oColumns) {
 				const UsdCurrencyAlign = oColumns.filter((field) => field.sId.includes("USD_CURRENCY"));
-				if(UsdCurrencyAlign.length > 0) {
+				if (UsdCurrencyAlign.length > 0) {
 					UsdCurrencyAlign.forEach((column) => {
 						column.setHAlign("Right");
 					})
 				}
 
 				const priceAlign = oColumns.filter((field) => field.sId.includes("PRICE"));
-				if(priceAlign.length > 0) {
+				if (priceAlign.length > 0) {
 					priceAlign.forEach((column) => {
 						column.setHAlign("Right");
 					})
 				}
 
 				const totalValueAlign = oColumns.filter((field) => field.sId.includes("MENDEL_EXPTOTAL"));
-				if(totalValueAlign.length > 0) {
+				if (totalValueAlign.length > 0) {
 					totalValueAlign.forEach((column) => {
 						column.setHAlign("Right");
 					})
@@ -987,35 +987,34 @@ sap.ui.define([
 			return ProviderSystem.getData().System;
 		},
 
-		getProviderSystem: function (callback) {
-			let oModel = this.getOwnerComponent().getModel();
+		getProviderSystem: function () {
+			return new Promise(function (resolve, reject) {
+				let oModel = this.getOwnerComponent().getModel();
 
-			if (this.getOwnerComponent().getModel("ProviderSystem")) {
-				callback(this.getOwnerComponent().getModel("ProviderSystem").getData());
-			}
+				if (this.getOwnerComponent().getModel("ProviderSystem"))
+					return resolve(this.getOwnerComponent().getModel("ProviderSystem").getData());
 
-			this.getOwnerComponent().setModel(new JSONModel({}), "ProviderSystem");
+				const oProviderSystemModel = new JSONModel({});
+				this.getOwnerComponent().setModel(oProviderSystemModel, "ProviderSystem");
 
-			const SystemModel = this.getOwnerComponent().getModel("ProviderSystem");
-			SystemModel.setData({});
-
-			oModel.read("/SystemInfoCollection", {
-				success: function (oData) {
-					if (oData.results.length > 0) {
-						SystemModel.setData(oData.results);
-					}
-					callback(SystemModel.getData());
-				},
-				error: function (err) {
-					if (this.isJsonString(err.responseText)) {
-						let messageError = JSONModel.parse(err.responseText);
-						MessageToast.show(messageError.error.message.value);
-					} else {
-						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.SystemInfoCollection"));
-					}
-					callback(SystemModel.getData());
-				}.bind(this)
-			})
+				oModel.read("/SystemInfoCollection", {
+					success: function (oData) {
+						if (oData.results.length > 0) {
+							oProviderSystemModel.setData(oData.results);
+						}
+						resolve(oProviderSystemModel.getData());
+					}.bind(this),
+					error: function (err) {
+						if (this.isJsonString(err.responseText)) {
+							let messageError = JSONModel.parse(err.responseText);
+							MessageToast.show(messageError.error.message.value);
+						} else {
+							MessageToast.show(this.i18nBundle.getText("custom.meli.msj.SystemInfoCollection"));
+						}
+						resolve(oProviderSystemModel.getData());
+					}.bind(this)
+				})
+			}.bind(this));
 		},
 	});
 });

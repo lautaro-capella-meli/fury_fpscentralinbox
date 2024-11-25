@@ -4789,7 +4789,7 @@ sap.ui.define([
 					});
 					break;
 				case 'LOCAL_TGW':
-					let ContractNumber = oDetailData.CustomAttributeData.results.find(({ Name }) => Name === "CONTRACT_NUMBER");
+					let ContractNumber = oDetailData.CustomAttributeData.results?.find(({ Name }) => Name === "CONTRACT_NUMBER");
 					if (ContractNumber) {
 
 						this.getOwnerComponent().setModel(new JSONModel({

@@ -149,9 +149,9 @@ sap.ui.define([
 
 			this._oProgressIndicator ??= this.byId("idLoadingProgressIndicator");
 			this._oMainIconTabBar ??= this.byId("idMainIconTabBar")
-				.attachSelect(this.onSelectMainIconTabBar.bind(this));
+				.attachSelect(this.onSelectIconTabBar.bind(this));
 			this._oSubIconTabBar ??= this.byId("idSubIconTabBar")
-				.attachSelect(this.onSelectMainIconTabBar.bind(this));
+				.attachSelect(this.onSelectIconTabBar.bind(this));
 
 			// Init taskList model
 			const aTaskListModel = new JSONModel({
@@ -484,7 +484,7 @@ sap.ui.define([
 			this._oTable.setBusy = this._oTableSetBusy.bind(this._oTable);
 		},
 
-		onSelectMainIconTabBar: function (oEvent) {
+		onSelectIconTabBar: function (oEvent) {
 
 			const oSelectedItem = oEvent.getParameter("item");
 			if (!oSelectedItem)

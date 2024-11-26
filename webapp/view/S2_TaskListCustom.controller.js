@@ -232,7 +232,8 @@ sap.ui.define([
 				: Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
 
 			// show progress bar if taskCount exceeds request pagination
-			this._oProgressIndicator.setVisible(iTaskCount > iChunkSize);
+			if (iTaskCount > iChunkSize)
+				setTimeout(this._displayProgressIndicator.bind(this), 500);
 
 			// fire chunks reads
 			do {
@@ -331,9 +332,12 @@ sap.ui.define([
 
 			this._enableTableSetBusy();
 			this._oTable.setBusy(false);
-			setTimeout(function () {
-				this._oProgressIndicator.setVisible(false);
-			}.bind(this), 500);
+
+		_displayProgressIndicator: function () {
+			this._oProgressIndicator.setPercentValue(0);
+			this._oProgressIndicator.setDisplayValue("");
+			this._oProgressIndicator.setVisible(true);
+		},
 		},
 
 		_processTaskListData: function (aTasks) {

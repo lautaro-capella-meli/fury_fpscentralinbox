@@ -176,41 +176,41 @@ sap.ui.define([
 			let oCurrentSorter = this._getCurrentSorter();
 			let oSelect = this._getTaskPropertiesToFetch().join(",");
 
-				ProviderSystemData.forEach((ProviderSystem) => {
-					let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
-					let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
+			ProviderSystemData.forEach((ProviderSystem) => {
+				let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+				let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
 
-					const oSAPOriginFilter = this._getSAPOriginFilters(ProviderSystem.SAP__Origin);
+				const oSAPOriginFilter = this._getSAPOriginFilters(ProviderSystem.SAP__Origin);
 
-					const oFilter = new Filter({
-						filters: [...aFilters, oSAPOriginFilter],
-						and: true
-					});
-
-					let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
-						useBatch: false
-					});
-
-					const oRequestConfiguration = {
-						filters: [oFilter],
-						sorters: ProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
-						success: this.onSuccessTaskCollectionRequest.bind(this),
-						urlParameters: {
-							$select: oSelect
-						}
-					};
-
-					if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
-						oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
-
-					oModel.read("/TaskCollection/$count", {
-						filters: [oFilter],
-						success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
-						error: function (oError) {
-							return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
-						},
-					});
+				const oFilter = new Filter({
+					filters: [...aFilters, oSAPOriginFilter],
+					and: true
 				});
+
+				let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
+					useBatch: false
+				});
+
+				const oRequestConfiguration = {
+					filters: [oFilter],
+					sorters: ProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
+					success: this.onSuccessTaskCollectionRequest.bind(this),
+					urlParameters: {
+						$select: oSelect
+					}
+				};
+
+				if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
+					oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
+
+				oModel.read("/TaskCollection/$count", {
+					filters: [oFilter],
+					success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
+					error: function (oError) {
+						return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
+					},
+				});
+			});
 
 		},
 
@@ -272,8 +272,8 @@ sap.ui.define([
 			} while (iTaskCount > 0);
 
 			// set final OData read handler
-				Promise.all(_aODataModelReadPromises)
-					.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
+			Promise.all(_aODataModelReadPromises)
+				.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
 		},
 
 		onSuccessTaskCollectionRequest: function ([oData, oResponse]) {
@@ -400,42 +400,39 @@ sap.ui.define([
 
 			// var oNewTaskListData = this._oCreateNewTaskListData(oTaskListData);
 
-			if (Object.keys(oTaskListData.bySource).length) {
+			for (const sSource in oTaskListData.bySource) {
+				const oTaskGroupBySource = oTaskListData.bySource[sSource];
+				/// MAIN > (EACH) SOURCE ///
+				const oBySourceIconTabFilter = new sap.m.IconTabFilter({
+					key: "bySource__" + sSource,
+					text: this._getI18nCustomText(`Source.${sSource}`),
+					icon: this._getI18nCustomText(`Source.${sSource}.Icon`),
+					count: oTaskGroupBySource.count
+				});
+				oBySourceIconTabFilter.setTooltip(this._getI18nCustomText(`Source.${sSource}`));
+				this._oMainIconTabBar.addItem(oBySourceIconTabFilter);
+				this._oGroupsMap.set(oBySourceIconTabFilter, oTaskGroupBySource);
 
-				for (const sSource in oTaskListData.bySource) {
-					const oTaskGroupBySource = oTaskListData.bySource[sSource];
-					/// MAIN > (EACH) SOURCE ///
-					const oBySourceIconTabFilter = new sap.m.IconTabFilter({
-						key: "bySource__" + sSource,
-						text: this._getI18nCustomText(`Source.${sSource}`),
-						icon: this._getI18nCustomText(`Source.${sSource}.Icon`),
-						count: oTaskGroupBySource.count
+				for (const sKey in oTaskGroupBySource.byTaskDefinition) {
+					const oTaskGroupByTaskDefinition = oTaskGroupBySource.byTaskDefinition[sKey];
+					/// SUB > BY TASK DEFINITION ///
+					const oByTaskDefinitionIconTabFilter = new sap.m.IconTabFilter({
+						key: "bySource__" + sSource + "__byTaskDefinition__" + oTaskGroupByTaskDefinition.TaskDefinitionID,
+						text: oTaskGroupByTaskDefinition.TaskDefinitionName,
+						count: oTaskGroupByTaskDefinition.count,
+						customData: [new sap.ui.core.CustomData({
+							key: "TaskDefinitionID",
+							value: oTaskGroupByTaskDefinition.TaskDefinitionID
+						}), new sap.ui.core.CustomData({
+							key: "TaskDefinitionName",
+							value: oTaskGroupByTaskDefinition.TaskDefinitionName
+						})]
 					});
-					oBySourceIconTabFilter.setTooltip(this._getI18nCustomText(`Source.${sSource}`));
-					this._oMainIconTabBar.addItem(oBySourceIconTabFilter);
-					this._oGroupsMap.set(oBySourceIconTabFilter, oTaskGroupBySource);
-
-					for (const sKey in oTaskGroupBySource.byTaskDefinition) {
-						const oTaskGroupByTaskDefinition = oTaskGroupBySource.byTaskDefinition[sKey];
-						/// SUB > BY TASK DEFINITION ///
-						const oByTaskDefinitionIconTabFilter = new sap.m.IconTabFilter({
-							key: "bySource__" + sSource + "__byTaskDefinition__" + oTaskGroupByTaskDefinition.TaskDefinitionID,
-							text: oTaskGroupByTaskDefinition.TaskDefinitionName,
-							count: oTaskGroupByTaskDefinition.count,
-							customData: [new sap.ui.core.CustomData({
-								key: "TaskDefinitionID",
-								value: oTaskGroupByTaskDefinition.TaskDefinitionID
-							}), new sap.ui.core.CustomData({
-								key: "TaskDefinitionName",
-								value: oTaskGroupByTaskDefinition.TaskDefinitionName
-							})]
-						});
-						if (this._bUseSubIconTabBar)
-							this._oSubIconTabBar.addItem(oByTaskDefinitionIconTabFilter);
-						else
-							oBySourceIconTabFilter.addItem(oByTaskDefinitionIconTabFilter);
-						this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinition);
-					}
+					if (this._bUseSubIconTabBar)
+						this._oSubIconTabBar.addItem(oByTaskDefinitionIconTabFilter);
+					else
+						oBySourceIconTabFilter.addItem(oByTaskDefinitionIconTabFilter);
+					this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinition);
 				}
 			}
 		},

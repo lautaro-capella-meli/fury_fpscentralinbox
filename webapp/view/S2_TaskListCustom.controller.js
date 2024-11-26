@@ -535,8 +535,10 @@ sap.ui.define([
 				(oItem.getKey() !== "ALL") && oItem.getVisible() // Tab Bar gets visible if any Tab Filter (apart from ALL) is visible
 			);
 			this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
-			this._oSubIconTabBar.setSelectedKey("ALL");
 
+			// Set by default selected key
+			const sSubIconTabBarByDefaultSelectedKey = this._oSubIconTabBar.getItems()[0].getKey();
+			this._oSubIconTabBar.setSelectedKey(sSubIconTabBarByDefaultSelectedKey);
 		},
 
 		_updateFiltersOnTabSelected: function (oMainIconTabBarSelectedItem) {

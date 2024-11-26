@@ -139,7 +139,6 @@ sap.ui.define([
 
 
 		_initTaskModel: async function () {
-			let vGetData = true;
 
 			// Get Task count
 			this._oTable.setBusy(true);
@@ -177,8 +176,6 @@ sap.ui.define([
 			let oCurrentSorter = this._getCurrentSorter();
 			let oSelect = this._getTaskPropertiesToFetch().join(",");
 
-			if (vGetData) {
-				vGetData = false;
 				ProviderSystemData.forEach((ProviderSystem) => {
 					let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
 					let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
@@ -214,7 +211,6 @@ sap.ui.define([
 						},
 					});
 				});
-			}
 
 		},
 

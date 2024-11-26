@@ -590,6 +590,15 @@ sap.ui.define([
 				contextPath: "TaskCollection(SAP__Origin='" + oBindingContext.getProperty("SAP__Origin") + "',InstanceID='" + oBindingContext.getProperty("InstanceID") + "')"
 			};
 			this.selectedTaskPath = oBindingContext.getPath();
+
+			try {
+				// New PO display component registers a DirtyStateProvider method
+				// this method throws an exception after 3 consecutive calls
+				// so this workaround deregisters the failing method from listeners 
+				if (sap.ushell.Container.getAsyncDirtyStateProviders().length > 1)
+					sap.ushell.Container.deregisterDirtyStateProvider(sap.ushell.Container.getAsyncDirtyStateProviders()[1])
+			} catch (error) { }
+
 			return this.oRouter.navTo("detail_deep", oParameters, false);
 		},
 

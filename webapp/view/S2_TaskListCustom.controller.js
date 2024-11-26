@@ -237,6 +237,9 @@ sap.ui.define([
 
 			// fire chunks reads
 			do {
+				if (iTaskCount <= 0)
+					break;
+
 				iTaskCount -= iChunkSize;
 				const pDataModelRead = new Promise(function (resolve, reject) {
 					const sGroupId = Math.random().toString(36).slice(2, 8); // e.g.: 's5gzlj'

@@ -364,30 +364,10 @@ sap.ui.define([
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].TaskDefinitionName ||= oTask.TaskDefinitionName;
 				oTaskListData.bySource[oTask.SAP__Origin].byTaskDefinition[oTask.TaskDefinitionID].TaskDefinitionID ||= oTask.TaskDefinitionID;
 
-				/* //Definieron que no querían estos Iconos 25/04/2024
-				// Build  By status group
-				oTaskListData.byStatus[oTask.Status] ||= newTaskGroup();
-				oTaskListData.byStatus[oTask.Status].count++;
-				oTaskListData.byStatus[oTask.Status].tasks.push(oTask);
-
-				// Build  By Priority group
-				oTaskListData.byPriority[oTask.Priority] ||= newTaskGroup();
-				oTaskListData.byPriority[oTask.Priority].count++;
-				oTaskListData.byPriority[oTask.Priority].tasks.push(oTask);
-
-				if (oTask.CompletionDeadLine) {
-					oTaskListData.withCompletionDeadLine.count++;
-					oTaskListData.withCompletionDeadLine.tasks.push(oTask);
-				}
-				*/
-
 				return oTaskListData;
 			}, {
 				allTasks: newTaskGroup(),
 				bySource: {}
-				//byStatus: {},
-				//byPriority: {},
-				//withCompletionDeadLine: newTaskGroup()
 			});
 
 			// Fill All Tasks group
@@ -408,30 +388,9 @@ sap.ui.define([
 
 		_createTabFilters: function (oTaskListData) {
 
-			// Se define que no quieren ICON TAB de totales (ALL)
-			/// MAIN > ALL TASKS ///
-			// const oAllTasksIconTabFilter = new sap.m.IconTabFilter({
-			// 	key: "ALL",
-			// 	text: this._getI18nCustomText("All"),
-			// 	showAll: true,
-			// 	count: oTaskListData.allTasks.count
-			// });
-			// this._oMainIconTabBar.addItem(oAllTasksIconTabFilter);
-			// this._oGroupsMap.set(oAllTasksIconTabFilter, oTaskListData.allTasks);
-
-			// /// SUB > ALL TASKS ///
-			// const oAllSubIconTabFilter = new sap.m.IconTabFilter({
-			// 	key: "ALL",
-			// 	text: this._getI18nCustomText("All")
-			// });
-			// this._oSubIconTabBar.addItem(oAllSubIconTabFilter);
-			// this._oGroupsMap.set(oAllSubIconTabFilter, oTaskListData.allTasks);
-
 			// var oNewTaskListData = this._oCreateNewTaskListData(oTaskListData);
 
 			if (Object.keys(oTaskListData.bySource).length) {
-				/// MAIN > |SEPARATOR| ///
-				// this._oMainIconTabBar.addItem(new sap.m.IconTabSeparator);
 
 				for (const sSource in oTaskListData.bySource) {
 					const oTaskGroupBySource = oTaskListData.bySource[sSource];
@@ -468,87 +427,7 @@ sap.ui.define([
 						this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinition);
 					}
 				}
-				// this.getView().getModel("taskList").setProperty("/TaskCollection", {});
-				// this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks);
 			}
-			// this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks); // TODO: fix Cannot read properties of undefined (reading '1')
-
-			/* //Definieron que no querían estos Iconos 25/04/2024
-			/// MAIN > |SEPARATOR| ///
-			this._oMainIconTabBar.addItem(new sap.m.IconTabSeparator);
-
-			/// MAIN > BY STATUS ///
-			const oByStatusIconTabFilter = new sap.m.IconTabFilter({
-				key: "byStatus",
-				text: this._getI18nCustomText("ByStatus"),
-				icon: this._getI18nCustomText("ByStatus.Icon"),
-			});
-			this._oMainIconTabBar.addItem(oByStatusIconTabFilter);
-			this._oGroupsMap.set(oByStatusIconTabFilter, oTaskListData.allTasks);
-
-			for (const sStatus in oTaskListData.byStatus) {
-				const oTaskGroupByStatus = oTaskListData.byStatus[sStatus];
-
-				/// SUB > BY STATUS ///
-				const oByStatusSubIconTabFilter = new sap.m.IconTabFilter({
-					key: "byStatus__" + sStatus,
-					text: this._getI18nCustomText(`Status.${sStatus}`),
-					icon: this._getI18nCustomText(`Status.${sStatus}.Icon`) || undefined,
-					iconColor: this._getI18nCustomText(`Status.${sStatus}.IconColor`) || undefined,
-					count: oTaskGroupByStatus.count,
-					customData: [new sap.ui.core.CustomData({
-						key: "Status",
-						value: sStatus
-					})]
-				});
-				if (this._bUseSubIconTabBar)
-					this._oSubIconTabBar.addItem(oByStatusSubIconTabFilter);
-				else
-					oByStatusIconTabFilter.addItem(oByStatusSubIconTabFilter);
-				this._oGroupsMap.set(oByStatusSubIconTabFilter, oTaskGroupByStatus);
-
-			}
-
-			/// MAIN > BY PRIORITY ///
-			const oByPriorityIconTabFilter = new sap.m.IconTabFilter({
-				key: "byPriority",
-				text: this._getI18nCustomText("ByPriority"),
-				icon: this._getI18nCustomText("ByPriority.Icon"),
-			});
-			this._oMainIconTabBar.addItem(oByPriorityIconTabFilter);
-			this._oGroupsMap.set(oByPriorityIconTabFilter, oTaskListData.allTasks);
-
-			for (const sPriority in oTaskListData.byPriority) {
-				const oTaskGroupByPriority = oTaskListData.byPriority[sPriority];
-				/// SUB > BY PRIORITY ///
-				const oByPrioritySubIconTabFilter = new sap.m.IconTabFilter({
-					key: "byPriority__" + sPriority,
-					text: this._getI18nCustomText(`Priority.${sPriority}`),
-					icon: this._getI18nCustomText(`Priority.${sPriority}.Icon`) || undefined,
-					iconColor: this._getI18nCustomText(`Priority.${sPriority}.IconColor`) || undefined,
-					count: oTaskGroupByPriority.count,
-					customData: [new sap.ui.core.CustomData({
-						key: "Priority",
-						value: sPriority
-					})]
-				});
-				if (this._bUseSubIconTabBar)
-					this._oSubIconTabBar.addItem(oByPrioritySubIconTabFilter);
-				else
-					oByPriorityIconTabFilter.addItem(oByPrioritySubIconTabFilter);
-				this._oGroupsMap.set(oByPrioritySubIconTabFilter, oTaskGroupByPriority);
-			}
-
-			/// MAIN > DUE ///
-			const oNewMainIconTabFilter = new sap.m.IconTabFilter({
-				key: "withCompletionDeadLine",
-				text: this._getI18nCustomText("TaskDue"),
-				icon: this._getI18nCustomText("TaskDue.Icon"),
-				count: oTaskListData.withCompletionDeadLine.count
-			});
-			this._oMainIconTabBar.addItem(oNewMainIconTabFilter);
-			this._oGroupsMap.set(oNewMainIconTabFilter, oTaskListData.withCompletionDeadLine);
-			*/
 		},
 
 		_oCreateNewTaskListData: function (oTasklistData) {
@@ -653,20 +532,6 @@ sap.ui.define([
 		_updateFiltersOnTabSelected: function (oMainIconTabBarSelectedItem) {
 			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
 			this._oFilterBarView ??= this.byId("taskListPage").getContent()[0];
-
-			/* //Definieron que no querían estos Iconos 25/04/2024
-			this._oStatusFilter ??= this._oFilterBarView?.byId("statusFilter");
-			this._oStatusFilter.setSelectedItems([]); // reset selected items
-			if (sMainIconTabBarSelectedKey.includes("byStatus__"))
-				this._updateStatusFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
-			// this._oStatusFilter.fireSelectionFinish.call(this._oStatusFilter); // avoid multiple calls as it will be called at this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter)
-
-			this._oPriorityFilter ??= this._oFilterBarView?.byId("priorityFilter");
-			this._oPriorityFilter.setSelectedItems([]); // reset selected items
-			if (sMainIconTabBarSelectedKey.includes("byPriority__"))
-				this._updatePriorityFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
-			// this._oPriorityFilter.fireSelectionFinish.call(this._oPriorityFilter); // avoid multiple calls as it will be called at this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter)
-			*/
 
 			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
 			this._oTaskDefinitionFilter.setSelectedItems([]); // reset selected items

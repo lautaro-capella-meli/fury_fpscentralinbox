@@ -288,17 +288,10 @@ sap.ui.define([
 				aTasks = this._dataMassage(oData.results);
 
 			// To remove PR above with firstAprovalName 'Buyer Procurement Desk Agent'
-			for (let i = aTasks.length - 1; i >= 0; i--) {
-
-				if (aTasks[i].SAP__Origin === C_ARIBA) {
-					validFirstAprovName = this._validFirtsApproverName(aTasks[i]);
-
-					if (validFirstAprovName) {
-						aTasks.splice(i, 1);
-					}
-				}
-
-			}
+			aTasks = aTasks.filter(oTask => oTask.SAP__Origin === C_ARIBA
+				? this._validFirtsApproverName(oTask)
+				: true
+			);
 
 			// Add tasks to taskList model
 			let aTaskListModel = this.getView().getModel("taskList");
@@ -388,12 +381,11 @@ sap.ui.define([
 		},
 
 		_validFirtsApproverName: function (oTask) {
-			var oValid = false;
+			var bIsValid = true;
 			var aTask = oTask.CustomAttributeData.results.filter((task) => task.Name === C_FIRST_APROV_NAME);
-			if (aTask[0].Value === C_FIRST_APROV_NAME_VALUE) {
-				oValid = true;
-			}
-			return oValid;
+			if (aTask && aTask[0] && aTask[0].Value === C_FIRST_APROV_NAME_VALUE)
+				bIsValid = false;
+			return bIsValid;
 		},
 
 		_createTabFilters: function (oTaskListData) {

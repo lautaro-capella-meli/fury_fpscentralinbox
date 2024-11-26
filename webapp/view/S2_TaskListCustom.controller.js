@@ -313,9 +313,15 @@ sap.ui.define([
 
 			aTasks = aTaskListModel.getProperty("/TaskCollection");
 			setTimeout(function () {
-				const nLoadingProgress = (aTasks.length / this._iTaskCount) * 100;
-				this._oProgressIndicator.setDisplayValue(`${aTasks.length}/${this._iTaskCount}`);
-				this._oProgressIndicator.setPercentValue(nLoadingProgress);
+				const nCurrentLoadingProgress = (aTasks.length / this._iTaskCount) * 100;
+				const nLastLoadingProgress = this._oProgressIndicator.getPercentValue();
+				const sLastDisplayValue = this._oProgressIndicator.getDisplayValue();
+				this._oProgressIndicator.setPercentValue(nCurrentLoadingProgress > nLastLoadingProgress
+					? nCurrentLoadingProgress
+					: nLastLoadingProgress);
+				this._oProgressIndicator.setDisplayValue(nCurrentLoadingProgress > nLastLoadingProgress
+					? `${aTasks.length}/${this._iTaskCount}`
+					: sLastDisplayValue);
 			}.bind(this), 0);
 		},
 
@@ -332,12 +338,19 @@ sap.ui.define([
 
 			this._enableTableSetBusy();
 			this._oTable.setBusy(false);
+			setTimeout(this._hideProgressIndicator.bind(this), 500);
+		},
 
 		_displayProgressIndicator: function () {
 			this._oProgressIndicator.setPercentValue(0);
 			this._oProgressIndicator.setDisplayValue("");
 			this._oProgressIndicator.setVisible(true);
 		},
+
+		_hideProgressIndicator: function () {
+			this._oProgressIndicator.setVisible(false);
+			this._oProgressIndicator.setPercentValue(0);
+			this._oProgressIndicator.setDisplayValue("");
 		},
 
 		_processTaskListData: function (aTasks) {

@@ -468,10 +468,10 @@ sap.ui.define([
 						this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinition);
 					}
 				}
-				this.getView().getModel("taskList").setProperty("/TaskCollection", {});
-				this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks);
+				// this.getView().getModel("taskList").setProperty("/TaskCollection", {});
+				// this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks);
 			}
-			this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks);
+			// this.getView().getModel("taskList").setProperty("/TaskCollection", Array.from(this._oGroupsMap)[0][1].tasks); // TODO: fix Cannot read properties of undefined (reading '1')
 
 			/* //Definieron que no querían estos Iconos 25/04/2024
 			/// MAIN > |SEPARATOR| ///

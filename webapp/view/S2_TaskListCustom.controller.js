@@ -266,20 +266,12 @@ sap.ui.define([
 				// collect Promises
 				_aODataModelReadPromises.push(pDataModelRead);
 
-				if (_aODataModelReadPromises.length === 5) {
-					Promise.all(_aODataModelReadPromises)
-						.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
-					_aODataModelReadPromises = [];
-				}
-
 				iSkip += iChunkSize;
 			} while (iTaskCount > 0);
 
 			// set final OData read handler
-			if (_aODataModelReadPromises.length > 0) {
 				Promise.all(_aODataModelReadPromises)
 					.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
-			}
 		},
 
 		onSuccessTaskCollectionRequest: function ([oData, oResponse]) {

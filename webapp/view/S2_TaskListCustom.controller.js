@@ -227,7 +227,9 @@ sap.ui.define([
 
 			let iSkip = 0;
 			const iTargetChunkSize = Math.min(200, this.oDataManager.getListSize());
-			const iChunkSize = ProviderSystem === C_ARIBA ? 10 : Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
+			const iChunkSize = ProviderSystem === C_ARIBA
+				? 10
+				: Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
 
 			// show progress bar if taskCount exceeds request pagination
 			this._oProgressIndicator.setVisible(iTaskCount > iChunkSize);

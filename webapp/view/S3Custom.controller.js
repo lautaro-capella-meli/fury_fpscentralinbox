@@ -108,8 +108,8 @@ sap.ui.define([
 		_toggleClaimReleaseFocus: false,
 
 		onExit: function () {
-			//this.oComponentCache.destroyCacheContent();
-			//delete this.oComponentCache;
+			this.oComponentCache.destroyCacheContent();
+			delete this.oComponentCache;
 		},
 
 		onInit: function () {

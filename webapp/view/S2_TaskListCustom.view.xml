@@ -15,7 +15,7 @@
 			</f:DynamicPageTitle>
 		</f:title>
 		<f:content-->
-			<semantic:FullscreenPage id="taskListPage" navButtonPress="onNavBack" showNavButton="true" title="{i18n>SHELL_TITLE}">
+			<semantic:FullscreenPage id="taskListPage" showNavButton="false" title="{i18n>SHELL_TITLE}">
 				<semantic:content>
 					<!-- the count mode on the item binding is set to obtain the $count information for the Task collection -->
 					<VBox fitContainer="true">

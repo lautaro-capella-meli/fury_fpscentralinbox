@@ -167,12 +167,15 @@ sap.ui.define([
 			});
 			this.getView().setModel(aTaskListModel, "taskList");
 
+			// show progress bar
+			setTimeout(this._displayProgressIndicator.bind(this), 500);
+
 			const [ProviderSystemData, _dummy] = await Promise.all([
 				this.getProviderSystem(),
 				this.fnAddAditionalSelectPropertiesAndInitBinding()
 			]);
 
-			// set up Request configuration
+			this._oProgressIndicator.setPercentValue(Math.max(10, this._oProgressIndicator.getPercentValue()));
 
 			// draw empty icon tab filters
 			this._createTabFiltersDisabled(ProviderSystemData);
@@ -247,6 +250,7 @@ sap.ui.define([
 
 		_handleProviderSystemCountResponsesAllFinished: function (aResponses) {
 			console.log(">>> ALL COUNT FINISHED <<<");
+			this._oProgressIndicator.setPercentValue(Math.max(30, this._oProgressIndicator.getPercentValue()));
 
 			// set final Data read handler
 			Promise.all(this._aODataModelReadPromises)
@@ -256,6 +260,8 @@ sap.ui.define([
 				}.bind(this))
 		},
 		_handleProviderSystemCountResponse: function (oRequestConfiguration, pDataModel, ProviderSystem, [iTaskCount, oResponse]) {
+
+			this._oProgressIndicator.setPercentValue(this._oProgressIndicator.getPercentValue() + 3);
 
 			this._aODataModelReadPromises ??= [];
 			let _iTaskCount = Number(iTaskCount);
@@ -268,11 +274,6 @@ sap.ui.define([
 			const iChunkSize = ProviderSystem === C_ARIBA
 				? 10
 				: Math.ceil(_iTaskCount / Math.max(Math.round(_iTaskCount / iTargetChunkSize), 1));
-
-			// show progress bar if taskCount exceeds request pagination
-			if (_iTaskCount > iChunkSize)
-				setTimeout(this._displayProgressIndicator.bind(this), 500);
-
 
 			let _iRemainingTaskCount = _iTaskCount;
 			// fire chunks reads
@@ -312,6 +313,7 @@ sap.ui.define([
 		},
 
 		onSuccessTaskCollectionRequest: function (ProviderSystem, [oData, oResponse]) {
+
 			// Se ejecuta por cada CHUNK o BATCH de Tasks			
 			if (oResponse.statusCode != 200)
 				return MessageToast.show(oResponse.statusText + ":" + oResponse.body);
@@ -339,15 +341,8 @@ sap.ui.define([
 			aTaskListModel.setProperty("/TaskCollectionAll", aTasks);
 
 			setTimeout(function () {
-				const nCurrentLoadingProgress = (aTasks.length / this._iTaskCount) * 100;
-				const nLastLoadingProgress = this._oProgressIndicator.getPercentValue();
-				const sLastDisplayValue = this._oProgressIndicator.getDisplayValue();
-				this._oProgressIndicator.setPercentValue(nCurrentLoadingProgress > nLastLoadingProgress
-					? nCurrentLoadingProgress
-					: nLastLoadingProgress);
-				this._oProgressIndicator.setDisplayValue(nCurrentLoadingProgress > nLastLoadingProgress
-					? `${aTasks.length}/${this._iTaskCount}`
-					: sLastDisplayValue);
+				const nCurrentLoadingProgress = 30 + (aTasks.length / this._iTaskCount) * 60;
+				this._oProgressIndicator.setPercentValue(Math.max(nCurrentLoadingProgress, this._oProgressIndicator.getPercentValue()));
 			}.bind(this), 0);
 		},
 
@@ -373,6 +368,7 @@ sap.ui.define([
 			const oSelectEvent = new sap.ui.base.Event("select", this._oMainIconTabBar, { item: oMainIconTabBarByDefaultSelectedItem });
 			setTimeout(() => this.onSelectIconTabBar(oSelectEvent), 0);
 
+			this._oProgressIndicator.setPercentValue(100);
 			setTimeout(this._hideProgressIndicator.bind(this), 1000);
 		},
 

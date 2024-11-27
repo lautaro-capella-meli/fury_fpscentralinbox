@@ -174,6 +174,10 @@ sap.ui.define([
 
 			// set up Request configuration
 
+			// draw empty icon tab filters
+			this._createTabFiltersDisabled(ProviderSystemData);
+
+			// set up Request configuration
 			const aFilters = [this._getinitialStatusFilters()];
 			const oTaskDefinitionFilter = this._getTaskDefinitionFilters();
 
@@ -355,6 +359,7 @@ sap.ui.define([
 			const aTasks = this.getView().getModel("taskList").getProperty("/TaskCollectionAll");
 
 			const oTaskListData = this._processTaskListData(aTasks);
+			this._initTabBars();
 			this._createTabFilters(oTaskListData);
 
 			this._enableTableSetBusy();
@@ -424,6 +429,21 @@ sap.ui.define([
 			if (aTask && aTask[0] && aTask[0].Value === C_FIRST_APROV_NAME_VALUE)
 				bIsValid = false;
 			return bIsValid;
+		},
+
+		_createTabFiltersDisabled: function (aProviderSystemData) {
+			aProviderSystemData.forEach(oProviderSystem => {
+				const sSource = oProviderSystem.SAP__Origin;
+				/// MAIN > (EACH) SOURCE ///
+				const oBySourceIconTabFilter = new sap.m.IconTabFilter({
+					key: "bySource__" + sSource,
+					text: this._getI18nCustomText(`Source.${sSource}`),
+					icon: this._getI18nCustomText(`Source.${sSource}.Icon`),
+					enabled: false
+				});
+				oBySourceIconTabFilter.setTooltip(this._getI18nCustomText(`Source.${sSource}`));
+				this._oMainIconTabBar.addItem(oBySourceIconTabFilter);
+			});
 		},
 
 		_createTabFilters: function (oTaskListData) {

@@ -341,7 +341,16 @@ sap.ui.define([
 
 			this._enableTableSetBusy();
 			this._oTable.setBusy(false);
-			setTimeout(this._hideProgressIndicator.bind(this), 500);
+
+			// Set by default selected key
+			const oMainIconTabBarByDefaultSelectedItem = this._oMainIconTabBar.getItems()
+				.filter(oItem => oItem.getVisible?.())[0];
+			const sMainIconTabBarByDefaultSelectedKey = oMainIconTabBarByDefaultSelectedItem?.getKey();
+			this._oMainIconTabBar.setSelectedKey(sMainIconTabBarByDefaultSelectedKey);
+			const oSelectEvent = new sap.ui.base.Event("select", this._oMainIconTabBar, { item: oMainIconTabBarByDefaultSelectedItem });
+			setTimeout(() => this.onSelectIconTabBar(oSelectEvent), 0);
+
+			setTimeout(this._hideProgressIndicator.bind(this), 1000);
 		},
 
 		_displayProgressIndicator: function () {

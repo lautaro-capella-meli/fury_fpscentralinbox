@@ -303,18 +303,13 @@ sap.ui.define([
 			// Add tasks to taskList model
 			let aTaskListModel = this.getView().getModel("taskList");
 
-			aTaskListModel.setProperty("/TaskCollection", [
+			aTasks = [
 				...aTaskListModel.getProperty("/TaskCollectionAll"),
 				...aTasks
-			]);
-
+			];
 			//Esto es una copia exacta para que no afecte cuando se seleccione algún Icon Tab que se modifica el TaskCollection
-			aTaskListModel.setProperty("/TaskCollectionAll", [
-				...aTaskListModel.getProperty("/TaskCollectionAll"),
-				...aTasks
-			]);
+			aTaskListModel.setProperty("/TaskCollectionAll", aTasks);
 
-			aTasks = aTaskListModel.getProperty("/TaskCollection");
 			setTimeout(function () {
 				const nCurrentLoadingProgress = (aTasks.length / this._iTaskCount) * 100;
 				const nLastLoadingProgress = this._oProgressIndicator.getPercentValue();

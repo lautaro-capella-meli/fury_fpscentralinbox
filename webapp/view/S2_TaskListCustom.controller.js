@@ -158,6 +158,7 @@ sap.ui.define([
 				.attachSelect(this.onSelectIconTabBar.bind(this));
 			this._oSubIconTabBar ??= this.byId("idSubIconTabBar")
 				.attachSelect(this.onSelectIconTabBar.bind(this));
+			this._initTabBars();
 
 			// Init taskList model
 			const aTaskListModel = new JSONModel({

@@ -546,8 +546,12 @@ sap.ui.define([
 			this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
 
 			// Set by default selected key
-			const sSubIconTabBarByDefaultSelectedKey = this._oSubIconTabBar.getItems()[0].getKey();
+			const oSubIconTabBarByDefaultSelectedItem = this._oSubIconTabBar.getItems()
+				.filter(oItem => oItem.getVisible?.())[0];
+			const sSubIconTabBarByDefaultSelectedKey = oSubIconTabBarByDefaultSelectedItem?.getKey();
 			this._oSubIconTabBar.setSelectedKey(sSubIconTabBarByDefaultSelectedKey);
+			const oSelectEvent = new sap.ui.base.Event("select", this._oSubIconTabBar, { item: oSubIconTabBarByDefaultSelectedItem });
+			setTimeout(() => this.onSelectIconTabBar(oSelectEvent), 0);
 		},
 
 		_updateFiltersOnTabSelected: function (oMainIconTabBarSelectedItem) {

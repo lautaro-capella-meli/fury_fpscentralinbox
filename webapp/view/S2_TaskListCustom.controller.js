@@ -182,26 +182,26 @@ sap.ui.define([
 
 			let oCurrentSorter = this._getCurrentSorter();
 			let oSelect = this._getTaskPropertiesToFetch().join(",");
+			let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
 
-			ProviderSystemData.forEach((ProviderSystem) => {
-				let sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
-				let ServiceUrlProv = sServiceUrl + ';o=' + ProviderSystem.SAP__Origin;
+			this._iTaskCount = 0;
+			this._aODataModelCountPromises = ProviderSystemData.map(function (oProviderSystem) {
 
-				const oSAPOriginFilter = this._getSAPOriginFilters(ProviderSystem.SAP__Origin);
+				let sServiceUrlProv = sServiceUrl + ';o=' + oProviderSystem.SAP__Origin;
+				const oSAPOriginFilter = this._getSAPOriginFilters(oProviderSystem.SAP__Origin);
 
 				const oFilter = new Filter({
 					filters: [...aFilters, oSAPOriginFilter],
 					and: true
 				});
 
-				let oModel = new sap.ui.model.odata.v2.ODataModel(ServiceUrlProv, {
+				let oModel = new sap.ui.model.odata.v2.ODataModel(sServiceUrlProv, {
 					useBatch: false
 				});
 
 				const oRequestConfiguration = {
 					filters: [oFilter],
-					sorters: ProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
-					success: this.onSuccessTaskCollectionRequest.bind(this),
+					sorters: oProviderSystem.SAP__Origin === C_ARIBA ? [] : [oCurrentSorter],
 					urlParameters: {
 						$select: oSelect
 					}
@@ -210,57 +210,84 @@ sap.ui.define([
 				if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
 					oRequestConfiguration.urlParameters.$expand = "CustomAttributeData";
 
-				oModel.read("/TaskCollection/$count", {
-					filters: [oFilter],
-					success: this._retrieveTasksByChunks.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
-					error: function (oError) {
-						return MessageToast.show(ProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
-					},
-				});
-			});
+				const pDataCountRead = new Promise(function (resolve, reject) {
+					oModel.read("/TaskCollection/$count", {
+						filters: [oFilter],
+						success: function (oData, oResponse) { return resolve([oData, oResponse]); },
+						// success: this._handleProviderSystemCountResponse.bind(this, oRequestConfiguration, oModel, ProviderSystem.SAP__Origin),
+						error: function (oError) {
+							return MessageToast.show(oProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
+						},
+					});
+				}.bind(this));
 
+				// call partial OData read handler
+				pDataCountRead
+					.then(
+						this._handleProviderSystemCountResponse.bind(this, oRequestConfiguration, oModel, oProviderSystem.SAP__Origin),
+						function (oError) {
+							return MessageToast.show(oProviderSystem.SAP__Origin + ": " + oError.message + " " + oError.responseText);
+						}
+					);
+
+				return pDataCountRead;
+			}.bind(this));
+
+			Promise.all(this._aODataModelCountPromises)
+				.then(this._handleProviderSystemCountResponsesAllFinished.bind(this))
 		},
 
 		_getSAPOriginFilters: function (sSAPOrigin) {
 			return new Filter("SAP__Origin", FilterOperator.EQ, sSAPOrigin);
 		},
 
-		_retrieveTasksByChunks: function (oRequestConfiguration, pDataModel, ProviderSystem, iTaskCount) {
+		_handleProviderSystemCountResponsesAllFinished: function (aResponses) {
+			console.log(">>> ALL COUNT FINISHED <<<");
 
-			let _aODataModelReadPromises = [];
+			// set final Data read handler
+			Promise.all(this._aODataModelReadPromises)
+				.then(this.onSuccessTaskCollectionRequestComplete.bind(this))
+				.then(function () {
+					delete this._aODataModelReadPromises;
+				}.bind(this))
+		},
+		_handleProviderSystemCountResponse: function (oRequestConfiguration, pDataModel, ProviderSystem, [iTaskCount, oResponse]) {
 
-			console.log(">>> LOADING " + iTaskCount + " TASKS <<<");
-			this._iTaskCount = iTaskCount;
+			this._aODataModelReadPromises ??= [];
+			let _iTaskCount = Number(iTaskCount);
+			let _iSkip = 0;
 
-			let iSkip = 0;
+			console.log(">>> " + ProviderSystem + " GOT COUNT: " + _iTaskCount + " TASKS <<<");
+			this._iTaskCount += _iTaskCount;
+
 			const iTargetChunkSize = Math.min(200, this.oDataManager.getListSize());
 			const iChunkSize = ProviderSystem === C_ARIBA
 				? 10
-				: Math.ceil(iTaskCount / Math.max(Math.round(iTaskCount / iTargetChunkSize), 1));
+				: Math.ceil(_iTaskCount / Math.max(Math.round(_iTaskCount / iTargetChunkSize), 1));
 
 			// show progress bar if taskCount exceeds request pagination
-			if (iTaskCount > iChunkSize)
+			if (_iTaskCount > iChunkSize)
 				setTimeout(this._displayProgressIndicator.bind(this), 500);
 
+
+			let _iRemainingTaskCount = _iTaskCount;
 			// fire chunks reads
 			do {
-				if (iTaskCount <= 0)
+				if (_iRemainingTaskCount <= 0)
 					break;
 
-				iTaskCount -= iChunkSize;
+				_iRemainingTaskCount -= iChunkSize;
 				const pDataModelRead = new Promise(function (resolve, reject) {
 					const sGroupId = Math.random().toString(36).slice(2, 8); // e.g.: 's5gzlj'
 					pDataModel.read("/TaskCollection", {
 						...oRequestConfiguration,
-						success: function (oData, oResponse) { return resolve([oData, oResponse]) },
-						error: function (oError) {
-							return reject(oError)
-						},
+						success: function (oData, oResponse) { return resolve([oData, oResponse]); },
+						error: function (oError) { return reject(oError); },
 						groupId: sGroupId,
 						urlParameters: {
 							...oRequestConfiguration.urlParameters,
 							$top: iChunkSize,
-							$skip: iSkip
+							$skip: _iSkip
 						}
 					});
 					pDataModel.submitChanges({
@@ -269,26 +296,23 @@ sap.ui.define([
 				}.bind(this));
 
 				// call partial OData read handler
-				pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this), function (oError) {
+				pDataModelRead.then(this.onSuccessTaskCollectionRequest.bind(this, ProviderSystem), function (oError) {
 					return MessageToast.show(ProviderSystem + ": " + oError.message + " " + oError.responseText);
 				});
 				// collect Promises
-				_aODataModelReadPromises.push(pDataModelRead);
+				this._aODataModelReadPromises.push(pDataModelRead);
 
-				iSkip += iChunkSize;
-			} while (iTaskCount > 0);
+				_iSkip += iChunkSize;
+			} while (_iRemainingTaskCount > 0);
 
-			// set final OData read handler
-			Promise.all(_aODataModelReadPromises)
-				.then(this.onSuccessTaskCollectionRequestComplete.bind(this));
 		},
 
-		onSuccessTaskCollectionRequest: function ([oData, oResponse]) {
-			var validFirstAprovName;
+		onSuccessTaskCollectionRequest: function (ProviderSystem, [oData, oResponse]) {
+			// Se ejecuta por cada CHUNK o BATCH de Tasks			
 			if (oResponse.statusCode != 200)
 				return MessageToast.show(oResponse.statusText + ":" + oResponse.body);
 
-			console.log(`>>> GOT ${oData.results.length} TASKS. <<<`);
+			console.log(`>>> ${ProviderSystem} GOT CHUNK WITH ${oData.results.length} TASKS. <<<`);
 			let aTasks = oData.results;
 
 			if (this.oDataManager.checkPropertyExistsInMetadata("CustomAttributeData"))
@@ -296,7 +320,7 @@ sap.ui.define([
 
 			// To remove PR above with firstAprovalName 'Buyer Procurement Desk Agent'
 			aTasks = aTasks.filter(oTask => oTask.SAP__Origin === C_ARIBA
-				? this._validFirtsApproverName(oTask)
+				? this._hasValidFirstApproverName(oTask)
 				: true
 			);
 
@@ -328,10 +352,9 @@ sap.ui.define([
 			this._loadCustomAttributesDeferredForTasks?.resolve();
 			this._filterDeferred?.resolve();
 
-			const aTasks = this.getView().getModel("taskList").getProperty("/TaskCollection");
+			const aTasks = this.getView().getModel("taskList").getProperty("/TaskCollectionAll");
 
 			const oTaskListData = this._processTaskListData(aTasks);
-			this._initTabBars();
 			this._createTabFilters(oTaskListData);
 
 			this._enableTableSetBusy();
@@ -395,7 +418,7 @@ sap.ui.define([
 			return oTaskListData;
 		},
 
-		_validFirtsApproverName: function (oTask) {
+		_hasValidFirstApproverName: function (oTask) {
 			var bIsValid = true;
 			var aTask = oTask.CustomAttributeData.results.filter((task) => task.Name === C_FIRST_APROV_NAME);
 			if (aTask && aTask[0] && aTask[0].Value === C_FIRST_APROV_NAME_VALUE)

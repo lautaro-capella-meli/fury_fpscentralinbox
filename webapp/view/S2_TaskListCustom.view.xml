@@ -24,7 +24,7 @@
 							visible="false"
 							state="None"
 							displayOnly="true"
-							displayValue="false"/>
+							showValue="false"/>
 						<IconTabBar
 							id="idMainIconTabBar"
 							headerMode="Standard"

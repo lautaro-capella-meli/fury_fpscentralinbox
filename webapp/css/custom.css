@@ -1,10 +1,24 @@
 .sapMObjStatus.sapMObjStatusInformation.sapMObjStatusInverted span {
     color: #e8f3ff;
 }
-.sapMPI, .sapMPI * {
-    min-height: 0;
-    border: none;
+.sapMPI {
+    height: 16px;
+    padding: 0;
+    margin: -8px 0 0 0;
+    background-color:white;
+}
+.sapMPIDisplayOnly:not(.sapMPIBarDisabled) .sapMPIBarNeutral,.sapMPIBarNeutral {
+    background-color: #73cdf3;
     border-radius: 0 !important;
+    border: none;
+}
+.sapMPIBarRemaining {
+    position: absolute;
+    width: 100%;
+    border: .0625rem solid #d5dadd
+}
+.sapMPIValueMin .sapMPIBarRemaining::before,.sapMPIBarRemaining::after {
+    display: none;
 }
 .meliCustomRemoveIconTabBarMarginTop {
     margin-top: -0.25rem;

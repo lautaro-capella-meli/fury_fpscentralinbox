@@ -19,6 +19,12 @@
 				<semantic:content>
 					<!-- the count mode on the item binding is set to obtain the $count information for the Task collection -->
 					<VBox fitContainer="true">
+						<ProgressIndicator
+							id="idLoadingProgressIndicator"
+							visible="false"
+							state="None"
+							displayOnly="true"
+							displayValue="false"/>
 						<IconTabBar
 							id="idMainIconTabBar"
 							headerMode="Standard"
@@ -32,16 +38,12 @@
 									visible="false" />
 							</items>
 							<content class="sapUiNoContentPadding">
-								<ProgressIndicator
-									id="idLoadingProgressIndicator"
-									visible="false"
-									state="Information"
-									displayOnly="true"/>
 								<IconTabBar 
 									id="idSubIconTabBar" 
 									headerMode="Inline" 
 									expandable="false"
 									visible="false"
+									backgroundDesign="Solid"
 									class="sapUiNoContentPadding">
 									<items>
 										<IconTabFilter
@@ -52,12 +54,12 @@
 									</items>
 									<content />
 								</IconTabBar>
-								<Table class="" id="taskListTable" growing="true" autoPopinMode="true" popinLayout="GridLarge"
+								<Table class="meliCustomRemoveIconTabBarMarginTop" id="taskListTable" growing="true" autoPopinMode="true" popinLayout="GridLarge"
 									items="{path:'taskList>/TaskCollection', sorter:[{path: 'TaskTitle', descending: false}], groupHeaderFactory:'.createGroupHeader'}"
 									noDataText="{taskListView>/noDataText}" updateFinished="onUpdateFinished" width="auto" mode="MultiSelect"
-									selectionChange="handleSelectionChange" fixedLayout="false">
+									selectionChange="handleSelectionChange" fixedLayout="false" alternateRowColors="false">
 									<headerToolbar>
-										<OverflowToolbar design="Transparent">
+										<OverflowToolbar design="Solid" style="Clear">
 											<ToolbarSpacer/>
 											<OverflowToolbarButton icon="sap-icon://refresh" id="refreshBtn" press="onRefreshPressed" text="{i18n>XBUT_REFRESH}"
 												tooltip="{i18n>XBUT_REFRESH}"/>

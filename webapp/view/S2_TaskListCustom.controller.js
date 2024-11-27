@@ -144,8 +144,14 @@ sap.ui.define([
 			this._oTable.setBusy(true);
 			this._disableTableSetBusy();
 
-			this._bUseSubIconTabBar ??= true;
-			this._oGroupsMap ??= new Map();
+			this._bUseSubIconTabBar = true;
+			this._oGroupsMap = new Map();
+
+			this._oFilterBarView ??= this.byId("taskListPage").getContent?.()[0];
+			if (!this._oFilterBarView?.getControllerName?.())
+				delete this._oFilterBarView;
+			this._oFilterBar ??= this._oFilterBarView?.byId?.("filterBar");
+			this._oFilterBar?.clear?.();
 
 			this._oProgressIndicator ??= this.byId("idLoadingProgressIndicator");
 			this._oMainIconTabBar ??= this.byId("idMainIconTabBar")

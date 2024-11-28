@@ -4841,10 +4841,10 @@ sap.ui.define([
 				}.bind(this),
 				error: function (err) {
 					this.getView().byId('TB_ListItemAriba').setVisible(false);
-					if (this.isJsonString(err.responseText)) {
-						let messageError = JSONModel.parse(err.responseText);
+					try {
+						let messageError = JSON.parse(err.responseText);
 						MessageToast.show(messageError.error.message.value);
-					} else {
+					} catch (error) {
 						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
 					}
 					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderAriba');
@@ -4876,10 +4876,10 @@ sap.ui.define([
 				}.bind(this),
 				error: function (err) {
 					this.getView().byId('TB_ListItemShipment').setVisible(false);
-					if (this.isJsonString(err.responseText)) {
-						let messageError = JSONModel.parse(err.responseText);
+					try {
+						let messageError = JSON.parse(err.responseText);
 						MessageToast.show(messageError.error.message.value);
-					} else {
+					} catch (error) {
 						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
 					}
 					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderShipment');
@@ -4911,10 +4911,10 @@ sap.ui.define([
 				}.bind(this),
 				error: function (err) {
 					this.getView().byId('TB_ListItemContract').setVisible(false);
-					if (this.isJsonString(err.responseText)) {
-						let messageError = JSONModel.parse(err.responseText);
+					try {
+						let messageError = JSON.parse(err.responseText);
 						MessageToast.show(messageError.error.message.value);
-					} else {
+					} catch (error) {
 						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
 					}
 					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderContract');
@@ -5045,10 +5045,10 @@ sap.ui.define([
 				}.bind(this),
 				error: function (err) {
 					this.getView().byId('TB_ListItemConcur').setVisible(false);
-					if (this.isJsonString(err.responseText)) {
-						let messageError = JSONModel.parse(err.responseText);
+					try {
+						let messageError = JSON.parse(err.responseText);
 						MessageToast.show(messageError.error.message.value);
-					} else {
+					} catch (error) {
 						MessageToast.show(this.i18nBundle.getText("custom.meli.msj.S3_ListItem"));
 					}
 					this.setPropertyModel(this, "/TableItemBusy", false, 'DatHeaderConcur');

@@ -936,10 +936,10 @@ sap.ui.define([
 						resolve(oProviderSystemModel.getData());
 					}.bind(this),
 					error: function (err) {
-						if (this.isJsonString(err.responseText)) {
-							let messageError = JSONModel.parse(err.responseText);
+						try {
+							let messageError = JSON.parse(err.responseText);
 							MessageToast.show(messageError.error.message.value);
-						} else {
+						} catch (error) {
 							MessageToast.show(this.i18nBundle.getText("custom.meli.msj.SystemInfoCollection"));
 						}
 						resolve(oProviderSystemModel.getData());

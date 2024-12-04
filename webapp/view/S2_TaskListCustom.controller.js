@@ -547,20 +547,41 @@ sap.ui.define([
 
 		onSelectIconTabBar: function (oEvent) {
 
+			const bMainBarSelected = oEvent.getSource() === this._oMainIconTabBar;
+			const bSubBarSelected = oEvent.getSource() === this._oSubIconTabBar;
+
 			const oSelectedItem = oEvent.getParameter("item");
 			if (!oSelectedItem)
 				return;
 			const oTaskGroup = this._oGroupsMap.get(oSelectedItem);
 
-			// update Sub IconTabBar items visibility according to Main IconTabBar selected item
-			if (this._bUseSubIconTabBar && (oEvent.getSource() === this._oMainIconTabBar))
-				this._updateSubIconTabBarItemsVisibility(oSelectedItem);
-
-			// update Task list items bound property
-			this.getView().getModel("taskList").setProperty("/TaskCollection", oTaskGroup.tasks);
-
 			// update filter for TaskDefinition
 			this._updateFiltersOnTabSelected(oSelectedItem);
+
+			// update Sub IconTabBar items visibility according to Main IconTabBar selected item
+			if (this._bUseSubIconTabBar && bSubBarSelected)
+				this._setSelectedTaskKey(oSelectedItem);
+
+			// update Sub IconTabBar items visibility according to Main IconTabBar selected item
+			if (this._bUseSubIconTabBar && bMainBarSelected)
+				this._updateSubIconTabBarItemsVisibility(oSelectedItem);
+
+			this._updateTableItems(oTaskGroup.tasks);
+		},
+
+		_setSelectedTaskKey: function (oSelectedItem) {
+			this._selectedTaskKey = oSelectedItem.getKey();
+		},
+
+		_getSelectedTaskKey: function () {
+			return this._selectedTaskKey;
+		},
+
+		_updateTableItems: function (aTasks) {
+			// update Task list items bound property
+			this.getView().getModel("taskList").setProperty("/TaskCollection", aTasks);
+
+			this._initPersonalization();
 		},
 
 		_updateSubIconTabBarItemsVisibility: function (oMainIconTabBarSelectedItem) {

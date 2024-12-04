@@ -577,9 +577,11 @@ sap.ui.define([
 			);
 			this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
 
-			// Set by default selected key
+			// Set by default first element in Sub Tab Bar as selected
 			const oSubIconTabBarByDefaultSelectedItem = this._oSubIconTabBar.getItems()
 				.filter(oItem => oItem.getVisible?.())[0];
+			if (!oSubIconTabBarByDefaultSelectedItem)
+				return;
 			const sSubIconTabBarByDefaultSelectedKey = oSubIconTabBarByDefaultSelectedItem?.getKey();
 			this._oSubIconTabBar.setSelectedKey(sSubIconTabBarByDefaultSelectedKey);
 			const oSelectEvent = new sap.ui.base.Event("select", this._oSubIconTabBar, { item: oSubIconTabBarByDefaultSelectedItem });

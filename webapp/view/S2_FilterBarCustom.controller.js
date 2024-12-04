@@ -26,8 +26,8 @@ sap.ui.define([
 	"use strict";
 
 	var ValueHelpRangeOperation = UICompLibrary.valuehelpdialog.ValueHelpRangeOperation;
-
-	return Controller.extend("cross.fnd.fiori.inbox.view.S2_FilterBar", {
+	
+	return sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_FilterBarCustom", {
 		_oDialogPromise: null,
 
 		Conversions: Conversions,

@@ -57,7 +57,7 @@ sap.ui.define([
 	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 
-	sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
+	return sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
 		Conversions: Conversions,
 		Resubmit: ResubmitPopUp,

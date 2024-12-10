@@ -228,10 +228,24 @@ sap.ui.define([
 					"group": null
 				},
 				{
+					"text": "Sociedad",
+					"order": 1,
+					"visible": true,
+					"id": "table-taskListTable-ARIBA_PRV2COMPANYColumn",
+					"group": null
+				},
+				{
 					"text": "Nombre Proveedor",
 					"order": 2,
 					"visible": true,
 					"id": "table-taskListTable-TS20000166SUPPLIER_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Proveedor",
+					"order": 2,
+					"visible": true,
+					"id": "table-taskListTable-TS99800064SUPPLIER_NAMEColumn",
 					"group": null
 				},
 				{
@@ -242,10 +256,24 @@ sap.ui.define([
 					"group": null
 				},
 				{
+					"text": "Valor Total",
+					"order": 3,
+					"visible": true,
+					"id": "table-taskListTable-TS99800064PRICEColumn",
+					"group": null
+				},
+				{
 					"text": "Importe Moneda USD",
 					"order": 4,
 					"visible": true,
 					"id": "table-taskListTable-TS20000166USD_CURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Importe Moneda USD",
+					"order": 4,
+					"visible": true,
+					"id": "table-taskListTable-ARIBA_PRV2USD_CURRENCYColumn",
 					"group": null
 				},
 				{
@@ -256,6 +284,13 @@ sap.ui.define([
 					"group": null
 				},
 				{
+					"text": "Último Aprobador",
+					"order": 5,
+					"visible": true,
+					"id": "table-taskListTable-TS99800064LAST_APPROVERColumn",
+					"group": null
+				},
+				{
 					"text": "Titulo",
 					"order": 6,
 					"visible": true,
@@ -263,10 +298,24 @@ sap.ui.define([
 					"group": null
 				},
 				{
+					"text": "Titulo",
+					"order": 6,
+					"visible": true,
+					"id": "table-taskListTable-ARIBA_PRV2HEADER_TEXTColumn",
+					"group": null
+				},
+				{
 					"text": "Des. de la compra",
 					"order": 7,
 					"visible": true,
 					"id": "table-taskListTable-TS20000166COMMENTColumn",
+					"group": null
+				},
+				{
+					"text": "Des. de la compra",
+					"order": 7,
+					"visible": true,
+					"id": "table-taskListTable-TS99800064COMMENTColumn",
 					"group": null
 				},
 				{
@@ -435,6 +484,167 @@ sap.ui.define([
 					"order": 31,
 					"visible": false,
 					"id": "table-taskListTable-TS20000166PURCHASING_SUBCATEGORYColumn",
+					"group": null
+				},
+				{
+					"text": "Moneda",
+					"order": 9,
+					"visible": false,
+					"id": "table-taskListTable-MENDEL_EXPCURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Cond.pago",
+					"order": 10,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064PAYMENT_TERM_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Proveedor",
+					"order": 11,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2SUPPLIERColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre soc.GL",
+					"order": 12,
+					"visible": false,
+					"id": "table-taskListTable-MENDEL_EXPCOMPANY_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Proveedor Cond. Pago",
+					"order": 13,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064SUPPLIER_PAYMENT_TERMSColumn",
+					"group": null
+				},
+				{
+					"text": "Estado",
+					"order": 14,
+					"visible": false,
+					"id": "table-taskListTable-statusColumn",
+					"group": null
+				},
+				{
+					"text": "Incoterms",
+					"order": 15,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064INCO_TERMS_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Grupo de compras",
+					"order": 16,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2PURCHASING_GROUPColumn",
+					"group": null
+				},
+				{
+					"text": "Prioridad",
+					"order": 17,
+					"visible": false,
+					"id": "table-taskListTable-priorityColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Incoterms",
+					"order": 18,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064INCO_TERMSColumn",
+					"group": null
+				},
+				{
+					"text": "Organización compras",
+					"order": 19,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2PURCHASING_ORGColumn",
+					"group": null
+				},
+				{
+					"text": "Creado por",
+					"order": 20,
+					"visible": false,
+					"id": "table-taskListTable-createdByColumn",
+					"group": null
+				},
+				{
+					"text": "Fecha de creación",
+					"order": 21,
+					"visible": false,
+					"id": "table-taskListTable-createdOnColumn",
+					"group": null
+				},
+				{
+					"text": "Vence el",
+					"order": 22,
+					"visible": false,
+					"id": "table-taskListTable-dueDateColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Cond. Pago",
+					"order": 23,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064PAYMENT_TERMColumn",
+					"group": null
+				},
+				{
+					"text": "Usuario Sustituido",
+					"order": 24,
+					"visible": false,
+					"id": "table-taskListTable-SubstitutedUserColumn",
+					"group": null
+				},
+				{
+					"text": "Solicitante",
+					"order": 25,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064REQUESTING_USERColumn",
+					"group": null
+				},
+				{
+					"text": "Cumple Politica",
+					"order": 26,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064COMPLIANCE_POLICYColumn",
+					"group": null
+				},
+				{
+					"text": "Tipo Compra",
+					"order": 27,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064PURCHASING_TYPEColumn",
+					"group": null
+				},
+				{
+					"text": "Categoria OC",
+					"order": 28,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064PURCHASING_CATEGORYColumn",
+					"group": null
+				},
+				{
+					"text": "Subcategoria OC",
+					"order": 29,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064PURCHASING_SUBCATEGORYColumn",
+					"group": null
+				},
+				{
+					"text": "Clase Documento",
+					"order": 30,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064DOCUMENT_CLASSColumn",
+					"group": null
+				},
+				{
+					"text": "Precio Bruto",
+					"order": 31,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064B_PRICEColumn",
 					"group": null
 				}
 			],

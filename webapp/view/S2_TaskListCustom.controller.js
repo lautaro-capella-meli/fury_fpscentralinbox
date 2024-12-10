@@ -793,10 +793,24 @@ sap.ui.define([
 					"group": null
 				},
 				{
+					"text": "Grupo de compras",
+					"order": 18,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2PURCHASING_GROUPColumn",
+					"group": null
+				},
+				{
 					"text": "Grupo compras",
 					"order": 18,
 					"visible": false,
 					"id": "table-taskListTable-TS20000166PURCHASING_GROUPColumn",
+					"group": null
+				},
+				{
+					"text": "Organización compras",
+					"order": 19,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2PURCHASING_ORGColumn",
 					"group": null
 				},
 				{

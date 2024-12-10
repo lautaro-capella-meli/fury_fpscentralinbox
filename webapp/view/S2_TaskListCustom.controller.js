@@ -1577,8 +1577,6 @@ sap.ui.define([
 		_updateTableItems: function (aTasks) {
 			// update Task list items bound property
 			this.getView().getModel("taskList").setProperty("/TaskCollection", aTasks);
-
-			this._initPersonalization();
 		},
 
 		_updateSubIconTabBarItemsVisibility: function (oMainIconTabBarSelectedItem) {

@@ -56,6 +56,760 @@ sap.ui.define([
 	const C_CONCUR_MENDEL = "CONCUR_MENDEL_TGW";
 	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
+	const C_PERSO_PREDEFINED = {
+
+		"bySource__LOCAL_TGW__byTaskDefinition__TS99800060_WS99800005_0000000032": {
+			"aColumns": [
+				{
+					"text": "Nº documento",
+					"order": 0,
+					"visible": true,
+					"id": "table-taskListTable-TS99800060DOC_NUMBERColumn",
+					"group": null
+				},
+				{
+					"text": "Sociedad",
+					"order": 1,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166COMPANY_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Proveedor",
+					"order": 2,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166SUPPLIER_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Valor Total",
+					"order": 3,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166PRICEColumn",
+					"group": null
+				},
+				{
+					"text": "Título de tarea",
+					"order": 4,
+					"visible": false,
+					"id": "table-taskListTable-taskTitleColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre soc.GL",
+					"order": 5,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060COMPANY_DESCColumn",
+					"group": null
+				},
+				{
+					"text": "Estado",
+					"order": 6,
+					"visible": false,
+					"id": "table-taskListTable-statusColumn",
+					"group": null
+				},
+				{
+					"text": "Prioridad",
+					"order": 7,
+					"visible": false,
+					"id": "table-taskListTable-priorityColumn",
+					"group": null
+				},
+				{
+					"text": "Creado por",
+					"order": 8,
+					"visible": false,
+					"id": "table-taskListTable-createdByColumn",
+					"group": null
+				},
+				{
+					"text": "Fecha de creación",
+					"order": 9,
+					"visible": false,
+					"id": "table-taskListTable-createdOnColumn",
+					"group": null
+				},
+				{
+					"text": "Proveedor",
+					"order": 10,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060SUPPLIER_IDColumn",
+					"group": null
+				},
+				{
+					"text": "Vence el",
+					"order": 11,
+					"visible": false,
+					"id": "table-taskListTable-dueDateColumn",
+					"group": null
+				},
+				{
+					"text": "Usuario Sustituido",
+					"order": 12,
+					"visible": false,
+					"id": "table-taskListTable-SubstitutedUserColumn",
+					"group": null
+				},
+				{
+					"text": "Ejercicio",
+					"order": 13,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060FISCAL_YEARColumn",
+					"group": null
+				},
+				{
+					"text": "Moneda",
+					"order": 14,
+					"visible": false,
+					"id": "table-taskListTable-EXPENSV300CURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Referencia",
+					"order": 15,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060REFERENCEColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre usuario",
+					"order": 16,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060CREATE_BYColumn",
+					"group": null
+				},
+				{
+					"text": "Clase doc.",
+					"order": 17,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060DOC_TYPEColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Clase de Doc.",
+					"order": 18,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060DOC_TYPE_DESCColumn",
+					"group": null
+				},
+				{
+					"text": "Fecha contab.",
+					"order": 19,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060DOC_DATEColumn",
+					"group": null
+				},
+				{
+					"text": "Mensaje",
+					"order": 20,
+					"visible": false,
+					"id": "table-taskListTable-TS99800060MSGColumn",
+					"group": null
+				}
+			],
+			"_persoSchemaVersion": "1.0"
+		},
+
+		"bySource__LOCAL_TGW__byTaskDefinition__TS99800064_WS20000079_0000000070": {
+			"aColumns": [
+				{
+					"text": "Doc.compras",
+					"order": 0,
+					"visible": true,
+					"id": "table-taskListTable-TS99800064CONTRACT_NUMBERColumn",
+					"group": null
+				},
+				{
+					"text": "Sociedad",
+					"order": 1,
+					"visible": true,
+					"id": "table-taskListTable-TS99800064COMPANYColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Proveedor",
+					"order": 2,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166SUPPLIER_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Valor Total",
+					"order": 3,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166PRICEColumn",
+					"group": null
+				},
+				{
+					"text": "Importe Moneda USD",
+					"order": 4,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166USD_CURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Último Aprobador",
+					"order": 5,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166LAST_APPROVERColumn",
+					"group": null
+				},
+				{
+					"text": "Titulo",
+					"order": 6,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166HEADER_TEXTColumn",
+					"group": null
+				},
+				{
+					"text": "Des. de la compra",
+					"order": 7,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166COMMENTColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre soc.GL",
+					"order": 8,
+					"visible": false,
+					"id": "table-taskListTable-EXPENSV300COMPANY_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Título de tarea",
+					"order": 9,
+					"visible": false,
+					"id": "table-taskListTable-taskTitleColumn",
+					"group": null
+				},
+				{
+					"text": "Proveedor Cond. Pago",
+					"order": 10,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166SUPPLIER_PAYMENT_TERMSColumn",
+					"group": null
+				},
+				{
+					"text": "Cod. Proveedor",
+					"order": 11,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166SUPPLIERColumn",
+					"group": null
+				},
+				{
+					"text": "Precio Bruto",
+					"order": 12,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166B_PRICEColumn",
+					"group": null
+				},
+				{
+					"text": "Estado",
+					"order": 13,
+					"visible": false,
+					"id": "table-taskListTable-statusColumn",
+					"group": null
+				},
+				{
+					"text": "Prioridad",
+					"order": 14,
+					"visible": false,
+					"id": "table-taskListTable-priorityColumn",
+					"group": null
+				},
+				{
+					"text": "Creado por",
+					"order": 15,
+					"visible": false,
+					"id": "table-taskListTable-createdByColumn",
+					"group": null
+				},
+				{
+					"text": "Fecha de creación",
+					"order": 16,
+					"visible": false,
+					"id": "table-taskListTable-createdOnColumn",
+					"group": null
+				},
+				{
+					"text": "Vence el",
+					"order": 17,
+					"visible": false,
+					"id": "table-taskListTable-dueDateColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Cond. Pago",
+					"order": 18,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064PAYMENT_TERMColumn",
+					"group": null
+				},
+				{
+					"text": "Usuario Sustituido",
+					"order": 19,
+					"visible": false,
+					"id": "table-taskListTable-SubstitutedUserColumn",
+					"group": null
+				},
+				{
+					"text": "Moneda",
+					"order": 20,
+					"visible": false,
+					"id": "table-taskListTable-EXPENSV300CURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Cond.pago",
+					"order": 21,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PAYMENT_TERM_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Incoterms",
+					"order": 22,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166INCO_TERMSColumn",
+					"group": null
+				},
+				{
+					"text": "Incoterms",
+					"order": 23,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166INCO_TERMS_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Solicitante",
+					"order": 24,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166REQUESTING_USERColumn",
+					"group": null
+				},
+				{
+					"text": "Grupo compras",
+					"order": 25,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_GROUPColumn",
+					"group": null
+				},
+				{
+					"text": "Org.compras",
+					"order": 26,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_ORGColumn",
+					"group": null
+				},
+				{
+					"text": "Clase Documento",
+					"order": 27,
+					"visible": false,
+					"id": "table-taskListTable-TS99800064DOCUMENT_CLASSColumn",
+					"group": null
+				},
+				{
+					"text": "Cumple Politica",
+					"order": 28,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166COMPLIANCE_POLICYColumn",
+					"group": null
+				},
+				{
+					"text": "Tipo Compra",
+					"order": 29,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_TYPEColumn",
+					"group": null
+				},
+				{
+					"text": "Categoria OC",
+					"order": 30,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_CATEGORYColumn",
+					"group": null
+				},
+				{
+					"text": "Subcategoria OC",
+					"order": 31,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_SUBCATEGORYColumn",
+					"group": null
+				}
+			],
+			"_persoSchemaVersion": "1.0"
+		},
+
+		"bySource__LOCAL_TGW__byTaskDefinition__TS20000166": {
+			"aColumns": [
+				{
+					"text": "Doc.compras",
+					"order": 0,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166PO_NUMBERColumn",
+					"group": null
+				},
+				{
+					"text": "Sociedad",
+					"order": 1,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166COMPANY_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Proveedor",
+					"order": 2,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166SUPPLIER_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Valor Total",
+					"order": 3,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166PRICEColumn",
+					"group": null
+				},
+				{
+					"text": "Importe Moneda USD",
+					"order": 4,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166USD_CURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Último Aprobador",
+					"order": 5,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166LAST_APPROVERColumn",
+					"group": null
+				},
+				{
+					"text": "Titulo",
+					"order": 6,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166HEADER_TEXTColumn",
+					"group": null
+				},
+				{
+					"text": "Des. de la compra",
+					"order": 7,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166COMMENTColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre soc.GL",
+					"order": 8,
+					"visible": false,
+					"id": "table-taskListTable-EXPENSV300COMPANY_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Cod. Proveedor",
+					"order": 9,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166SUPPLIERColumn",
+					"group": null
+				},
+				{
+					"text": "Proveedor Cond. Pago",
+					"order": 10,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166SUPPLIER_PAYMENT_TERMSColumn",
+					"group": null
+				},
+				{
+					"text": "Precio Bruto",
+					"order": 11,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166B_PRICEColumn",
+					"group": null
+				},
+				{
+					"text": "Título de tarea",
+					"order": 12,
+					"visible": false,
+					"id": "table-taskListTable-taskTitleColumn",
+					"group": null
+				},
+				{
+					"text": "Estado",
+					"order": 13,
+					"visible": false,
+					"id": "table-taskListTable-statusColumn",
+					"group": null
+				},
+				{
+					"text": "Prioridad",
+					"order": 14,
+					"visible": false,
+					"id": "table-taskListTable-priorityColumn",
+					"group": null
+				},
+				{
+					"text": "Creado por",
+					"order": 15,
+					"visible": false,
+					"id": "table-taskListTable-createdByColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Cond. Pago",
+					"order": 16,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PAYMENT_TERMSColumn",
+					"group": null
+				},
+				{
+					"text": "Fecha de creación",
+					"order": 17,
+					"visible": false,
+					"id": "table-taskListTable-createdOnColumn",
+					"group": null
+				},
+				{
+					"text": "Vence el",
+					"order": 18,
+					"visible": false,
+					"id": "table-taskListTable-dueDateColumn",
+					"group": null
+				},
+				{
+					"text": "Usuario Sustituido",
+					"order": 19,
+					"visible": false,
+					"id": "table-taskListTable-SubstitutedUserColumn",
+					"group": null
+				},
+				{
+					"text": "Moneda",
+					"order": 20,
+					"visible": false,
+					"id": "table-taskListTable-EXPENSV300CURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Cond.pago",
+					"order": 21,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PAYMENT_TERM_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre Incoterms",
+					"order": 22,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166INCO_TERMSColumn",
+					"group": null
+				},
+				{
+					"text": "Incoterms",
+					"order": 23,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166INCO_TERMS_CODEColumn",
+					"group": null
+				},
+				{
+					"text": "Solicitante",
+					"order": 24,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166REQUESTING_USERColumn",
+					"group": null
+				},
+				{
+					"text": "Grupo compras",
+					"order": 25,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_GROUPColumn",
+					"group": null
+				},
+				{
+					"text": "Org.compras",
+					"order": 26,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_ORGColumn",
+					"group": null
+				},
+				{
+					"text": "Cumple Politica",
+					"order": 27,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166COMPLIANCE_POLICYColumn",
+					"group": null
+				},
+				{
+					"text": "Tipo Compra",
+					"order": 28,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_TYPEColumn",
+					"group": null
+				},
+				{
+					"text": "Categoria OC",
+					"order": 29,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_CATEGORYColumn",
+					"group": null
+				},
+				{
+					"text": "Subcategoria OC",
+					"order": 30,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_SUBCATEGORYColumn",
+					"group": null
+				}
+			],
+			"_persoSchemaVersion": "1.0"
+		},
+
+		"bySource__ARIBA_TGW__byTaskDefinition__ARIBA_PRV2": {
+			"aColumns": [
+				{
+					"text": "Doc.compras",
+					"order": 0,
+					"visible": true,
+					"id": "table-taskListTable-ARIBA_PRV2PR_NUMBERColumn",
+					"group": null
+				},
+				{
+					"text": "Sociedad",
+					"order": 1,
+					"visible": true,
+					"id": "table-taskListTable-TS99800064COMPANYColumn",
+					"group": null
+				},
+				{
+					"text": "Cod. Proveedor",
+					"order": 2,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166SUPPLIERColumn",
+					"group": null
+				},
+				{
+					"text": "Importe Moneda USD",
+					"order": 3,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166USD_CURRENCYColumn",
+					"group": null
+				},
+				{
+					"text": "Titulo",
+					"order": 4,
+					"visible": true,
+					"id": "table-taskListTable-TS20000166HEADER_TEXTColumn",
+					"group": null
+				},
+				{
+					"text": "Título de tarea",
+					"order": 5,
+					"visible": false,
+					"id": "table-taskListTable-taskTitleColumn",
+					"group": null
+				},
+				{
+					"text": "Nombre de autor",
+					"order": 6,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2OWNERColumn",
+					"group": null
+				},
+				{
+					"text": "Fecha/HoraCreac",
+					"order": 7,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2CREATE_DATEColumn",
+					"group": null
+				},
+				{
+					"text": "Estado",
+					"order": 8,
+					"visible": false,
+					"id": "table-taskListTable-statusColumn",
+					"group": null
+				},
+				{
+					"text": "Prioridad",
+					"order": 9,
+					"visible": false,
+					"id": "table-taskListTable-priorityColumn",
+					"group": null
+				},
+				{
+					"text": "Creado por",
+					"order": 10,
+					"visible": false,
+					"id": "table-taskListTable-createdByColumn",
+					"group": null
+				},
+				{
+					"text": "Categoría OC",
+					"order": 11,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2CUS_CATEGORIAColumn",
+					"group": null
+				},
+				{
+					"text": "Sub Categoria OC",
+					"order": 12,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2CUS_SUBCATEGORIAColumn",
+					"group": null
+				},
+				{
+					"text": "Fecha de creación",
+					"order": 13,
+					"visible": false,
+					"id": "table-taskListTable-createdOnColumn",
+					"group": null
+				},
+				{
+					"text": "Primer Aprobador Act",
+					"order": 14,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2CUS_FIRST_APROV_NAMEColumn",
+					"group": null
+				},
+				{
+					"text": "Vence el",
+					"order": 15,
+					"visible": false,
+					"id": "table-taskListTable-dueDateColumn",
+					"group": null
+				},
+				{
+					"text": "Usuario Sustituido",
+					"order": 16,
+					"visible": false,
+					"id": "table-taskListTable-SubstitutedUserColumn",
+					"group": null
+				},
+				{
+					"text": "Término pago de prov",
+					"order": 17,
+					"visible": false,
+					"id": "table-taskListTable-ARIBA_PRV2TERMS_PAYMENTColumn",
+					"group": null
+				},
+				{
+					"text": "Grupo compras",
+					"order": 18,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_GROUPColumn",
+					"group": null
+				},
+				{
+					"text": "Org.compras",
+					"order": 19,
+					"visible": false,
+					"id": "table-taskListTable-TS20000166PURCHASING_ORGColumn",
+					"group": null
+				}
+			],
+			"_persoSchemaVersion": "1.0"
+		}
+	}
 
 	return sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
@@ -553,28 +1307,39 @@ sap.ui.define([
 			const oSelectedItem = oEvent.getParameter("item");
 			if (!oSelectedItem)
 				return;
+			const sTaskKey = oSelectedItem.getKey();
 			const oTaskGroup = this._oGroupsMap.get(oSelectedItem);
 
-			// update filter for TaskDefinition
-			this._updateFiltersOnTabSelected(oSelectedItem);
-
-			// update Sub IconTabBar items visibility according to Main IconTabBar selected item
-			if (this._bUseSubIconTabBar && bSubBarSelected)
-				this._setSelectedTaskKey(oSelectedItem);
-
-			// update Sub IconTabBar items visibility according to Main IconTabBar selected item
+			// Main IconTabBar
 			if (this._bUseSubIconTabBar && bMainBarSelected)
 				this._updateSubIconTabBarItemsVisibility(oSelectedItem);
 
-			this._updateTableItems(oTaskGroup.tasks);
+			// Sub IconTabBar
+			if (this._bUseSubIconTabBar && bSubBarSelected) {
+				this._setSelectedTaskKey(sTaskKey);
+				// update filter for TaskDefinition
+				this._updateFiltersOnTabSelected(oSelectedItem);
+
+				this._updateTableItems(oTaskGroup.tasks);
+			}
 		},
 
-		_setSelectedTaskKey: function (oSelectedItem) {
-			this._selectedTaskKey = oSelectedItem.getKey();
+		_setSelectedTaskKey: function (sTaskKey) {
+			this._selectedTaskKey = sTaskKey;
 		},
 
 		_getSelectedTaskKey: function () {
 			return this._selectedTaskKey;
+		},
+
+		_updatePersonalization: function (sTaskKey) {
+			if (!this._oTablePersoController._oPersonalizations)
+				return;
+
+			if (C_PERSO_PREDEFINED[sTaskKey]) {
+				this._oTablePersoController._oPersonalizations = C_PERSO_PREDEFINED[sTaskKey];
+				this._oTablePersoController.getPersoService().setPersData(this._oTablePersoController._oPersonalizations);
+			}
 		},
 
 		_updateTableItems: function (aTasks) {

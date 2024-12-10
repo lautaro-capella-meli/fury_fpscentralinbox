@@ -1321,6 +1321,8 @@ sap.ui.define([
 				this._updateFiltersOnTabSelected(oSelectedItem);
 
 				this._updateTableItems(oTaskGroup.tasks);
+				// this._updateTableColumns(sTaskKey);
+				this._updatePersonalization(sTaskKey);
 			}
 		},
 

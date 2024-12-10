@@ -51,6 +51,7 @@ sap.ui.define([
 			this._oFilterBar.registerApplyData(this._applyData);
 			this._oFilterBar.registerGetFiltersWithValues(this._getFiltersWithValues);
 			this._oFilterBar.fireInitialise();
+			this._oFilterBar.getVariantManagement().attachSave(this.onSaveVariant.bind(this));
 
 			this.oDataManager.oModel.getMetaModel().loaded().then(function() {
 				// Safe guard for oServiceMetaModel creation
@@ -222,7 +223,7 @@ sap.ui.define([
 			if (filterName === "taskdefinition") {
 				this._tableHelper.hideCustomAttributeColumns(false);
 				var oControl = this._oFilterBar.determineControlByName(filterName);
-				this._tableHelper.showCustomAttributeColumns(oControl.getSelectedKeys());
+				this._tableHelper.showCustomAttributeColumns(oControl.getSelectedKeys()); // Disable Custom Attributes columns
 			}
 			this._oFilterBar.fireFilterChange(oEvent);
 		},
@@ -713,6 +714,11 @@ sap.ui.define([
 				oEvent.getSource().fireSearch(oEvent);
 				return;
 			}
+		},
+
+		onSaveVariant: function(oEvent) {
+			var sVariantId = oEvent.getParameter("id");
+			// debugger;
 		},
 
 		onValueHelpRequest:function(oEvent, oData) {

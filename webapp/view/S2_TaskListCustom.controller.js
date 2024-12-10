@@ -1559,12 +1559,18 @@ sap.ui.define([
 		},
 
 		_updatePersonalization: function (sTaskKey) {
+			let bRefresh = true;
 			if (!this._oTablePersoController._oPersonalizations)
 				return;
 
 			if (C_PERSO_PREDEFINED[sTaskKey]) {
 				this._oTablePersoController._oPersonalizations = C_PERSO_PREDEFINED[sTaskKey];
 				this._oTablePersoController.getPersoService().setPersData(this._oTablePersoController._oPersonalizations);
+				if (bRefresh) {
+					this._oTablePersoController.refresh();
+				} else {
+					this._oTablePersoController.applyPersonalizations(this._oTable);
+				}
 			}
 		},
 

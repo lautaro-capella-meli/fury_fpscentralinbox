@@ -1666,8 +1666,9 @@ sap.ui.define([
 			// update filter in FilterBar before fire SelectionFinish
 			const sSelectedTaskDefinitionID = oMainIconTabBarSelectedItem.data("TaskDefinitionID");
 			const aTaskDefinitionFilterItems = this._oTaskDefinitionFilter.getItems();
-			const oSelectedTaskDefinitionFilterItem = aTaskDefinitionFilterItems.find(oItem => oItem.getKey() === sSelectedTaskDefinitionID.toUpperCase());
-			this._oTaskDefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
+			const oSelectedTaskDefinitionFilterItem = aTaskDefinitionFilterItems.find(oItem => oItem.getKey().toUpperCase() === sSelectedTaskDefinitionID.toUpperCase());
+			if (oSelectedTaskDefinitionFilterItem)
+				this._oTaskDefinitionFilter.setSelectedItems([oSelectedTaskDefinitionFilterItem]);
 		},
 
 		_updateStatusFilterOnTaskDefinitionTabSelected: function (oMainIconTabBarSelectedItem) {

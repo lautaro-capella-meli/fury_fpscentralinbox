@@ -57,7 +57,6 @@ sap.ui.define([
 	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 	const C_PERSO_PREDEFINED = {
-
 		"bySource__LOCAL_TGW__byTaskDefinition__TS99800060_WS99800005_0000000032": {
 			"aColumns": [
 				{
@@ -1033,7 +1032,11 @@ sap.ui.define([
 			],
 			"_persoSchemaVersion": "1.0"
 		}
-	}
+	};
+	C_PERSO_PREDEFINED["_merged"] = Object.keys(C_PERSO_PREDEFINED).reduce((acc, key) => ({
+		_persoSchemaVersion: C_PERSO_PREDEFINED[key]?._persoSchemaVersion,
+		aColumns: (acc.aColumns || []).concat(C_PERSO_PREDEFINED[key]?.aColumns)
+	}), {});
 
 	return sap.ui.controller("cross.fnd.fiori.inbox.CA_FIORI_INBOXExtension2.view.S2_TaskListCustom", {
 
@@ -1564,7 +1567,7 @@ sap.ui.define([
 				return;
 
 			if (C_PERSO_PREDEFINED[sTaskKey]) {
-				this._oTablePersoController._oPersonalizations = C_PERSO_PREDEFINED[sTaskKey];
+				this._oTablePersoController._oPersonalizations =  /* C_PERSO_PREDEFINED[sTaskKey] */ C_PERSO_PREDEFINED["_merged"];
 				this._oTablePersoController.getPersoService().setPersData(this._oTablePersoController._oPersonalizations);
 				if (bRefresh) {
 					this._oTablePersoController.refresh();

@@ -1342,15 +1342,40 @@ sap.ui.define([
 			this._oTable.setBusy(false);
 
 			// Set by default selected key
-			const oMainIconTabBarByDefaultSelectedItem = this._oMainIconTabBar.getItems()
-				.filter(oItem => oItem.getVisible?.())[0];
-			const sMainIconTabBarByDefaultSelectedKey = oMainIconTabBarByDefaultSelectedItem?.getKey();
-			this._oMainIconTabBar.setSelectedKey(sMainIconTabBarByDefaultSelectedKey);
-			const oSelectEvent = new sap.ui.base.Event("select", this._oMainIconTabBar, { item: oMainIconTabBarByDefaultSelectedItem });
-			setTimeout(() => this.onSelectIconTabBar(oSelectEvent), 0);
+			this._restoreOrInitIconTabBarSelectedKey();
 
 			this._oProgressIndicator.setPercentValue(100);
 			setTimeout(this._hideProgressIndicator.bind(this), 1000);
+		},
+
+		_restoreOrInitIconTabBarSelectedKey: function () {
+			const bLastSelectedMainBar = localStorage?.getItem("LastSelectedMainIconTabBar");
+			const bLastSelectedSubBar = localStorage?.getItem("LastSelectedSubIconTabBar");
+			const sLastSelectedMainIconTabFilterKey = localStorage?.getItem("LastSelectedMainIconTabFilterKey");
+			const sLastSelectedSubIconTabFilterKey = localStorage?.getItem("LastSelectedSubIconTabFilterKey");
+			const oLastSelectedMainIconTabFilter = this._oMainIconTabBar.getItems().find(oItem => oItem.getVisible() && (oItem.getKey() === sLastSelectedMainIconTabFilterKey));
+			const oLastSelectedSubIconTabFilter = this._oMainIconTabBar.getItems().find(oItem => oItem.getVisible() && (oItem.getKey() === sLastSelectedSubIconTabFilterKey));
+			this._oMainIconTabBar.setSelectedKey(oLastSelectedMainIconTabFilter.getKey());
+			this._oSubIconTabBar.setSelectedKey(oLastSelectedSubIconTabFilter.getKey());
+
+			let oIconTabBarToSelect;
+			let oIconTabFilterToSelect;
+
+			if (bLastSelectedMainBar) {
+				oIconTabBarToSelect = this._oMainIconTabBar;
+				oIconTabFilterToSelect = oLastSelectedMainIconTabFilter;
+
+			} else if (bLastSelectedSubBar) {
+				oIconTabBarToSelect = this._oSubIconTabBar;
+				oIconTabFilterToSelect = oLastSelectedSubIconTabFilter;
+
+			} else {
+				oIconTabBarToSelect = this._oMainIconTabBar;
+				oIconTabFilterToSelect = this._oMainIconTabBar.getItems().find(oItem => oItem.getVisible?.());
+			}
+
+			const oSelectEvent = new sap.ui.base.Event("select", oIconTabBarToSelect, { item: oIconTabFilterToSelect });
+			setTimeout(() => this.onSelectIconTabBar(oSelectEvent), 0);
 		},
 
 		_displayProgressIndicator: function () {
@@ -1536,6 +1561,16 @@ sap.ui.define([
 				return;
 			const sTaskKey = oSelectedItem.getKey();
 			const oTaskGroup = this._oGroupsMap.get(oSelectedItem);
+
+			// Store state for restoring later
+			localStorage?.setItem("LastSelectedMainIconTabBar", bMainBarSelected);
+			localStorage?.setItem("LastSelectedSubIconTabBar", bSubBarSelected);
+			if (bMainBarSelected) {
+				localStorage?.setItem("LastSelectedMainIconTabFilterKey", sTaskKey);
+				localStorage?.removeItem("LastSelectedSubIconTabFilterKey");
+			} else if (bSubBarSelected) {
+				localStorage?.setItem("LastSelectedSubIconTabFilterKey", sTaskKey);
+			}
 
 			// Main IconTabBar
 			if (this._bUseSubIconTabBar && bMainBarSelected)

@@ -1379,17 +1379,17 @@ sap.ui.define([
 		},
 
 		_displayProgressIndicator: function () {
-			if (this._isProgressIndicatorDisplayerd)
+			if (this._isProgressIndicatorDisplayed)
 				return;
 			this._oProgressIndicator.setPercentValue(0);
 			this._oProgressIndicator.setVisible(true);
-			this._isProgressIndicatorDisplayerd = true;
+			this._isProgressIndicatorDisplayed = true;
 		},
 
 		_hideProgressIndicator: function () {
 			this._oProgressIndicator.setVisible(false);
 			this._oProgressIndicator.setPercentValue(0);
-			delete this._isProgressIndicatorDisplayerd;
+			delete this._isProgressIndicatorDisplayed;
 		},
 
 		_processTaskListData: function (aTasks) {

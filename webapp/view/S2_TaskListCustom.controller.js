@@ -1642,24 +1642,17 @@ sap.ui.define([
 			setTimeout(() => this.onSelectIconTabBar(oSelectEvent), 0);
 		},
 
-		_updateFiltersOnTabSelected: function (oMainIconTabBarSelectedItem) {
-			const sMainIconTabBarSelectedKey = oMainIconTabBarSelectedItem.getKey();
+		_updateFiltersOnTabSelected: function (oSubIconTabBarSelectedItem) {
+			const sSubIconTabBarSelectedKey = oSubIconTabBarSelectedItem.getKey();
 			this._oFilterBarView ??= this.byId("taskListPage").getContent()[0];
+			if (!this._oFilterBarView && !this._oTaskDefinitionFilter)
+				return console.error(".byId(\"taskListPage\") unreachable");
 
 			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
 			this._oTaskDefinitionFilter.setSelectedItems([]); // reset selected items
-			if (sMainIconTabBarSelectedKey.includes("__byTaskDefinition__"))
-				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oMainIconTabBarSelectedItem);
+			if (sSubIconTabBarSelectedKey.includes("__byTaskDefinition__"))
+				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oSubIconTabBarSelectedItem);
 			this._oTaskDefinitionFilter.fireSelectionFinish.call(this._oTaskDefinitionFilter);
-
-			// if (this._oTablePersoController._oPersonalizations !== null) {
-			// 	let ColumItemsPosition = this._oTablePersoController._oPersonalizations.aColumns.find(({ id }) => id === "table-taskListTable-TS20000166ITEMOVERVIEWColumn");
-			// 	if (ColumItemsPosition) {
-			// 		ColumItemsPosition.visible = false;
-			// 		this._oTablePersoController.getPersoService().setPersData(this._oTablePersoController._oPersonalizations)
-			// 	}
-			// }
-
 		},
 
 		_updateTaskDefinitionFilterOnTaskDefinitionTabSelected: function (oMainIconTabBarSelectedItem) {

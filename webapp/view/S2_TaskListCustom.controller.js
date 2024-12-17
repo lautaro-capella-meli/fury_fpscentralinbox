@@ -1602,7 +1602,27 @@ sap.ui.define([
 				return;
 
 			if (C_PERSO_PREDEFINED[sTaskKey]) {
-				this._oTablePersoController._oPersonalizations =  /* C_PERSO_PREDEFINED[sTaskKey] */ C_PERSO_PREDEFINED["_merged"];
+				this._oTablePersoController.refresh();
+				let { aColumns } = this._oTablePersoController._oPersonalizations;
+				this._oTablePersoController._oPersonalizations = {
+					...this._oTablePersoController._oPersonalizations,
+					aColumns: aColumns
+						.map(oColumn => ({
+							...oColumn,
+							visible: false
+						}))
+						.reduce((aPredefColumns, oNewColConfig) => {
+							const idxPredefColConfig = aPredefColumns.findIndex(oPredefCol => oPredefCol.id === oNewColConfig.id)
+							if (idxPredefColConfig >= 0)
+								aPredefColumns[idxPredefColConfig].visible ||= oNewColConfig.visible;
+							else
+								aPredefColumns.push(oNewColConfig);
+
+							return aPredefColumns;
+						}, C_PERSO_PREDEFINED[sTaskKey].aColumns)
+				};
+				// this._oTablePersoController._oPersonalizations = C_PERSO_PREDEFINED[sTaskKey];
+				// this._oTablePersoController._oPersonalizations =  /* C_PERSO_PREDEFINED[sTaskKey] */ C_PERSO_PREDEFINED["_merged"];
 				this._oTablePersoController.getPersoService().setPersData(this._oTablePersoController._oPersonalizations);
 				if (bRefresh) {
 					this._oTablePersoController.refresh();

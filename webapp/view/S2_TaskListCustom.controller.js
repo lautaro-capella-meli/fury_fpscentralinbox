@@ -58,7 +58,7 @@ sap.ui.define([
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 	const C_PERSO_PREDEFINED = {
 		"bySource__LOCAL_FIGR_TGW__byTaskDefinition__FIGRP_SHIP": {}, // SHIPPING
-		
+
 		"bySource__LOCAL_TGW__byTaskDefinition__TS99800060_WS99800005_0000000032": { // Liberación Pago Nivel 1
 			"aColumns": [
 				{
@@ -2558,9 +2558,9 @@ sap.ui.define([
 			// }
 
 			const oSelectEventMain = new sap.ui.base.Event("select", this._oMainIconTabBar, { item: oLastSelectedMainIconTabFilter });
-			setTimeout(() => this.onSelectIconTabBar(oSelectEventMain), 0);
+			this.onSelectIconTabBar(oSelectEventMain);
 			const oSelectEventSub = new sap.ui.base.Event("select", this._oSubIconTabBar, { item: oLastSelectedSubIconTabFilter });
-			setTimeout(() => this.onSelectIconTabBar(oSelectEventSub), 0);
+			this.onSelectIconTabBar(oSelectEventSub);
 		},
 
 		_displayProgressIndicator: function () {
@@ -2862,7 +2862,7 @@ sap.ui.define([
 			const sSubIconTabBarByDefaultSelectedKey = oSubIconTabBarByDefaultSelectedItem?.getKey();
 			this._oSubIconTabBar.setSelectedKey(sSubIconTabBarByDefaultSelectedKey);
 			const oSelectEvent = new sap.ui.base.Event("select", this._oSubIconTabBar, { item: oSubIconTabBarByDefaultSelectedItem });
-			setTimeout(() => this.onSelectIconTabBar(oSelectEvent), 0);
+			this.onSelectIconTabBar(oSelectEvent);
 		},
 
 		_updateFiltersOnTabSelected: function (oSubIconTabBarSelectedItem) {

@@ -1853,21 +1853,21 @@ sap.ui.define([
 			{
 				"text": "Doc. compras",
 				"order": 1,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064CONTRACT_NUMBERColumn",
 				"group": null
 			},
 			{
 				"text": "Valor total",
 				"order": 7,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064PRICEColumn",
 				"group": null
 			},
 			{
 				"text": "Moneda Local",
 				"order": 6,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064CURRENCYColumn",
 				"group": null
 			},
@@ -1909,21 +1909,21 @@ sap.ui.define([
 			{
 				"text": "N° proveedor",
 				"order": 4,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064SUPPLIERColumn",
 				"group": null
 			},
 			{
 				"text": "Nombre del Proveedor",
 				"order": 5,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064SUPPLIER_NAMEColumn",
 				"group": null
 			},
 			{
 				"text": "Sociedad",
 				"order": 3,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064COMPANYColumn",
 				"group": null
 			},
@@ -1993,21 +1993,21 @@ sap.ui.define([
 			{
 				"text": "Último Aprobador",
 				"order": 9,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064LAST_APPROVERColumn",
 				"group": null
 			},
 			{
 				"text": "Importe en USD",
 				"order": 8,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064USD_CURRENCYColumn",
 				"group": null
 			},
 			{
 				"text": "Titulo",
 				"order": 2,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-TS99800064HEADER_TEXTColumn",
 				"group": null
 			},
@@ -2035,42 +2035,42 @@ sap.ui.define([
 			{
 				"text": "Doc. compras",
 				"order": 1,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-ARIBA_PRV2PR_NUMBERColumn",
 				"group": null
 			},
 			{
 				"text": "Título",
 				"order": 2,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-ARIBA_PRV2HEADER_TEXTColumn",
 				"group": null
 			},
 			{
 				"text": "Valor total",
 				"order": 6,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-ARIBA_PRV2PRICEColumn",
 				"group": null
 			},
 			{
 				"text": "Moneda Local",
 				"order": 5,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-ARIBA_PRV2CURRENCYColumn",
 				"group": null
 			},
 			{
 				"text": "Sociedad",
 				"order": 3,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-ARIBA_PRV2COMPANYColumn",
 				"group": null
 			},
 			{
 				"text": "Proveedor",
 				"order": 4,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-ARIBA_PRV2SUPPLIERColumn",
 				"group": null
 			},
@@ -2126,7 +2126,7 @@ sap.ui.define([
 			{
 				"text": "Importe en USD",
 				"order": 7,
-				"visible": false,
+				"visible": true,
 				"id": "table-taskListTable-ARIBA_PRV2USD_CURRENCYColumn",
 				"group": null
 			},

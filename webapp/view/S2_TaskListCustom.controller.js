@@ -57,6 +57,8 @@ sap.ui.define([
 	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 	const C_PERSO_PREDEFINED = {
+		"bySource__LOCAL_FIGR_TGW__byTaskDefinition__FIGRP_SHIP": {}, // SHIPPING
+		
 		"bySource__LOCAL_TGW__byTaskDefinition__TS99800060_WS99800005_0000000032": { // Liberación Pago Nivel 1
 			"aColumns": [
 				{

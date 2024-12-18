@@ -57,7 +57,7 @@ sap.ui.define([
 	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 	const C_PERSO_PREDEFINED = {
-		"bySource__LOCAL_FIGR_TGW__byTaskDefinition__FIGRP_SHIP": {}, // SHIPPING
+		"bySource__LOCAL_FIGR_TGW__byTaskDefinition__FIGRP_SHIP": true, // SHIPPING
 
 		"bySource__LOCAL_TGW__byTaskDefinition__TS99800060_WS99800005_0000000032": { // Liberación Pago Nivel 1
 			"aColumns": [
@@ -1491,13 +1491,13 @@ sap.ui.define([
 			"_persoSchemaVersion": "1.0"
 		}
 	};
-	C_PERSO_PREDEFINED["_merged"] = Object.keys(C_PERSO_PREDEFINED).reduce((acc, key) => ({
-		_persoSchemaVersion: C_PERSO_PREDEFINED[key]?._persoSchemaVersion,
-		aColumns: (acc.aColumns || []).concat(C_PERSO_PREDEFINED[key]?.aColumns)
-	}), {});
-	C_PERSO_PREDEFINED["_merged"].aColumns = C_PERSO_PREDEFINED["_merged"].aColumns.filter(oColA => {
-		return !C_PERSO_PREDEFINED["_merged"].aColumns.some(oColB => oColA.id === oColB.id);
-	});
+	// C_PERSO_PREDEFINED["_merged"] = Object.keys(C_PERSO_PREDEFINED).reduce((acc, key) => ({
+	// 	_persoSchemaVersion: C_PERSO_PREDEFINED[key]?._persoSchemaVersion,
+	// 	aColumns: (acc.aColumns || []).concat(C_PERSO_PREDEFINED[key]?.aColumns)
+	// }), {});
+	// C_PERSO_PREDEFINED["_merged"].aColumns = C_PERSO_PREDEFINED["_merged"].aColumns.filter(oColA => {
+	// 	return !C_PERSO_PREDEFINED["_merged"].aColumns.some(oColB => oColA.id === oColB.id);
+	// });
 
 	C_PERSO_PREDEFINED["_preprocessed"] = {
 		"_persoSchemaVersion": "1.0",
@@ -2007,7 +2007,7 @@ sap.ui.define([
 				"group": null
 			},
 			{
-				"text": "Titulo",
+				"text": "Título",
 				"order": 2,
 				"visible": true,
 				"id": "table-taskListTable-TS99800064HEADER_TEXTColumn",
@@ -2194,9 +2194,513 @@ sap.ui.define([
 				"visible": true,
 				"id": "table-taskListTable-FIGRP_SHIPCURRENCYColumn",
 				"group": null
+			},
+			{
+				"text": "Nro Doc",
+				"order": 1,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060DOC_NUMBERColumn",
+				"group": null
+			},
+			{
+				"text": "Fiscal Year",
+				"order": 2,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060FISCAL_YEARColumn",
+				"group": null
+			},
+			{
+				"text": "Sociedad",
+				"order": 4,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060COMPANY_CODEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060COMPANY_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "N° proveedor",
+				"order": 5,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060SUPPLIER_IDColumn",
+				"group": null
+			},
+			{
+				"text": "Nombre del Proveedor",
+				"order": 6,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060SUPPLIER_NAMEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060REFERENCEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060CREATE_BYColumn",
+				"group": null
+			},
+			{
+				"text": "Valor total",
+				"order": 8,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060PRICEColumn",
+				"group": null
+			},
+			{
+				"text": "Moneda Local",
+				"order": 7,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060DOC_TYPEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060DOC_TYPE_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060DOC_DATEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060MSGColumn",
+				"group": null
+			},
+			{
+				"text": "Último Aprobador",
+				"order": 10,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060LAST_APPROVERColumn",
+				"group": null
+			},
+			{
+				"text": "Importe en USD",
+				"order": 9,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060USD_CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "Título",
+				"order": 3,
+				"visible": true,
+				"id": "table-taskListTable-TS99800060HEADER_TEXTColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800060COUNTRYColumn",
+				"group": null
+			},
+			{
+				"text": "Nro Doc",
+				"order": 1,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862DOC_NUMBERColumn",
+				"group": null
+			},
+			{
+				"text": "Fiscal Year",
+				"order": 2,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862FISCAL_YEARColumn",
+				"group": null
+			},
+			{
+				"text": "Sociedad",
+				"order": 4,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862COMPANY_CODEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862COMPANY_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "N° proveedor",
+				"order": 5,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862SUPPLIER_IDColumn",
+				"group": null
+			},
+			{
+				"text": "Nombre del Proveedor",
+				"order": 6,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862SUPPLIER_NAMEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862REFERENCEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862CREATE_BYColumn",
+				"group": null
+			},
+			{
+				"text": "Valor total",
+				"order": 8,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862PRICEColumn",
+				"group": null
+			},
+			{
+				"text": "Moneda Local",
+				"order": 7,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862DOC_TYPEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862DOC_TYPE_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862DOC_DATEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862MSGColumn",
+				"group": null
+			},
+			{
+				"text": "Último Aprobador",
+				"order": 10,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862LAST_APPROVERColumn",
+				"group": null
+			},
+			{
+				"text": "Importe en USD",
+				"order": 9,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862USD_CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "Título",
+				"order": 3,
+				"visible": true,
+				"id": "table-taskListTable-TS00407862HEADER_TEXTColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00407862COUNTRYColumn",
+				"group": null
+			},
+			{
+				"text": "Nro Doc",
+				"order": 1,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061DOC_NUMBERColumn",
+				"group": null
+			},
+			{
+				"text": "Fiscal Year",
+				"order": 2,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061FISCAL_YEARColumn",
+				"group": null
+			},
+			{
+				"text": "Sociedad",
+				"order": 4,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061COMPANY_CODEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061COMPANY_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "N° proveedor",
+				"order": 5,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061SUPPLIER_IDColumn",
+				"group": null
+			},
+			{
+				"text": "Nombre del Proveedor",
+				"order": 6,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061SUPPLIER_NAMEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061REFERENCEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061CREATE_BYColumn",
+				"group": null
+			},
+			{
+				"text": "Valor total",
+				"order": 8,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061PRICEColumn",
+				"group": null
+			},
+			{
+				"text": "Moneda Local",
+				"order": 7,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061DOC_TYPEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061DOC_TYPE_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061DOC_DATEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061MSGColumn",
+				"group": null
+			},
+			{
+				"text": "Último Aprobador",
+				"order": 10,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061LAST_APPROVERColumn",
+				"group": null
+			},
+			{
+				"text": "Importe en USD",
+				"order": 9,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061USD_CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "Título",
+				"order": 3,
+				"visible": true,
+				"id": "table-taskListTable-TS99800061HEADER_TEXTColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS99800061COUNTRYColumn",
+				"group": null
+			},
+			{
+				"text": "Nro Doc",
+				"order": 1,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914DOC_NUMBERColumn",
+				"group": null
+			},
+			{
+				"text": "Fiscal Year",
+				"order": 2,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914FISCAL_YEARColumn",
+				"group": null
+			},
+			{
+				"text": "Sociedad",
+				"order": 4,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914COMPANY_CODEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914COMPANY_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "N° proveedor",
+				"order": 5,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914SUPPLIER_IDColumn",
+				"group": null
+			},
+			{
+				"text": "Nombre del Proveedor",
+				"order": 6,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914SUPPLIER_NAMEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914REFERENCEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914CREATE_BYColumn",
+				"group": null
+			},
+			{
+				"text": "Valor total",
+				"order": 8,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914PRICEColumn",
+				"group": null
+			},
+			{
+				"text": "Moneda Local",
+				"order": 7,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914DOC_TYPEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914DOC_TYPE_DESCColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914DOC_DATEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914MSGColumn",
+				"group": null
+			},
+			{
+				"text": "Último Aprobador",
+				"order": 10,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914LAST_APPROVERColumn",
+				"group": null
+			},
+			{
+				"text": "Importe en USD",
+				"order": 9,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914USD_CURRENCYColumn",
+				"group": null
+			},
+			{
+				"text": "Título",
+				"order": 3,
+				"visible": true,
+				"id": "table-taskListTable-TS00007914HEADER_TEXTColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 99,
+				"visible": false,
+				"id": "table-taskListTable-TS00007914COUNTRYColumn",
+				"group": null
 			}
 		]
-	}
+	};
 
 
 	const C_PERSO_PREDEFINED_COLUMNS = [

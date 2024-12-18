@@ -2143,6 +2143,55 @@ sap.ui.define([
 				"visible": false,
 				"id": "table-taskListTable-ARIBA_PRV2COUNTRYColumn",
 				"group": null
+			},
+			{
+				"text": "",
+				"order": 1,
+				"visible": true,
+				"id": "table-taskListTable-FIGRP_SHIPSHIPMENT_NOColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 2,
+				"visible": true,
+				"id": "table-taskListTable-FIGRP_SHIPCOMPANY_CODEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 3,
+				"visible": true,
+				"id": "table-taskListTable-FIGRP_SHIPCOMPANY_NAMEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 4,
+				"visible": true,
+				"id": "table-taskListTable-FIGRP_SHIPSUPPLIER_CODEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 5,
+				"visible": true,
+				"id": "table-taskListTable-FIGRP_SHIPSUPPLIER_NAMEColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 6,
+				"visible": true,
+				"id": "table-taskListTable-FIGRP_SHIPTOTALColumn",
+				"group": null
+			},
+			{
+				"text": "",
+				"order": 7,
+				"visible": true,
+				"id": "table-taskListTable-FIGRP_SHIPCURRENCYColumn",
+				"group": null
 			}
 		]
 	}

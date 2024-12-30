@@ -57,7 +57,14 @@ sap.ui.define([
 	const C_FIRST_APROV_NAME_KEY = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 	const C_PERSO_PREDEFINED = {
-		"_preprocessed": {
+		"TaskSelectorsEnabled": {
+			"bySource__LOCAL_FIGR_TGW__byTaskDefinition__FIGRP_SHIP": true,
+			"bySource__LOCAL_TGW__byTaskDefinition__TS99800060_WS99800005_0000000032": true,
+			"bySource__LOCAL_TGW__byTaskDefinition__TS99800064_WS20000079_0000000070": true,
+			"bySource__LOCAL_TGW__byTaskDefinition__TS20000166": true,
+			"bySource__ARIBA_TGW__byTaskDefinition__ARIBA_PRV2": true
+		},
+		"PersonalizationPayload": {
 			"_persoSchemaVersion": "1.0",
 			"aColumns": [
 				{
@@ -1855,9 +1862,9 @@ sap.ui.define([
 			if (!this._oTablePersoController._oPersonalizations)
 				return;
 
-			if (C_PERSO_PREDEFINED[sTaskKey]) {
+			if (C_PERSO_PREDEFINED.TaskSelectorsEnabled[sTaskKey]) {
 				// let { aColumns } = this._oTablePersoController._oPersonalizations;
-				this._oTablePersoController._oPersonalizations = C_PERSO_PREDEFINED["_preprocessed"];
+				this._oTablePersoController._oPersonalizations = C_PERSO_PREDEFINED["PersonalizationPayload"];
 				// this._oTablePersoController._oPersonalizations = {
 				// 	...this._oTablePersoController._oPersonalizations,
 				// 	aColumns: aColumns

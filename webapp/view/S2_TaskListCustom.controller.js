@@ -54,7 +54,7 @@ sap.ui.define([
 	const C_MENDEL = "MENDEL_TGW";
 	const C_CONCUR = "CONCUR_TGW";
 	const C_CONCUR_MENDEL = "CONCUR_MENDEL_TGW";
-	const C_FIRST_APROV_NAME = "CUS_FIRST_APROV_NAME";
+	const C_FIRST_APROV_NAME_KEY = "CUS_FIRST_APROV_NAME";
 	const C_FIRST_APROV_NAME_VALUE = "Buyer Procurement Desk Agent";
 	const C_PERSO_PREDEFINED = {
 		"bySource__LOCAL_FIGR_TGW__byTaskDefinition__FIGRP_SHIP": true, // SHIPPING
@@ -3114,7 +3114,7 @@ sap.ui.define([
 
 		_hasValidFirstApproverName: function (oTask) {
 			var bIsValid = true;
-			var aTask = oTask.CustomAttributeData.results.filter((task) => task.Name === C_FIRST_APROV_NAME);
+			var aTask = oTask.CustomAttributeData.results.filter((task) => task.Name === C_FIRST_APROV_NAME_KEY);
 			if (aTask && aTask[0] && aTask[0].Value === C_FIRST_APROV_NAME_VALUE)
 				bIsValid = false;
 			return bIsValid;

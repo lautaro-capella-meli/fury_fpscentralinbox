@@ -1923,15 +1923,20 @@ sap.ui.define([
 				(oItem.getKey() !== "ALL") && oItem.getVisible() // Tab Bar gets visible if any Tab Filter (apart from ALL) is visible
 			);
 			this._oSubIconTabBar.setVisible(bShowSubIconTabBar);
+		},
 
+		_setSubIconTabBarItemSelected: function (oSubIconTabBarItemSelected) {
 			// Set by default first element in Sub Tab Bar as selected
-			const oSubIconTabBarByDefaultSelectedItem = this._oSubIconTabBar.getItems()
+			const oSubIconTabBarItemToSelectByDefault = this._oSubIconTabBar.getItems()
 				.filter(oItem => oItem.getVisible?.())[0];
-			if (!oSubIconTabBarByDefaultSelectedItem)
+
+			const oSubIconTabBarItemToSelect = oSubIconTabBarItemSelected ?? oSubIconTabBarItemToSelectByDefault;
+			if (!oSubIconTabBarItemToSelect)
 				return;
-			const sSubIconTabBarByDefaultSelectedKey = oSubIconTabBarByDefaultSelectedItem?.getKey();
-			this._oSubIconTabBar.setSelectedKey(sSubIconTabBarByDefaultSelectedKey);
-			const oSelectEvent = new sap.ui.base.Event("select", this._oSubIconTabBar, { item: oSubIconTabBarByDefaultSelectedItem });
+
+			const sSubIconTabBarItemToSelectKey = oSubIconTabBarItemToSelect.getKey();
+			this._oSubIconTabBar.setSelectedKey(sSubIconTabBarItemToSelectKey);
+			const oSelectEvent = new sap.ui.base.Event("select", this._oSubIconTabBar, { item: oSubIconTabBarItemToSelect });
 			this.onSelectIconTabBar(oSelectEvent);
 		},
 

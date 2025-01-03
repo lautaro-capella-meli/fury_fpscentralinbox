@@ -1627,9 +1627,14 @@ sap.ui.define([
 			// 	oIconTabFilterToSelect = this._oMainIconTabBar.getItems().find(oItem => oItem.getVisible?.());
 			// }
 
-			const oSelectEventMain = new sap.ui.base.Event("select", this._oMainIconTabBar, { item: oLastSelectedMainIconTabFilter });
+			const oSelectEventMain = new sap.ui.base.Event("select", this._oMainIconTabBar, {
+				item: oLastSelectedMainIconTabFilter,
+				doNotSetSubIconTabBarItemSelected: true
+			});
 			this.onSelectIconTabBar(oSelectEventMain);
-			const oSelectEventSub = new sap.ui.base.Event("select", this._oSubIconTabBar, { item: oLastSelectedSubIconTabFilter });
+			const oSelectEventSub = new sap.ui.base.Event("select", this._oSubIconTabBar, {
+				item: oLastSelectedSubIconTabFilter
+			});
 			this.onSelectIconTabBar(oSelectEventSub);
 		},
 
@@ -1817,6 +1822,7 @@ sap.ui.define([
 			const bMainBarSelected = oEvent.getSource() === this._oMainIconTabBar;
 			const bSubBarSelected = oEvent.getSource() === this._oSubIconTabBar;
 
+			const bDoNotSetSubIconTabBarItemSelected = oEvent.getParameter("doNotSetSubIconTabBarItemSelected");
 			const oSelectedItem = oEvent.getParameter("item");
 			if (!oSelectedItem)
 				return;
@@ -1834,8 +1840,11 @@ sap.ui.define([
 			}
 
 			// Main IconTabBar
-			if (this._bUseSubIconTabBar && bMainBarSelected)
+			if (this._bUseSubIconTabBar && bMainBarSelected) {
 				this._updateSubIconTabBarItemsVisibility(oSelectedItem);
+				if (!bDoNotSetSubIconTabBarItemSelected)
+					this._setSubIconTabBarItemSelected(null);
+			}
 
 			// Sub IconTabBar
 			if (this._bUseSubIconTabBar && bSubBarSelected) {
@@ -1946,7 +1955,9 @@ sap.ui.define([
 			if (!this._oFilterBarView && !this._oTaskDefinitionFilter)
 				return console.error(".byId(\"taskListPage\") unreachable");
 
-			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId("taskdefinitionFilter");
+			this._oTaskDefinitionFilter ??= this._oFilterBarView?.byId?.("taskdefinitionFilter");
+			if (!this._oTaskDefinitionFilter)
+				return;
 			this._oTaskDefinitionFilter.setSelectedItems([]); // reset selected items
 			if (sSubIconTabBarSelectedKey.includes("__byTaskDefinition__"))
 				this._updateTaskDefinitionFilterOnTaskDefinitionTabSelected(oSubIconTabBarSelectedItem);

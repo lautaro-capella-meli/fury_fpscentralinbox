@@ -1698,6 +1698,7 @@ sap.ui.define([
 				const sSourceAText = this._getI18nCustomText(`Source.${sSourceA}`)
 				const sSourceBText = this._getI18nCustomText(`Source.${sSourceB}`)
 				return sSourceAText.localeCompare(sSourceBText);
+
 			}).forEach(oProviderSystem => {
 				const sSource = oProviderSystem.SAP__Origin;
 				/// MAIN > (EACH) SOURCE ///
@@ -1714,9 +1715,12 @@ sap.ui.define([
 
 		_createTabFilters: function (oTaskListData) {
 
-			// var oNewTaskListData = this._oCreateNewTaskListData(oTaskListData);
+			Object.keys(oTaskListData.bySource).sort((sSourceA, sSourceB) => {
+				const sSourceTextA = this._getI18nCustomText(`Source.${sSourceA}`)
+				const sSourceTextB = this._getI18nCustomText(`Source.${sSourceB}`)
+				return sSourceTextA.localeCompare(sSourceTextB);
 
-			for (const sSource in oTaskListData.bySource) {
+			}).forEach(sSource => {
 				const oTaskGroupBySource = oTaskListData.bySource[sSource];
 				/// MAIN > (EACH) SOURCE ///
 				const oBySourceIconTabFilter = new sap.m.IconTabFilter({
@@ -1729,7 +1733,16 @@ sap.ui.define([
 				this._oMainIconTabBar.addItem(oBySourceIconTabFilter);
 				this._oGroupsMap.set(oBySourceIconTabFilter, oTaskGroupBySource);
 
-				for (const sKey in oTaskGroupBySource.byTaskDefinition) {
+				// for (const sKey in oTaskGroupBySource.byTaskDefinition) {
+				Object.keys(oTaskGroupBySource.byTaskDefinition).sort((sKeyA, sKeyB) => {
+					const oTaskGroupByTaskDefinitionA = oTaskGroupBySource.byTaskDefinition[sKeyA];
+					const oTaskGroupByTaskDefinitionB = oTaskGroupBySource.byTaskDefinition[sKeyB];
+
+					const sTaskDefinitionNameA = oTaskGroupByTaskDefinitionA.TaskDefinitionName;
+					const sTaskDefinitionNameB = oTaskGroupByTaskDefinitionB.TaskDefinitionName;
+					return sTaskDefinitionNameA.localeCompare(sTaskDefinitionNameB);
+
+				}).forEach(sKey => {
 					const oTaskGroupByTaskDefinition = oTaskGroupBySource.byTaskDefinition[sKey];
 					/// SUB > BY TASK DEFINITION ///
 					const oByTaskDefinitionIconTabFilter = new sap.m.IconTabFilter({
@@ -1749,8 +1762,8 @@ sap.ui.define([
 					else
 						oBySourceIconTabFilter.addItem(oByTaskDefinitionIconTabFilter);
 					this._oGroupsMap.set(oByTaskDefinitionIconTabFilter, oTaskGroupByTaskDefinition);
-				}
-			}
+				});
+			});
 		},
 
 		_oCreateNewTaskListData: function (oTasklistData) {
